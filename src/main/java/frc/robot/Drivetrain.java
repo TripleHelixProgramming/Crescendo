@@ -16,10 +16,10 @@ public class Drivetrain {
   public static final double kMaxSpeed = 3.0; // 3 meters per second
   public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
 
-  private final SwerveModule m_frontLeft = new SwerveModule(1, 2, 0, 1, 2, 3);
-  private final SwerveModule m_frontRight = new SwerveModule(3, 4, 4, 5, 6, 7);
-  private final SwerveModule m_backLeft = new SwerveModule(5, 6, 8, 9, 10, 11);
-  private final SwerveModule m_backRight = new SwerveModule(7, 8, 12, 13, 14, 15);
+  private final SwerveModule m_frontLeft = new SwerveModule(DriveConstants.SparkCAN.kFrontLeftDriveMotorPort, DriveConstants.SparkCAN.kFrontLeftTurningMotorPort, 0, 1, 2, 3);
+  private final SwerveModule m_frontRight = new SwerveModule(DriveConstants.SparkCAN.kFrontRightDriveMotorPort, DriveConstants.SparkCAN.kFrontRightTurningMotorPort, 4, 5, 6, 7);
+  private final SwerveModule m_backLeft = new SwerveModule(DriveConstants.SparkCAN.kRearLeftDriveMotorPort, DriveConstants.SparkCAN.kRearLeftTurningMotorPort, 8, 9, 10, 11);
+  private final SwerveModule m_backRight = new SwerveModule(DriveConstants.SparkCAN.kRearRightDriveMotorPort, DriveConstants.SparkCAN.kRearRightTurningMotorPort, 12, 13, 14, 15);
 
   private final AnalogGyro m_gyro = new AnalogGyro(0);
 
