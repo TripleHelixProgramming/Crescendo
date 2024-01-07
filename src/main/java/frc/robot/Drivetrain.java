@@ -10,13 +10,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.AnalogGyro;
+import frc.robot.Constants;
 
 /** Represents a swerve drive style drivetrain. */
 public class Drivetrain {
   public static final double kMaxSpeed = 3.0; // 3 meters per second
   public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
 
-  private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
+  //private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
   private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
   private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
   private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
@@ -28,13 +29,13 @@ public class Drivetrain {
 
   private final AnalogGyro m_gyro = new AnalogGyro(0);
 
-  private final SwerveDriveKinematics m_kinematics =
-      new SwerveDriveKinematics(
-          m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
+  //private final SwerveDriveKinematics m_kinematics =
+  //    new SwerveDriveKinematics(
+  //        m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
 
   private final SwerveDriveOdometry m_odometry =
       new SwerveDriveOdometry(
-          m_kinematics,
+        m_kinematics,
           m_gyro.getRotation2d(),
           new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
