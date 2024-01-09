@@ -4,14 +4,14 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.RelativeEncoder;
 import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule {
@@ -30,9 +30,7 @@ public class SwerveModule {
    * @param driveMotorChannel PWM output for the drive motor.
    * @param turningMotorChannel PWM output for the turning motor.
    */
-  public SwerveModule(
-      int driveMotorChannel,
-      int turningMotorChannel) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel) {
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
 
@@ -56,10 +54,12 @@ public class SwerveModule {
     m_turningPIDController.setI(ModuleConstants.kTurningI);
     m_turningPIDController.setD(ModuleConstants.kTurningD);
 
-    m_turningPIDController.setSmartMotionMaxVelocity(ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond, 0);
-   // m_turningPIDController.setSmartMotionMinOutputVelocity(0.0, 0);
-    m_turningPIDController.setSmartMotionMaxAccel(ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared, 0);
-    //m_turningPIDController.setSmartMotionAllowedClosedLoopError(0.0, 0);
+    m_turningPIDController.setSmartMotionMaxVelocity(
+        ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond, 0);
+    // m_turningPIDController.setSmartMotionMinOutputVelocity(0.0, 0);
+    m_turningPIDController.setSmartMotionMaxAccel(
+        ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared, 0);
+    // m_turningPIDController.setSmartMotionAllowedClosedLoopError(0.0, 0);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
@@ -75,8 +75,8 @@ public class SwerveModule {
     m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveConversionFactor);
     m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveConversionFactor / 60.0);
 
-    m_turningEncoder.setPositionConversionFactor(360.0 / ModuleConstants.kTurnPositionConversionFactor);
-
+    m_turningEncoder.setPositionConversionFactor(
+        360.0 / ModuleConstants.kTurnPositionConversionFactor);
   }
 
   /**
@@ -115,7 +115,9 @@ public class SwerveModule {
     // driving.
     state.speedMetersPerSecond *= state.angle.minus(encoderRotation).getCos();
 
-    m_drivePIDController.setReference(state.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
-    m_turningPIDController.setReference(state.angle.getRadians(), CANSparkMax.ControlType.kSmartMotion);
+    m_drivePIDController.setReference(
+        state.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
+    m_turningPIDController.setReference(
+        state.angle.getRadians(), CANSparkMax.ControlType.kSmartMotion);
   }
 }

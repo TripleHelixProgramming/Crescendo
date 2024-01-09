@@ -21,10 +21,10 @@ public final class Constants {
   public static final class DriveConstants {
 
     // Define the conventional order of our modules when putting them into arrays
-    public static final int FRONT_LEFT =0;
-    public static final int FRONT_RIGHT =1;
-    public static final int REAR_LEFT =2;
-    public static final int REAR_RIGHT =3;
+    public static final int FRONT_LEFT = 0;
+    public static final int FRONT_RIGHT = 1;
+    public static final int REAR_LEFT = 2;
+    public static final int REAR_RIGHT = 3;
 
     public static final int kPigeonPort = 20;
 
@@ -33,8 +33,8 @@ public final class Constants {
       public static final int kFrontRightDriveMotorPort = 12;
       public static final int kFrontLeftDriveMotorPort = 22;
       public static final int kRearLeftDriveMotorPort = 24;
-  
-      public static final int kRearRightTurningMotorPort = 11;  
+
+      public static final int kRearRightTurningMotorPort = 11;
       public static final int kFrontRightTurningMotorPort = 13;
       public static final int kFrontLeftTurningMotorPort = 23;
       public static final int kRearLeftTurningMotorPort = 25;
@@ -42,7 +42,7 @@ public final class Constants {
 
     public static final class CANCoder {
       // Below provided by SparkMAX motors API.
-      // public static final int kFrontLeftDriveEncoderPort = 
+      // public static final int kFrontLeftDriveEncoderPort =
       // public static final int kRearLeftDriveEncoderPort =
       // public static final int kFrontRightDriveEncoderPort =
       // public static final int kRearRightDriveEncoderPort =
@@ -71,25 +71,25 @@ public final class Constants {
     // Units are meters.
     // Distance between centers of right and left wheels on robot
     public static final double kTrackWidth = 0.5715; // 22.5 in
-    
+
     // Distance between front and back wheels on robot
     public static final double kWheelBase = 0.6223; // 24.5 in
 
     // Units are meters per second
-    public static final double kMaxTranslationalVelocity = 0.75; //max 4.5
+    public static final double kMaxTranslationalVelocity = 0.75; // max 4.5
 
     // Units are radians per second
-    public static final double kMaxRotationalVelocity = 5.0; //max 5.0
+    public static final double kMaxRotationalVelocity = 5.0; // max 5.0
 
-    //The locations for the modules must be relative to the center of the robot. 
-    // Positive x values represent moving toward the front of the robot 
+    // The locations for the modules must be relative to the center of the robot.
+    // Positive x values represent moving toward the front of the robot
     // Positive y values represent moving toward the left of the robot.
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
-            new Translation2d(kWheelBase / 2.0, kTrackWidth / 2.0),   // front left
-            new Translation2d(kWheelBase / 2.0, -kTrackWidth / 2.0),  // front right
-            new Translation2d(-kWheelBase / 2.0, kTrackWidth / 2.0),  // rear left
-            new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0)  // rear right
+            new Translation2d(kWheelBase / 2.0, kTrackWidth / 2.0), // front left
+            new Translation2d(kWheelBase / 2.0, -kTrackWidth / 2.0), // front right
+            new Translation2d(-kWheelBase / 2.0, kTrackWidth / 2.0), // rear left
+            new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0) // rear right
             );
 
     public static final boolean kGyroReversed = false;
@@ -117,18 +117,21 @@ public final class Constants {
     public static final double kTurningP = 0.01;
     public static final double kTurningI = 0.0;
     public static final double kTurningD = 0.005;
-    
-    public static final double kMaxModuleAngularSpeedRadiansPerSecond = 0.000005 * Math.PI;
-    public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 0.000005 * Math.PI;
 
-    // public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254, 0.137);
-    
+    public static final double kMaxModuleAngularSpeedRadiansPerSecond = 0.000005 * Math.PI;
+    public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared =
+        0.000005 * Math.PI;
+
+    // public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254,
+    // 0.137);
+
     public static final double kWheelDiameterMeters = 0.09398; // 3.7 in
 
     // The drive encoder reports in RPM by default. Calculate the conversion factor
     // to make it report in meters per second.
     public static final double kDriveGearRatio = 6.75;
-    public static final double kDriveConversionFactor = (kWheelDiameterMeters * Math.PI) / kDriveGearRatio;
+    public static final double kDriveConversionFactor =
+        (kWheelDiameterMeters * Math.PI) / kDriveGearRatio;
 
     public static final double kTurnPositionConversionFactor = 12.8;
   }
