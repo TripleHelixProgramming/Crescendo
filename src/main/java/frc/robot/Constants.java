@@ -127,16 +127,19 @@ public final class Constants {
 
     public static final double kWheelDiameterMeters = 0.09398; // 3.7 in
 
-    // The drive encoder in position mode measures rotations by default; convert to meters
+    // By default, the drive encoder in position mode measures rotations at the drive motor
+    // Convert to meters at the wheel
     public static final double kDriveGearRatio = 6.75;
     public static final double kDrivePositionConversionFactor =
         (kWheelDiameterMeters * Math.PI) / kDriveGearRatio;
 
-    // The drive encoder in velocity mode measures RPM by default; convert to meters/second
+    // By default, the drive encoder in velocity mode measures RPM at the drive motor
+    // Convert to meters per second at the wheel
     public static final double kDriveVelocityConversionFactor =
         kDrivePositionConversionFactor / 60.0;
 
-    // The turn encoder in position mode measures rotations by default; convert to radians
+    // By default, the turn encoder in position mode measures rotations at the turning motor
+    // Convert to radians at the module azimuth
     public static final double kTurnGearRatio = 12.8;
     public static final double kTurnPositionConversionFactor = (2.0 * Math.PI / kTurnGearRatio);
   }
