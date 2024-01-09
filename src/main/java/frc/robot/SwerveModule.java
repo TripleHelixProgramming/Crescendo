@@ -48,18 +48,23 @@ public class SwerveModule {
     m_drivePIDController.setP(ModuleConstants.kDriveP);
     m_drivePIDController.setI(ModuleConstants.kDriveI);
     m_drivePIDController.setD(ModuleConstants.kDriveD);
+    // m_drivePIDController.setIZone();
     m_drivePIDController.setFF(ModuleConstants.kDriveFF);
+    // m_drivePIDController.setOutputRange();
 
     m_turningPIDController.setP(ModuleConstants.kTurningP);
     m_turningPIDController.setI(ModuleConstants.kTurningI);
     m_turningPIDController.setD(ModuleConstants.kTurningD);
+    // m_turningPIDController.setIZone();
+    // m_turningPIDController.setFF();
+    // m_turningPIDController.setOutputRange();
 
     m_turningPIDController.setSmartMotionMaxVelocity(
         ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond, 0);
     // m_turningPIDController.setSmartMotionMinOutputVelocity(0.0, 0);
     m_turningPIDController.setSmartMotionMaxAccel(
         ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared, 0);
-    // m_turningPIDController.setSmartMotionAllowedClosedLoopError(0.0, 0);
+    // m_turningPIDController.setSmartMotionAllowedClosedLoopError(0.1, 0);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
@@ -70,13 +75,10 @@ public class SwerveModule {
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = m_turningMotor.getEncoder();
 
-    // m_driveEncoder returns RPM by default. Use setVelocityConversionFactor() to
-    // convert that to meters per second.
-    m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveConversionFactor);
-    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveConversionFactor / 60.0);
+    m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDrivePositionConversionFactor);
+    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveVelocityConversionFactor);
 
-    m_turningEncoder.setPositionConversionFactor(
-        360.0 / ModuleConstants.kTurnPositionConversionFactor);
+    m_turningEncoder.setPositionConversionFactor(ModuleConstants.kTurnPositionConversionFactor);
   }
 
   /**
