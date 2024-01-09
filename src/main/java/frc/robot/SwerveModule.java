@@ -8,15 +8,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.RelativeEncoder;
 import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule {
-  private static final double kWheelRadius = 0.0508;
-  private static final int kEncoderResolution = 4096;
-
   private final CANSparkMax m_driveMotor;
   private final CANSparkMax m_turningMotor;
 
@@ -41,6 +39,11 @@ public class SwerveModule {
     m_driveMotor.restoreFactoryDefaults();
     m_turningMotor.restoreFactoryDefaults();
 
+    m_driveMotor.setIdleMode(IdleMode.kCoast);
+    m_turningMotor.setIdleMode(IdleMode.kBrake);
+
+    m_driveMotor.enableVoltageCompensation(12.0);
+
     m_drivePIDController = m_driveMotor.getPIDController();
     m_turningPIDController = m_turningMotor.getPIDController();
 
@@ -52,31 +55,28 @@ public class SwerveModule {
     m_turningPIDController.setP(ModuleConstants.kTurningP);
     m_turningPIDController.setI(ModuleConstants.kTurningI);
     m_turningPIDController.setD(ModuleConstants.kTurningD);
-    
+
     m_turningPIDController.setSmartMotionMaxVelocity(ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond, 0);
    // m_turningPIDController.setSmartMotionMinOutputVelocity(0.0, 0);
     m_turningPIDController.setSmartMotionMaxAccel(ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared, 0);
     //m_turningPIDController.setSmartMotionAllowedClosedLoopError(0.0, 0);
-
-    m_driveEncoder = m_driveMotor.getEncoder();
-    m_turningEncoder = m_turningMotor.getEncoder();
-
-    // Set the distance per pulse for the drive encoder. We can simply use the
-    // distance traveled for one rotation of the wheel divided by the encoder
-    // resolution.
-    m_driveEncoder.setPositionConversionFactor(2 * Math.PI * kWheelRadius / kEncoderResolution);
-    m_driveEncoder.setVelocityConversionFactor(2 * Math.PI * kWheelRadius / kEncoderResolution);
-
-    // Set the distance (in this case, angle) in radians per pulse for the turning encoder.
-    // This is the the angle through an entire rotation (2 * pi) divided by the
-    // encoder resolution.
-    m_turningEncoder.setPositionConversionFactor(2 * Math.PI / kEncoderResolution);
 
     // Limit the PID Controller's input range between -pi and pi and set the input
     // to be continuous.
     m_turningPIDController.setPositionPIDWrappingEnabled(true);
     m_turningPIDController.setPositionPIDWrappingMaxInput(Math.PI);
     m_turningPIDController.setPositionPIDWrappingMinInput(-Math.PI);
+
+    m_driveEncoder = m_driveMotor.getEncoder();
+    m_turningEncoder = m_turningMotor.getEncoder();
+
+    // m_driveEncoder returns RPM by default. Use setVelocityConversionFactor() to
+    // convert that to meters per second.
+    m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveConversionFactor);
+    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveConversionFactor / 60.0);
+
+    m_turningEncoder.setPositionConversionFactor(360.0 / ModuleConstants.kTurnPositionConversionFactor);
+
   }
 
   /**
