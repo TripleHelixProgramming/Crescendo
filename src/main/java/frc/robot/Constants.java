@@ -127,13 +127,18 @@ public final class Constants {
 
     public static final double kWheelDiameterMeters = 0.09398; // 3.7 in
 
-    // The drive encoder reports in RPM by default. Calculate the conversion factor
-    // to make it report in meters per second.
+    // The drive encoder in position mode measures rotations by default; convert to meters
     public static final double kDriveGearRatio = 6.75;
-    public static final double kDriveConversionFactor =
+    public static final double kDrivePositionConversionFactor =
         (kWheelDiameterMeters * Math.PI) / kDriveGearRatio;
 
-    public static final double kTurnPositionConversionFactor = 12.8;
+    // The drive encoder in velocity mode measures RPM by default; convert to meters/second
+    public static final double kDriveVelocityConversionFactor =
+        kDrivePositionConversionFactor / 60.0;
+
+    // The turn encoder in position mode measures rotations by default; convert to radians
+    public static final double kTurnGearRatio = 12.8;
+    public static final double kTurnPositionConversionFactor = (2.0 * Math.PI / kTurnGearRatio);
   }
 
   public static final class OIConstants {
