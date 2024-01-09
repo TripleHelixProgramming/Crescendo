@@ -4,11 +4,11 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
 
 /** Represents a swerve drive style drivetrain. */
@@ -16,16 +16,28 @@ public class Drivetrain {
   static double kMaxSpeed = Constants.DriveConstants.kMaxTranslationalVelocity;
   static double kMaxAngularSpeed = Constants.DriveConstants.kMaxRotationalVelocity;
 
-  private final SwerveModule m_frontLeft = new SwerveModule(DriveConstants.SparkCAN.kFrontLeftDriveMotorPort, DriveConstants.SparkCAN.kFrontLeftTurningMotorPort);
-  private final SwerveModule m_frontRight = new SwerveModule(DriveConstants.SparkCAN.kFrontRightDriveMotorPort, DriveConstants.SparkCAN.kFrontRightTurningMotorPort);
-  private final SwerveModule m_backLeft = new SwerveModule(DriveConstants.SparkCAN.kRearLeftDriveMotorPort, DriveConstants.SparkCAN.kRearLeftTurningMotorPort);
-  private final SwerveModule m_backRight = new SwerveModule(DriveConstants.SparkCAN.kRearRightDriveMotorPort, DriveConstants.SparkCAN.kRearRightTurningMotorPort);
+  private final SwerveModule m_frontLeft =
+      new SwerveModule(
+          DriveConstants.SparkCAN.kFrontLeftDriveMotorPort,
+          DriveConstants.SparkCAN.kFrontLeftTurningMotorPort);
+  private final SwerveModule m_frontRight =
+      new SwerveModule(
+          DriveConstants.SparkCAN.kFrontRightDriveMotorPort,
+          DriveConstants.SparkCAN.kFrontRightTurningMotorPort);
+  private final SwerveModule m_backLeft =
+      new SwerveModule(
+          DriveConstants.SparkCAN.kRearLeftDriveMotorPort,
+          DriveConstants.SparkCAN.kRearLeftTurningMotorPort);
+  private final SwerveModule m_backRight =
+      new SwerveModule(
+          DriveConstants.SparkCAN.kRearRightDriveMotorPort,
+          DriveConstants.SparkCAN.kRearRightTurningMotorPort);
 
   private final AHRS m_gyro = new AHRS();
 
   private final SwerveDriveOdometry m_odometry =
       new SwerveDriveOdometry(
-        DriveConstants.kDriveKinematics,
+          DriveConstants.kDriveKinematics,
           m_gyro.getRotation2d(),
           new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
