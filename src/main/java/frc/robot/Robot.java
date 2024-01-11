@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class Robot extends TimedRobot {
-  private final XboxController m_controller = new XboxController(0);
   private final Drivetrain m_swerve = new Drivetrain();
+  private final XboxController m_controller = new XboxController(0);
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(3);
@@ -19,9 +19,39 @@ public class Robot extends TimedRobot {
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
   @Override
+  public void robotInit() {
+
+  }
+
+  @Override
+  public void robotPeriodic() {
+
+  }
+
+  @Override
+  public void disabledInit() {
+
+  }
+
+  @Override
+  public void disabledPeriodic() {
+
+  }
+
+  @Override
+  public void autonomousInit() {
+
+  }
+
+  @Override
   public void autonomousPeriodic() {
     driveWithJoystick(false);
     m_swerve.updateOdometry();
+  }
+
+  @Override
+  public void teleopInit() {
+
   }
 
   @Override
@@ -52,5 +82,15 @@ public class Robot extends TimedRobot {
             * Drivetrain.kMaxAngularSpeed;
 
     m_swerve.drive(xSpeed, ySpeed, rot, fieldRelative, getPeriod());
+  }
+
+  @Override
+  public void testInit() {
+
+  }
+
+  @Override
+  public void testPeriodic() {
+
   }
 }
