@@ -130,7 +130,7 @@ public final class Constants {
     // 0.137);
 
     // 2023 Competion Robot
-    public static final double kWheelDiameterMeters = 2 * 0.051; // 3.7 in
+    public static final double kWheelDiameterMeters = 0.102; // 3.7 in
 
     // By default, the drive encoder in position mode measures rotations at the drive motor
     // Convert to meters at the wheel
