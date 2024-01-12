@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -13,10 +17,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.ModuleConstants;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 
 public class SwerveModule {
   private final CANSparkMax m_driveMotor;
@@ -28,7 +28,7 @@ public class SwerveModule {
   private final SparkPIDController m_drivePIDController;
   private final SparkPIDController m_turningPIDController;
 
-  private final CANcoder m_turningCANCoder; 
+  private final CANcoder m_turningCANCoder;
 
   /**
    * Constructs a SwerveModule with a drive motor, turning motor, drive encoder and turning encoder.
@@ -38,7 +38,11 @@ public class SwerveModule {
    * @param turningAbsoluteEncoderChannel CAN ID of absolute encoder
    * @param turningAbsoluteEncoderOffset Offset angle of the absolute encoder
    */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningAbsoluteEncoderChannel, double turningAbsoluteEncoderOffset) {
+  public SwerveModule(
+      int driveMotorChannel,
+      int turningMotorChannel,
+      int turningAbsoluteEncoderChannel,
+      double turningAbsoluteEncoderOffset) {
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
 
