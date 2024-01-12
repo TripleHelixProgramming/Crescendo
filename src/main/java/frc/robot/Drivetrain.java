@@ -19,19 +19,27 @@ public class Drivetrain {
   private final SwerveModule m_frontLeft =
       new SwerveModule(
           DriveConstants.SparkCAN.kFrontLeftDriveMotorPort,
-          DriveConstants.SparkCAN.kFrontLeftTurningMotorPort);
+          DriveConstants.SparkCAN.kFrontLeftTurningMotorPort,
+          DriveConstants.CANCoder.kFrontLeftTurningEncoderPort,
+          DriveConstants.CANCoder.kFrontLeftTurningEncoderOffset);
   private final SwerveModule m_frontRight =
       new SwerveModule(
           DriveConstants.SparkCAN.kFrontRightDriveMotorPort,
-          DriveConstants.SparkCAN.kFrontRightTurningMotorPort);
+          DriveConstants.SparkCAN.kFrontRightTurningMotorPort,
+          DriveConstants.CANCoder.kFrontRightTurningEncoderPort,
+          DriveConstants.CANCoder.kFrontRightTurningEncoderOffset);
   private final SwerveModule m_backLeft =
       new SwerveModule(
           DriveConstants.SparkCAN.kRearLeftDriveMotorPort,
-          DriveConstants.SparkCAN.kRearLeftTurningMotorPort);
+          DriveConstants.SparkCAN.kRearLeftTurningMotorPort,
+          DriveConstants.CANCoder.kRearLeftTurningEncoderPort,
+          DriveConstants.CANCoder.kRearLeftTurningEncoderOffset);
   private final SwerveModule m_backRight =
       new SwerveModule(
           DriveConstants.SparkCAN.kRearRightDriveMotorPort,
-          DriveConstants.SparkCAN.kRearRightTurningMotorPort);
+          DriveConstants.SparkCAN.kRearRightTurningMotorPort,
+          DriveConstants.CANCoder.kRearRightTurningEncoderPort,
+          DriveConstants.CANCoder.kRearRightTurningEncoderOffset);
 
   private final AHRS m_gyro = new AHRS();
 

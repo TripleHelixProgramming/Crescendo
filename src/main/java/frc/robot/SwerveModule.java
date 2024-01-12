@@ -13,6 +13,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.ModuleConstants;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 
 public class SwerveModule {
   private final CANSparkMax m_driveMotor;
@@ -24,13 +28,17 @@ public class SwerveModule {
   private final SparkPIDController m_drivePIDController;
   private final SparkPIDController m_turningPIDController;
 
+  private final CANcoder m_turningCANCoder; 
+
   /**
    * Constructs a SwerveModule with a drive motor, turning motor, drive encoder and turning encoder.
    *
-   * @param driveMotorChannel PWM output for the drive motor.
-   * @param turningMotorChannel PWM output for the turning motor.
+   * @param driveMotorChannel CAN ID of the drive motor controller.
+   * @param turningMotorChannel CAN ID of the turning motor controller.
+   * @param turningAbsoluteEncoderChannel CAN ID of absolute encoder
+   * @param turningAbsoluteEncoderOffset Offset angle of the absolute encoder
    */
-  public SwerveModule(int driveMotorChannel, int turningMotorChannel) {
+  public SwerveModule(int driveMotorChannel, int turningMotorChannel, int turningAbsoluteEncoderChannel, double turningAbsoluteEncoderOffset) {
     m_driveMotor = new CANSparkMax(driveMotorChannel, MotorType.kBrushless);
     m_turningMotor = new CANSparkMax(turningMotorChannel, MotorType.kBrushless);
 
@@ -72,6 +80,13 @@ public class SwerveModule {
     m_turningPIDController.setPositionPIDWrappingMaxInput(Math.PI);
     m_turningPIDController.setPositionPIDWrappingMinInput(-Math.PI);
 
+    m_turningCANCoder = new CANcoder(turningAbsoluteEncoderChannel);
+    CANcoderConfiguration m_configs = new CANcoderConfiguration();
+    m_configs.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    m_configs.MagnetSensor.MagnetOffset = turningAbsoluteEncoderOffset;
+    m_configs.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    m_turningCANCoder.getConfigurator().apply(m_configs);
+
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningEncoder = m_turningMotor.getEncoder();
 
@@ -79,6 +94,9 @@ public class SwerveModule {
     m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveVelocityConversionFactor);
 
     m_turningEncoder.setPositionConversionFactor(ModuleConstants.kTurnPositionConversionFactor);
+
+    double absPosition = m_turningCANCoder.getAbsolutePosition().getValue() * (2.0 * Math.PI);
+    m_turningEncoder.setPosition(absPosition);
   }
 
   /**
