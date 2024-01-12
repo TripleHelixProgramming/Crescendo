@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.wpilibj.Preferences;
 import frc.robot.Constants.DriveConstants;
 
 /** Represents a swerve drive style drivetrain. */
@@ -20,26 +21,24 @@ public class Drivetrain {
       new SwerveModule(
           DriveConstants.SparkCAN.kFrontLeftDriveMotorPort,
           DriveConstants.SparkCAN.kFrontLeftTurningMotorPort,
-          DriveConstants.CANCoder.kFrontLeftTurningEncoderPort,
-          DriveConstants.CANCoder.kFrontLeftTurningEncoderOffset);
+          DriveConstants.CANCoder.kFrontLeftTurningEncoderPort);
   private final SwerveModule m_frontRight =
       new SwerveModule(
           DriveConstants.SparkCAN.kFrontRightDriveMotorPort,
           DriveConstants.SparkCAN.kFrontRightTurningMotorPort,
-          DriveConstants.CANCoder.kFrontRightTurningEncoderPort,
-          DriveConstants.CANCoder.kFrontRightTurningEncoderOffset);
+          DriveConstants.CANCoder.kFrontRightTurningEncoderPort);
   private final SwerveModule m_backLeft =
       new SwerveModule(
           DriveConstants.SparkCAN.kRearLeftDriveMotorPort,
           DriveConstants.SparkCAN.kRearLeftTurningMotorPort,
-          DriveConstants.CANCoder.kRearLeftTurningEncoderPort,
-          DriveConstants.CANCoder.kRearLeftTurningEncoderOffset);
+          DriveConstants.CANCoder.kRearLeftTurningEncoderPort);
   private final SwerveModule m_backRight =
       new SwerveModule(
           DriveConstants.SparkCAN.kRearRightDriveMotorPort,
           DriveConstants.SparkCAN.kRearRightTurningMotorPort,
-          DriveConstants.CANCoder.kRearRightTurningEncoderPort,
-          DriveConstants.CANCoder.kRearRightTurningEncoderOffset);
+          DriveConstants.CANCoder.kRearRightTurningEncoderPort);
+
+  private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_backLeft, m_backRight};
 
   private final AHRS m_gyro = new AHRS();
 
@@ -56,6 +55,11 @@ public class Drivetrain {
 
   public Drivetrain() {
     m_gyro.reset();
+
+    for (SwerveModule module : modules) {
+      module.resetDriveEncoder();
+      module.syncTurningEncoders();
+    }
   }
 
   /**
@@ -93,5 +97,17 @@ public class Drivetrain {
           m_backLeft.getPosition(),
           m_backRight.getPosition()
         });
+  }
+
+  /** Reconfigures all swerve module steering angles using external alignment device. */
+  public void setAbsTurningEncoderZero() {
+    Preferences.initDouble(
+        "kFrontLeftAbsEncoderMagnetOffset", m_frontLeft.setAbsTurningEncoderZero());
+    Preferences.initDouble(
+        "kFrontRightAbsEncoderMagnetOffset", m_frontRight.setAbsTurningEncoderZero());
+    Preferences.initDouble(
+        "kBackLeftAbsEncoderMagnetOffset", m_backLeft.setAbsTurningEncoderZero());
+    Preferences.initDouble(
+        "kBackRightAbsEncoderMagnetOffset", m_backRight.setAbsTurningEncoderZero());
   }
 }
