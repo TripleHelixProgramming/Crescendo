@@ -29,15 +29,15 @@ public final class Constants {
     public static final int kPigeonPort = 20;
 
     public static final class SparkCAN {
-      public static final int kRearRightDriveMotorPort = 10;
-      public static final int kFrontRightDriveMotorPort = 12;
-      public static final int kFrontLeftDriveMotorPort = 22;
-      public static final int kRearLeftDriveMotorPort = 24;
+      public static final int kRearRightDriveMotorPort = 12;
+      public static final int kFrontRightDriveMotorPort = 26;
+      public static final int kFrontLeftDriveMotorPort = 28;
+      public static final int kRearLeftDriveMotorPort = 10;
 
-      public static final int kRearRightTurningMotorPort = 11;
-      public static final int kFrontRightTurningMotorPort = 13;
-      public static final int kFrontLeftTurningMotorPort = 23;
-      public static final int kRearLeftTurningMotorPort = 25;
+      public static final int kRearRightTurningMotorPort = 13;
+      public static final int kFrontRightTurningMotorPort = 27;
+      public static final int kFrontLeftTurningMotorPort = 29;
+      public static final int kRearLeftTurningMotorPort = 11;
     }
 
     public static final class CANCoder {
@@ -70,16 +70,17 @@ public final class Constants {
 
     // Units are meters.
     // Distance between centers of right and left wheels on robot
-    public static final double kTrackWidth = 0.5715; // 22.5 in
+    public static final double kTrackWidth = 0.572; // 2023 Competion Robot
 
     // Distance between front and back wheels on robot
-    public static final double kWheelBase = 0.6223; // 24.5 in
+    public static final double kWheelBase = 0.622; // 2023 Competion Robot
 
     // Units are meters per second
-    public static final double kMaxTranslationalVelocity = 0.75; // max 4.5
+
+    public static final double kMaxTranslationalVelocity = 0.73; // 2023 Competion Robot // max 4.5
 
     // Units are radians per second
-    public static final double kMaxRotationalVelocity = 5.0; // max 5.0
+    public static final double kMaxRotationalVelocity = 5.0; // 2023 Competion Robot // max 5.0
 
     // The locations for the modules must be relative to the center of the robot.
     // Positive x values represent moving toward the front of the robot
@@ -104,20 +105,23 @@ public final class Constants {
     public static final double kvVoltSecondsPerMeter = 0.8;
     public static final double kaVoltSecondsSquaredPerMeter = 0.15;
     */
-    public static final double kMaxSpeedMetersPerSecond = 3.0;
+
+    public static final double kMaxSpeedMetersPerSecond = 4.0; // 2023 Competion Robot
   }
 
   public static final class ModuleConstants {
 
-    public static final double kDriveP = 0.1;
-    public static final double kDriveI = 0.0;
-    public static final double kDriveD = 0.0;
-    public static final double kDriveFF = 2.96;
+    public static final double kDriveP = 0.1; // 2023 Competion Robot
+    public static final double kDriveI = 0.0; // 2023 Competion Robot
+    public static final double kDriveD = 0.0; // 2023 Competion Robot
+    public static final double kDriveFF = 0.255; // 2023 Competion Robot
 
-    public static final double kTurningP = 0.01;
-    public static final double kTurningI = 0.0;
-    public static final double kTurningD = 0.005;
+    public static final double kTurningP = 1.5; // 2023 Competion Robot
+    public static final double kTurningI = 0.0; // 2023 Competion Robot
+    public static final double kTurningD = 0.0; // 2023 Competion Robot
+    public static final double kTurningFF = 0; // 2023 Competion Robot
 
+    // Not adjusted
     public static final double kMaxModuleAngularSpeedRadiansPerSecond = 0.000005 * Math.PI;
     public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared =
         0.000005 * Math.PI;
@@ -125,11 +129,12 @@ public final class Constants {
     // public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254,
     // 0.137);
 
-    public static final double kWheelDiameterMeters = 0.09398; // 3.7 in
+    // 2023 Competion Robot
+    public static final double kWheelDiameterMeters = 0.102; // 3.7 in
 
     // By default, the drive encoder in position mode measures rotations at the drive motor
     // Convert to meters at the wheel
-    public static final double kDriveGearRatio = 6.75;
+    public static final double kDriveGearRatio = 6.75; // 2023 Competion Robot
     public static final double kDrivePositionConversionFactor =
         (kWheelDiameterMeters * Math.PI) / kDriveGearRatio;
 
@@ -140,7 +145,7 @@ public final class Constants {
 
     // By default, the turn encoder in position mode measures rotations at the turning motor
     // Convert to radians at the module azimuth
-    public static final double kTurnGearRatio = 12.8;
+    public static final double kTurnGearRatio = 12.8; // 2023 Competion Robot
     public static final double kTurnPositionConversionFactor = (2.0 * Math.PI / kTurnGearRatio);
   }
 
