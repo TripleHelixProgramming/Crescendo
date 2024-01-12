@@ -25,12 +25,13 @@ public class SwerveModule {
   private final CANSparkMax m_turningMotor;
 
   private final RelativeEncoder m_driveEncoder;
-  private final RelativeEncoder m_turningEncoder;
+  private final RelativeEncoder m_turningRelativeEncoder;
 
   private final SparkPIDController m_drivePIDController;
   private final SparkPIDController m_turningPIDController;
 
   private final CANcoder m_turningAbsEncoder;
+  private final CANcoderConfiguration m_turningAbsEncoderConfig;
 
   /**
    * Constructs a SwerveModule with a drive motor, turning motor, drive encoder and turning encoder.
@@ -88,14 +89,17 @@ public class SwerveModule {
     m_turningPIDController.setPositionPIDWrappingMinInput(-Math.PI);
 
     m_turningAbsEncoder = new CANcoder(turningAbsoluteEncoderChannel);
+    m_turningAbsEncoderConfig = new CANcoderConfiguration();
+    m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
 
     m_driveEncoder = m_driveMotor.getEncoder();
-    m_turningEncoder = m_turningMotor.getEncoder();
+    m_turningRelativeEncoder = m_turningMotor.getEncoder();
 
     m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDrivePositionConversionFactor);
     m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveVelocityConversionFactor);
 
-    m_turningEncoder.setPositionConversionFactor(ModuleConstants.kTurnPositionConversionFactor);
+    m_turningRelativeEncoder.setPositionConversionFactor(
+        ModuleConstants.kTurnPositionConversionFactor);
   }
 
   /**
@@ -146,7 +150,7 @@ public class SwerveModule {
    * @return The relative turning angle of the module
    */
   public Rotation2d getRelativeTurningPosition() {
-    return Rotation2d.fromRadians(m_turningEncoder.getPosition());
+    return Rotation2d.fromRadians(m_turningRelativeEncoder.getPosition());
   }
 
   /**
@@ -161,7 +165,7 @@ public class SwerveModule {
    * angle.
    */
   public void syncTurningEncoders() {
-    m_turningEncoder.setPosition(getAbsTurningPosition().getRadians());
+    m_turningRelativeEncoder.setPosition(getAbsTurningPosition().getRadians());
   }
 
   /**
@@ -170,31 +174,25 @@ public class SwerveModule {
    * encoder has been swapped.)
    */
   public void setAbsTurningEncoderZero() {
-    CANcoderConfiguration m_configs = new CANcoderConfiguration();
-    m_turningAbsEncoder.getConfigurator().refresh(m_configs);
-
-    m_configs.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    m_configs.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-
-    Rotation2d currentMagnetOffset = Rotation2d.fromRotations(m_configs.MagnetSensor.MagnetOffset);
+    Rotation2d currentMagnetOffset = getMagnetOffset();
     Rotation2d newMagnetOffset = currentMagnetOffset.minus(getAbsTurningPosition());
-    m_configs.MagnetSensor.MagnetOffset = newMagnetOffset.getRotations();
+    m_turningAbsEncoderConfig.MagnetSensor.MagnetOffset = newMagnetOffset.getRotations();
 
-    m_turningAbsEncoder.getConfigurator().apply(m_configs);
+    m_turningAbsEncoderConfig.MagnetSensor.AbsoluteSensorRange =
+        AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    m_turningAbsEncoderConfig.MagnetSensor.SensorDirection =
+        SensorDirectionValue.Clockwise_Positive;
+    m_turningAbsEncoder.getConfigurator().apply(m_turningAbsEncoderConfig);
 
-    m_turningEncoder.setPosition(0.0);
+    m_turningRelativeEncoder.setPosition(0.0);
   }
 
   /**
    * @return The magnet offset of the module's absolute turning encoder
    */
   public Rotation2d getMagnetOffset() {
-    CANcoderConfiguration m_configs = new CANcoderConfiguration();
-    m_turningAbsEncoder.getConfigurator().refresh(m_configs);
-
-    Rotation2d magnetOffset = Rotation2d.fromRotations(m_configs.MagnetSensor.MagnetOffset);
-
-    return magnetOffset;
+    m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
+    return Rotation2d.fromRotations(m_turningAbsEncoderConfig.MagnetSensor.MagnetOffset);
   }
 
   /**
