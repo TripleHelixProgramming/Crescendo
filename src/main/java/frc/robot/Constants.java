@@ -105,13 +105,12 @@ public final class Constants {
     public static final double kvVoltSecondsPerMeter = 0.8;
     public static final double kaVoltSecondsSquaredPerMeter = 0.15;
     */
-    
+
     public static final double kMaxSpeedMetersPerSecond = 4.0; // 2023 Competion Robot
   }
 
   public static final class ModuleConstants {
 
-    
     public static final double kDriveP = 0.1; // 2023 Competion Robot
     public static final double kDriveI = 0.0; // 2023 Competion Robot
     public static final double kDriveD = 0.0; // 2023 Competion Robot
