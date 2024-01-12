@@ -26,7 +26,7 @@ public final class Constants {
     public static final int REAR_LEFT = 2;
     public static final int REAR_RIGHT = 3;
 
-    public static final class SparkCAN {
+    public static final class MotorControllers {
       public static final int kRearRightDriveMotorPort = 12;
       public static final int kFrontRightDriveMotorPort = 26;
       public static final int kFrontLeftDriveMotorPort = 28;
@@ -38,11 +38,14 @@ public final class Constants {
       public static final int kRearLeftTurningMotorPort = 11;
     }
 
-    public static final class CANCoder {
+    public static final class AbsoluteEncoders {
       public static final int kRearRightTurningEncoderPort = 31;
       public static final int kFrontRightTurningEncoderPort = 33;
       public static final int kFrontLeftTurningEncoderPort = 43;
       public static final int kRearLeftTurningEncoderPort = 45;
+
+      public static final String kAbsEncoderMagnetOffsetKey = "AbsEncoderMagnetOffsetKey";
+      public static final double kDefaultAbsEncoderMagnetOffset = 0.0;
     }
 
     /**
@@ -61,7 +64,7 @@ public final class Constants {
     // Distance between centers of right and left wheels on robot
     public static final double kTrackWidth = 0.572; // 2023 Competion Robot
 
-    // Distance between front and back wheels on robot
+    // Distance between front and rear wheels on robot
     public static final double kWheelBase = 0.622; // 2023 Competion Robot
 
     // Units are meters per second
