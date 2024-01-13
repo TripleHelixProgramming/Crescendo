@@ -44,7 +44,7 @@ public class Drivetrain extends SubsystemBase {
           DriveConstants.AbsoluteEncoders.kRearRightTurningEncoderPort);
 
   private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
-  private String[] absEncoderMagnetOffsetKeys;
+  private String[] absEncoderMagnetOffsetKeys = new String[4];
 
   private final AHRS m_gyro = new AHRS();
 
