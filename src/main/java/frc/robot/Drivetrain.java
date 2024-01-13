@@ -85,6 +85,10 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber(
           modules[i].getName() + "AbsoluteTurningPosition", 
           modules[i].getAbsTurningPosition().getDegrees());
+
+      SmartDashboard.putNumber(
+          modules[i].getName() + "RelativeDrivePosition",
+          modules[i].getRelativeDrivePosition());
     }
     SmartDashboard.putNumber("GyroAngle", m_gyro.getRotation2d().getDegrees());
   }

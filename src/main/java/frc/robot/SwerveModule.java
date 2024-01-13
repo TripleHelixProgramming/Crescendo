@@ -16,7 +16,6 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.MathUtil;
 import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule {
@@ -118,7 +117,7 @@ public class SwerveModule {
    * @return The current position of the module.
    */
   public SwerveModulePosition getPosition() {
-    return new SwerveModulePosition(m_driveEncoder.getPosition(), getRelativeTurningPosition());
+    return new SwerveModulePosition(getRelativeDrivePosition(), getRelativeTurningPosition());
   }
 
   /**
@@ -148,11 +147,17 @@ public class SwerveModule {
   }
 
   /**
+   * @return The relative drive position of the module
+   */
+  public double getRelativeDrivePosition() {
+    return (m_driveEncoder.getPosition());
+  }
+
+  /**
    * @return The relative turning angle of the module
    */
   public Rotation2d getRelativeTurningPosition() {
-    double relativePositionRadians = m_turningRelativeEncoder.getPosition();
-    return Rotation2d.fromRadians(MathUtil.inputModulus(relativePositionRadians, -Math.PI, Math.PI));
+    return Rotation2d.fromRadians(m_turningRelativeEncoder.getPosition());
   }
 
   /**
