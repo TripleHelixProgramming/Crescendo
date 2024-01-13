@@ -61,6 +61,8 @@ public class SwerveModule {
 
     m_driveMotor.enableVoltageCompensation(12.0);
 
+    m_turningMotor.setInverted(true);
+
     m_drivePIDController = m_driveMotor.getPIDController();
     m_turningPIDController = m_turningMotor.getPIDController();
 
@@ -161,14 +163,16 @@ public class SwerveModule {
   public Rotation2d getRelativeTurningPosition() {
     double relativePositionRadians = m_turningRelativeEncoder.getPosition();
     return Rotation2d.fromRadians(MathUtil.angleModulus(relativePositionRadians));
+    //return Rotation2d.fromRadians(m_turningRelativeEncoder.getPosition());
   }
 
   /**
    * @return The absolute turning angle of the module
    */
   public Rotation2d getAbsTurningPosition() {
-    double absPositonRotations = m_turningAbsEncoder.getPosition().getValue();
-    return Rotation2d.fromRotations(MathUtil.inputModulus(absPositonRotations, -0.5, 0.5));
+    //double absPositonRotations = m_turningAbsEncoder.getPosition().getValue();
+    //return Rotation2d.fromRotations(MathUtil.inputModulus(absPositonRotations, -0.5, 0.5));
+    return Rotation2d.fromRotations(m_turningAbsEncoder.getPosition().getValue());
   }
 
   /**

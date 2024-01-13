@@ -129,7 +129,7 @@ public final class Constants {
     // By default, the turn encoder in position mode measures rotations at the turning motor
     // Convert to radians at the module azimuth
     public static final double kTurnGearRatio = 12.8; // 2023 Competion Robot
-    public static final double kTurnPositionConversionFactor = (2.0 * Math.PI / kTurnGearRatio);
+    public static final double kTurnPositionConversionFactor = (2.0 * Math.PI) / kTurnGearRatio;
   }
 
   public static final class OIConstants {
