@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -71,6 +72,15 @@ public class Drivetrain extends SubsystemBase {
 
       modules[i].resetDriveEncoder();
       modules[i].syncTurningEncoders();
+    }
+  }
+
+  @Override
+  public void periodic() {
+    for (int i = 0; i < 4; i++) {
+      SmartDashboard.putNumber(
+          modules[i].getName() + "RelativeTurningPosition",
+          modules[i].getRelativeTurningPosition().getDegrees());
     }
   }
 
