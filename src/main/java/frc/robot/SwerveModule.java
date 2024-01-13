@@ -150,7 +150,7 @@ public class SwerveModule {
    * @return The relative drive position of the module
    */
   public double getRelativeDrivePosition() {
-    return (m_driveEncoder.getPosition());
+    return m_driveEncoder.getPosition();
   }
 
   /**
