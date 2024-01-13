@@ -13,7 +13,6 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -61,7 +60,8 @@ public class SwerveModule {
 
     m_driveMotor.enableVoltageCompensation(12.0);
 
-    m_turningMotor.setInverted(true);
+    m_driveMotor.setInverted(false);
+    m_turningMotor.setInverted(false);
 
     m_drivePIDController = m_driveMotor.getPIDController();
     m_turningPIDController = m_turningMotor.getPIDController();
@@ -80,17 +80,17 @@ public class SwerveModule {
     // m_turningPIDController.setFF();
     // m_turningPIDController.setOutputRange();
 
-    m_turningPIDController.setSmartMotionMaxVelocity(
-        ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond, 0);
+    // m_turningPIDController.setSmartMotionMaxVelocity(
+    //    ModuleConstants.kMaxModuleAngularSpeedRadiansPerSecond, 0);
     // m_turningPIDController.setSmartMotionMinOutputVelocity(0.0, 0);
-    m_turningPIDController.setSmartMotionMaxAccel(
-        ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared, 0);
+    // m_turningPIDController.setSmartMotionMaxAccel(
+    //    ModuleConstants.kMaxModuleAngularAccelerationRadiansPerSecondSquared, 0);
     // m_turningPIDController.setSmartMotionAllowedClosedLoopError(0.1, 0);
 
-    // Limit the PID Controller's range to (-pi, pi], with continuous wrapping
+    // Limit the PID Controller's range to (-0.5, 0.5], with continuous wrapping
     m_turningPIDController.setPositionPIDWrappingEnabled(true);
-    m_turningPIDController.setPositionPIDWrappingMaxInput(Math.PI);
-    m_turningPIDController.setPositionPIDWrappingMinInput(-Math.PI);
+    m_turningPIDController.setPositionPIDWrappingMaxInput(0.5);
+    m_turningPIDController.setPositionPIDWrappingMinInput(-0.5);
 
     m_turningAbsEncoder = new CANcoder(turningAbsoluteEncoderChannel);
     m_turningAbsEncoderConfig = new CANcoderConfiguration();
@@ -104,6 +104,9 @@ public class SwerveModule {
 
     m_turningRelativeEncoder.setPositionConversionFactor(
         ModuleConstants.kTurnPositionConversionFactor);
+
+    // m_driveMotor.burnFlash();
+    // m_turningMotor.burnFlash();
   }
 
   /**
@@ -143,7 +146,7 @@ public class SwerveModule {
     m_drivePIDController.setReference(
         state.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
     m_turningPIDController.setReference(
-        state.angle.getRadians(), CANSparkMax.ControlType.kSmartMotion);
+        state.angle.getRotations(), CANSparkMax.ControlType.kPosition);
   }
 
   public void resetDriveEncoder() {
@@ -161,17 +164,15 @@ public class SwerveModule {
    * @return The relative turning angle of the module
    */
   public Rotation2d getRelativeTurningPosition() {
-    double relativePositionRadians = m_turningRelativeEncoder.getPosition();
-    return Rotation2d.fromRadians(MathUtil.angleModulus(relativePositionRadians));
-    //return Rotation2d.fromRadians(m_turningRelativeEncoder.getPosition());
+    double relativePositionRotations = m_turningRelativeEncoder.getPosition();
+    return Rotation2d.fromRotations(MathUtil.inputModulus(relativePositionRotations, -0.5, 0.5));
+    // return Rotation2d.fromRadians(m_turningRelativeEncoder.getPosition());
   }
 
   /**
    * @return The absolute turning angle of the module
    */
   public Rotation2d getAbsTurningPosition() {
-    //double absPositonRotations = m_turningAbsEncoder.getPosition().getValue();
-    //return Rotation2d.fromRotations(MathUtil.inputModulus(absPositonRotations, -0.5, 0.5));
     return Rotation2d.fromRotations(m_turningAbsEncoder.getPosition().getValue());
   }
 
@@ -180,7 +181,8 @@ public class SwerveModule {
    * angle.
    */
   public void syncTurningEncoders() {
-    m_turningRelativeEncoder.setPosition(getAbsTurningPosition().getRadians());
+    double absPositonRotations = m_turningAbsEncoder.getPosition().getValue();
+    m_turningRelativeEncoder.setPosition(MathUtil.inputModulus(absPositonRotations, -0.5, 0.5));
   }
 
   /**
