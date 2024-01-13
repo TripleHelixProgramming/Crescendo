@@ -160,14 +160,15 @@ public class SwerveModule {
    */
   public Rotation2d getRelativeTurningPosition() {
     double relativePositionRadians = m_turningRelativeEncoder.getPosition();
-    return Rotation2d.fromRadians(MathUtil.inputModulus(relativePositionRadians, -Math.PI, Math.PI));
+    return Rotation2d.fromRadians(MathUtil.angleModulus(relativePositionRadians));
   }
 
   /**
    * @return The absolute turning angle of the module
    */
   public Rotation2d getAbsTurningPosition() {
-    return Rotation2d.fromRotations(m_turningAbsEncoder.getPosition().getValue());
+    double absPositonRotations = m_turningAbsEncoder.getPosition().getValue();
+    return Rotation2d.fromRotations(MathUtil.inputModulus(absPositonRotations, -0.5, 0.5));
   }
 
   /**
