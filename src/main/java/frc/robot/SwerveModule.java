@@ -117,7 +117,7 @@ public class SwerveModule {
    * @return The current position of the module.
    */
   public SwerveModulePosition getPosition() {
-    return new SwerveModulePosition(m_driveEncoder.getPosition(), getRelativeTurningPosition());
+    return new SwerveModulePosition(getRelativeDrivePosition(), getRelativeTurningPosition());
   }
 
   /**
@@ -144,6 +144,13 @@ public class SwerveModule {
 
   public void resetDriveEncoder() {
     m_driveEncoder.setPosition(0.0);
+  }
+
+  /**
+   * @return The relative drive position of the module
+   */
+  public double getRelativeDrivePosition() {
+    return m_driveEncoder.getPosition();
   }
 
   /**
