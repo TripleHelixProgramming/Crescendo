@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -12,7 +13,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.DriveConstants;
 
 /** Represents a swerve drive style drivetrain. */
@@ -99,8 +99,7 @@ public class Drivetrain extends SubsystemBase {
    * @param chassisSpeeds x, y, and theta speeds
    * @param fieldRelative Whether the provided x and y speeds are relative to the field.
    */
-  public void drive(
-      ChassisSpeeds chassisSpeeds, boolean fieldRelative) {
+  public void drive(ChassisSpeeds chassisSpeeds, boolean fieldRelative) {
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize(chassisSpeeds, DriveConstants.kDrivePeriod));
@@ -132,6 +131,7 @@ public class Drivetrain extends SubsystemBase {
           absEncoderMagnetOffsetKeys[i], modules[i].getMagnetOffset().getRadians());
     }
   }
+
   public Rotation2d getHeading() {
     return m_gyro.getRotation2d();
   }
