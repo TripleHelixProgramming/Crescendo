@@ -79,11 +79,10 @@ public class Drivetrain extends SubsystemBase {
           modules[i].getAbsTurningPosition().getDegrees());
 
       SmartDashboard.putNumber(
-          modules[i].getName() + "RelativeDrivePosition", 
-          modules[i].getRelativeDrivePosition());
+          modules[i].getName() + "RelativeDrivePosition", modules[i].getRelativeDrivePosition());
 
       SmartDashboard.putNumber(
-          modules[i].getName() + "AbsoluteMagnetOffset", 
+          modules[i].getName() + "AbsoluteMagnetOffset",
           modules[i].getAbsTurningEncoderOffset().getDegrees());
     }
 
@@ -122,7 +121,8 @@ public class Drivetrain extends SubsystemBase {
   /**
    * Updates all relative turning encoders to match the absolute measurement of the module turning
    * angle.
-   */  public void syncEncoders() {
+   */
+  public void syncEncoders() {
     for (SwerveModule module : modules) {
       module.syncTurningEncoders();
     }
@@ -135,7 +135,9 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  /** @return The heading of the robot */
+  /**
+   * @return The heading of the robot
+   */
   public Rotation2d getHeading() {
     return m_gyro.getRotation2d();
   }

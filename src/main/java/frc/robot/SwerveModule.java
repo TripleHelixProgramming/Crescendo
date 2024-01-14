@@ -176,7 +176,7 @@ public class SwerveModule {
    * @return The absolute turning angle of the module
    */
   public Rotation2d getAbsTurningPosition() {
-    return Rotation2d.fromRotations(m_turningAbsEncoder.getPosition().getValue());
+    return Rotation2d.fromRotations(-m_turningAbsEncoder.getAbsolutePosition().getValue());
   }
 
   /**
@@ -184,7 +184,7 @@ public class SwerveModule {
    * angle.
    */
   public void syncTurningEncoders() {
-    double absPositonRotations = m_turningAbsEncoder.getPosition().getValue();
+    double absPositonRotations = getAbsTurningPosition().getRotations();
     m_turningRelativeEncoder.setPosition(MathUtil.inputModulus(absPositonRotations, -0.5, 0.5));
   }
 
@@ -215,7 +215,7 @@ public class SwerveModule {
         magnetOffset.getRotations());
     setAbsTurningEncoderOffset(magnetOffset.getRotations());
 
-    //m_turningRelativeEncoder.setPosition(0.0);
+    // m_turningRelativeEncoder.setPosition(0.0);
     syncTurningEncoders();
   }
 
