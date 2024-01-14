@@ -10,7 +10,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
@@ -46,7 +45,6 @@ public class Drivetrain extends SubsystemBase {
           DriveConstants.AbsoluteEncoders.kRearRightTurningEncoderPort);
 
   private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
-  private String[] absEncoderMagnetOffsetKeys = new String[4];
 
   private final AHRS m_gyro = new AHRS();
 
@@ -65,20 +63,15 @@ public class Drivetrain extends SubsystemBase {
     m_gyro.reset();
 
     for (int i = 0; i < 4; i++) {
-      absEncoderMagnetOffsetKeys[i] =
-          modules[i].getName() + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey;
-      Preferences.initDouble(
-          absEncoderMagnetOffsetKeys[i],
-          DriveConstants.AbsoluteEncoders.kDefaultAbsEncoderMagnetOffset);
-
       modules[i].resetDriveEncoder();
-      modules[i].syncTurningEncoders();
     }
   }
 
   @Override
   public void periodic() {
     for (int i = 0; i < 4; i++) {
+      modules[i].syncTurningEncoders();
+
       SmartDashboard.putNumber(
           modules[i].getName() + "RelativeTurningPosition",
           modules[i].getRelativeTurningPosition().getDegrees());
@@ -90,6 +83,7 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber(
           modules[i].getName() + "RelativeDrivePosition", modules[i].getRelativeDrivePosition());
     }
+
     SmartDashboard.putNumber("GyroAngle", m_gyro.getRotation2d().getDegrees());
   }
 
@@ -123,12 +117,9 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /** Reconfigures all swerve module steering angles using external alignment device. */
-  public void setAbsTurningEncoderZero() {
+  public void zeroAbsTurningEncoderOffsets() {
     for (int i = 0; i < 4; i++) {
-      modules[i].setAbsTurningEncoderZero();
-
-      Preferences.setDouble(
-          absEncoderMagnetOffsetKeys[i], modules[i].getMagnetOffset().getRadians());
+      modules[i].zeroAbsTurningEncoderOffset();
     }
   }
 

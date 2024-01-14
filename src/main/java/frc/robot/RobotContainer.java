@@ -18,7 +18,7 @@ public class RobotContainer {
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData(
         "Align Encoders",
-        new InstantCommand(() -> m_swerve.setAbsTurningEncoderZero()).ignoringDisable(true));
+        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets()).ignoringDisable(true));
   }
 
   public Command getAutonomousCommand() {

@@ -17,6 +17,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Preferences;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule {
@@ -95,6 +97,14 @@ public class SwerveModule {
     m_turningAbsEncoder = new CANcoder(turningAbsoluteEncoderChannel);
     m_turningAbsEncoderConfig = new CANcoderConfiguration();
     m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
+    Preferences.initDouble(
+        moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
+        DriveConstants.AbsoluteEncoders.kDefaultAbsEncoderMagnetOffset);
+    double magnetOffsetFromPreferences =
+        Preferences.getDouble(
+            moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
+            getAbsTurningEncoderOffset().getRotations());
+    setAbsTurningEncoderOffset(magnetOffsetFromPreferences);
 
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningRelativeEncoder = m_turningMotor.getEncoder();
@@ -186,29 +196,42 @@ public class SwerveModule {
   }
 
   /**
-   * Adjusts the offset of the absolute turning encoder to align the wheels with an alignment
+   * Decrements the offset of the absolute turning encoder to align the wheels with an alignment
    * device. To be performed upon a hardware change (e.g. when a swerve module or absolute turning
    * encoder has been swapped.)
+   *
+   * @return New absolute encoder magnet offset
    */
-  public void setAbsTurningEncoderZero() {
-    Rotation2d currentMagnetOffset = getMagnetOffset();
-    Rotation2d newMagnetOffset = currentMagnetOffset.minus(getAbsTurningPosition());
-    m_turningAbsEncoderConfig.MagnetSensor.MagnetOffset = newMagnetOffset.getRotations();
+  public void zeroAbsTurningEncoderOffset() {
+    m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
 
-    m_turningAbsEncoderConfig.MagnetSensor.AbsoluteSensorRange =
-        AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-    m_turningAbsEncoderConfig.MagnetSensor.SensorDirection =
-        SensorDirectionValue.Clockwise_Positive;
-    m_turningAbsEncoder.getConfigurator().apply(m_turningAbsEncoderConfig);
+    Rotation2d magnetOffset = getAbsTurningEncoderOffset().minus(getAbsTurningPosition());
+    Preferences.setDouble(
+        moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
+        magnetOffset.getRotations());
+    setAbsTurningEncoderOffset(magnetOffset.getRotations());
 
     m_turningRelativeEncoder.setPosition(0.0);
   }
 
   /**
+   * Sets the magnetic offset of the absolute turning encoder
+   *
+   * @param offset The magnetic offset in rotations
+   */
+  public void setAbsTurningEncoderOffset(double offset) {
+    m_turningAbsEncoderConfig.MagnetSensor.MagnetOffset = offset;
+    m_turningAbsEncoderConfig.MagnetSensor.AbsoluteSensorRange =
+        AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+    m_turningAbsEncoderConfig.MagnetSensor.SensorDirection =
+        SensorDirectionValue.Clockwise_Positive;
+    m_turningAbsEncoder.getConfigurator().apply(m_turningAbsEncoderConfig);
+  }
+
+  /**
    * @return The magnet offset of the module's absolute turning encoder
    */
-  public Rotation2d getMagnetOffset() {
-    m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
+  public Rotation2d getAbsTurningEncoderOffset() {
     return Rotation2d.fromRotations(m_turningAbsEncoderConfig.MagnetSensor.MagnetOffset);
   }
 
