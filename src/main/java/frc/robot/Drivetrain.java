@@ -70,8 +70,6 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     for (int i = 0; i < 4; i++) {
-      modules[i].syncTurningEncoders();
-
       SmartDashboard.putNumber(
           modules[i].getName() + "RelativeTurningPosition",
           modules[i].getRelativeTurningPosition().getDegrees());
@@ -114,6 +112,12 @@ public class Drivetrain extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
         });
+  }
+
+  public void syncEncoders() {
+    for (SwerveModule module : modules) {
+      module.syncTurningEncoders();
+    }
   }
 
   /** Reconfigures all swerve module steering angles using external alignment device. */

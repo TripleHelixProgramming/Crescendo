@@ -25,4 +25,8 @@ public class RobotContainer {
     Command autoCommand = null;
     return autoCommand;
   }
+
+  public void runDisabled() {
+    m_swerve.syncEncoders();
+  }
 }
