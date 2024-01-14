@@ -97,14 +97,7 @@ public class SwerveModule {
     m_turningAbsEncoder = new CANcoder(turningAbsoluteEncoderChannel);
     m_turningAbsEncoderConfig = new CANcoderConfiguration();
     m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
-    Preferences.initDouble(
-        moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
-        DriveConstants.AbsoluteEncoders.kDefaultAbsEncoderMagnetOffset);
-    double magnetOffsetFromPreferences =
-        Preferences.getDouble(
-            moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
-            getAbsTurningEncoderOffset().getRotations());
-    setAbsTurningEncoderOffset(magnetOffsetFromPreferences);
+    initializeAbsTurningEncoderOffset();
 
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningRelativeEncoder = m_turningMotor.getEncoder();
@@ -193,6 +186,19 @@ public class SwerveModule {
   public void syncTurningEncoders() {
     double absPositonRotations = m_turningAbsEncoder.getPosition().getValue();
     m_turningRelativeEncoder.setPosition(MathUtil.inputModulus(absPositonRotations, -0.5, 0.5));
+  }
+
+  /** Initializes the magnetic offset of the absolute turning encoder */
+  public void initializeAbsTurningEncoderOffset() {
+    double magnetOffsetFromCANCoder = getAbsTurningEncoderOffset().getRotations();
+    Preferences.initDouble(
+        moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
+        magnetOffsetFromCANCoder);
+    double magnetOffsetFromPreferences =
+        Preferences.getDouble(
+            moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
+            magnetOffsetFromCANCoder);
+    setAbsTurningEncoderOffset(magnetOffsetFromPreferences);
   }
 
   /**
