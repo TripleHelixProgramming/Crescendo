@@ -180,7 +180,7 @@ public class SwerveModule {
   }
 
   /**
-   * Updates the relative turning encoder to match the absolute measurement of the module turnin
+   * Updates the relative turning encoder to match the absolute measurement of the module turning
    * angle.
    */
   public void syncTurningEncoders() {
@@ -205,8 +205,6 @@ public class SwerveModule {
    * Decrements the offset of the absolute turning encoder to align the wheels with an alignment
    * device. To be performed upon a hardware change (e.g. when a swerve module or absolute turning
    * encoder has been swapped.)
-   *
-   * @return New absolute encoder magnet offset
    */
   public void zeroAbsTurningEncoderOffset() {
     m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
@@ -217,7 +215,8 @@ public class SwerveModule {
         magnetOffset.getRotations());
     setAbsTurningEncoderOffset(magnetOffset.getRotations());
 
-    m_turningRelativeEncoder.setPosition(0.0);
+    //m_turningRelativeEncoder.setPosition(0.0);
+    syncTurningEncoders();
   }
 
   /**
