@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.TimedRobot;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -19,6 +20,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public final class Constants {
 
   public static final class DriveConstants {
+    public static final double kDrivePeriod = TimedRobot.kDefaultPeriod;
 
     // Define the conventional order of our modules when putting them into arrays
     public static final int FRONT_LEFT = 0;
@@ -68,8 +70,7 @@ public final class Constants {
     public static final double kWheelBase = 0.622; // 2023 Competion Robot
 
     // Units are meters per second
-    public static final double kMaxTranslationalVelocity = 0.73; // 2023 Competion Robot // max 4.5
-    // public static final double kMaxSpeedMetersPerSecond = 4.0; // 2023 Competion Robot
+    public static final double kMaxTranslationalVelocity = 4.0; // 2023 Competion Robot // max 4.5
 
     // Units are radians per second
     public static final double kMaxRotationalVelocity = 5.0; // 2023 Competion Robot // max 5.0
@@ -94,19 +95,19 @@ public final class Constants {
 
   public static final class ModuleConstants {
 
-    public static final double kDriveP = 0.1; // 2023 Competion Robot
-    public static final double kDriveI = 0.0; // 2023 Competion Robot
-    public static final double kDriveD = 0.0; // 2023 Competion Robot
-    public static final double kDriveFF = 0.255; // 2023 Competion Robot
+    public static final double kDriveP = 0.1; // 2023 Competition Robot
+    public static final double kDriveI = 0.0; // 2023 Competition Robot
+    public static final double kDriveD = 0.0; // 2023 Competition Robot
+    public static final double kDriveFF = 0.255; // 2023 Competition Robot
 
-    public static final double kTurningP = 1.5; // 2023 Competion Robot
-    public static final double kTurningI = 0.0; // 2023 Competion Robot
-    public static final double kTurningD = 0.0; // 2023 Competion Robot
+    public static final double kTurningP = 0.75; // 2023 Competition Robot
+    public static final double kTurningI = 0.0; // 2023 Competition Robot
+    public static final double kTurningD = 0.0; // 2023 Competition Robot
 
     // Not adjusted
-    public static final double kMaxModuleAngularSpeedRadiansPerSecond = 0.000005 * Math.PI;
-    public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared =
-        0.000005 * Math.PI;
+    // public static final double kMaxModuleAngularSpeedRadiansPerSecond = 0.05 * Math.PI;
+    // public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared =
+    //    0.05 * Math.PI;
 
     // public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254,
     // 0.137);
@@ -125,9 +126,9 @@ public final class Constants {
         kDrivePositionConversionFactor / 60.0;
 
     // By default, the turn encoder in position mode measures rotations at the turning motor
-    // Convert to radians at the module azimuth
+    // Convert to rotations at the module azimuth
     public static final double kTurnGearRatio = 12.8; // 2023 Competion Robot
-    public static final double kTurnPositionConversionFactor = (2.0 * Math.PI / kTurnGearRatio);
+    public static final double kTurnPositionConversionFactor = 1.0 / kTurnGearRatio;
   }
 
   public static final class OIConstants {
