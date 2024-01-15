@@ -62,28 +62,28 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     m_gyro.reset();
 
-    for (int i = 0; i < 4; i++) {
-      modules[i].resetDriveEncoder();
+    for (SwerveModule module : modules) {
+      module.resetDriveEncoder();
     }
   }
 
   @Override
   public void periodic() {
-    for (int i = 0; i < 4; i++) {
+    for (SwerveModule module : modules) {
       SmartDashboard.putNumber(
-          modules[i].getName() + "RelativeTurningPosition",
-          modules[i].getRelativeTurningPosition().getDegrees());
+          module.getName() + "RelativeTurningPosition",
+          module.getRelativeTurningPosition().getDegrees());
 
       SmartDashboard.putNumber(
-          modules[i].getName() + "AbsoluteTurningPosition",
-          modules[i].getAbsTurningPosition().getDegrees());
+          module.getName() + "AbsoluteTurningPosition",
+          module.getAbsTurningPosition().getDegrees());
 
       SmartDashboard.putNumber(
-          modules[i].getName() + "RelativeDrivePosition", modules[i].getRelativeDrivePosition());
+          module.getName() + "RelativeDrivePosition", module.getRelativeDrivePosition());
 
       SmartDashboard.putNumber(
-          modules[i].getName() + "AbsoluteMagnetOffset",
-          modules[i].getAbsTurningEncoderOffset().getDegrees());
+          module.getName() + "AbsoluteMagnetOffset",
+          module.getAbsTurningEncoderOffset().getDegrees());
     }
 
     SmartDashboard.putNumber("GyroAngle", m_gyro.getRotation2d().getDegrees());
