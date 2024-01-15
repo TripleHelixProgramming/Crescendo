@@ -133,6 +133,15 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+
+    // zorro joystick
+    // RadioMaster Zorro Joystick Axis
+    public static int kZorroLeftXAxis = 0;
+    public static int kZorroLeftYAxis = 1;
+    public static int kZorroLeftDial = 2;
+    public static int kZorroRightDial = 3;
+    public static int kZorroRightXAxis = 4;
+    public static int kZorroRightYAxis = 5;
   }
 
   public static final class AutoConstants {
