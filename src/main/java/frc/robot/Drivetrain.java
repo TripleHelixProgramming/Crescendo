@@ -64,6 +64,8 @@ public class Drivetrain extends SubsystemBase {
 
     for (SwerveModule module : modules) {
       module.resetDriveEncoder();
+      module.initializeAbsoluteTurningEncoder();
+      module.initializeRelativeTurningEncoder();
     }
   }
 
@@ -116,16 +118,6 @@ public class Drivetrain extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
         });
-  }
-
-  /**
-   * Updates all relative turning encoders to match the absolute measurement of the module turning
-   * angle.
-   */
-  public void syncEncoders() {
-    for (SwerveModule module : modules) {
-      module.syncTurningEncoders();
-    }
   }
 
   /** Reconfigures all swerve module steering angles using external alignment device */

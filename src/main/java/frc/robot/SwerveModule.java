@@ -97,7 +97,6 @@ public class SwerveModule {
     m_turningAbsEncoder = new CANcoder(turningAbsoluteEncoderChannel);
     m_turningAbsEncoderConfig = new CANcoderConfiguration();
     m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
-    initializeAbsTurningEncoderOffset();
 
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningRelativeEncoder = m_turningMotor.getEncoder();
@@ -183,13 +182,14 @@ public class SwerveModule {
    * Updates the relative turning encoder to match the absolute measurement of the module turning
    * angle.
    */
-  public void syncTurningEncoders() {
-    double absPositonRotations = getAbsTurningPosition().getRotations();
+  public void initializeRelativeTurningEncoder() {
+    double absPositonRotations =
+        -m_turningAbsEncoder.getAbsolutePosition().waitForUpdate(0.25).getValue();
     m_turningRelativeEncoder.setPosition(MathUtil.inputModulus(absPositonRotations, -0.5, 0.5));
   }
 
   /** Initializes the magnetic offset of the absolute turning encoder */
-  public void initializeAbsTurningEncoderOffset() {
+  public void initializeAbsoluteTurningEncoder() {
     double magnetOffsetFromCANCoder = getAbsTurningEncoderOffset().getRotations();
     Preferences.initDouble(
         moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
@@ -209,14 +209,14 @@ public class SwerveModule {
   public void zeroAbsTurningEncoderOffset() {
     m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
 
-    Rotation2d magnetOffset = getAbsTurningEncoderOffset().minus(getAbsTurningPosition());
+    Rotation2d magnetOffset = getAbsTurningEncoderOffset().plus(getAbsTurningPosition());
     Preferences.setDouble(
         moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
         magnetOffset.getRotations());
     setAbsTurningEncoderOffset(magnetOffset.getRotations());
 
     // m_turningRelativeEncoder.setPosition(0.0);
-    syncTurningEncoders();
+    initializeRelativeTurningEncoder();
   }
 
   /**
