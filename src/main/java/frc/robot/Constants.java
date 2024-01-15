@@ -18,10 +18,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final double kNominalVoltage = 12.0;
+  public static final double kPeriod = TimedRobot.kDefaultPeriod;
 
   public static final class DriveConstants {
-    public static final double kDrivePeriod = TimedRobot.kDefaultPeriod;
-
     // Define the conventional order of our modules when putting them into arrays
     public static final int FRONT_LEFT = 0;
     public static final int FRONT_RIGHT = 1;
@@ -94,6 +94,9 @@ public final class Constants {
   }
 
   public static final class ModuleConstants {
+
+    public static final int kDriveMotorCurrentLimit = 80;
+    public static final int kTurningMotorCurrentLimit = 80;
 
     public static final double kDriveP = 0.1; // 2023 Competition Robot
     public static final double kDriveI = 0.0; // 2023 Competition Robot

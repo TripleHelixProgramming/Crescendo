@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Preferences;
+import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -60,7 +61,10 @@ public class SwerveModule {
     m_driveMotor.setIdleMode(IdleMode.kCoast);
     m_turningMotor.setIdleMode(IdleMode.kBrake);
 
-    m_driveMotor.enableVoltageCompensation(12.0);
+    m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDriveMotorCurrentLimit);
+    m_turningMotor.setSmartCurrentLimit(ModuleConstants.kDriveMotorCurrentLimit);
+    m_driveMotor.enableVoltageCompensation(Constants.kNominalVoltage);
+    m_turningMotor.enableVoltageCompensation(Constants.kNominalVoltage);
 
     m_driveMotor.setInverted(false);
     m_turningMotor.setInverted(false);
