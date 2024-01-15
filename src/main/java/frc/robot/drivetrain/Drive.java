@@ -1,9 +1,11 @@
+// Copyright (c) Triple Helix Robotics, FRC 2363. All rights reserved.
+
 package frc.robot.drivetrain;
 
+import static frc.robot.Constants.DriveConstants;
+
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.DriveConstants;
 
 public abstract class Drive extends Command {
 

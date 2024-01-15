@@ -1,8 +1,9 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Copyright (c) Triple Helix Robotics, FRC 2363. All rights reserved.
 
 package frc.robot.drivetrain;
+
+import static frc.robot.Constants.DriveConstants;
+import static frc.robot.Constants.RobotConstants;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,9 +14,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
 
-/** Represents a swerve drive style drivetrain. */
+/** Constructs a swerve drive style drivetrain. */
 public class Drivetrain extends SubsystemBase {
   static double kMaxSpeed = Constants.DriveConstants.kMaxTranslationalVelocity;
   static double kMaxAngularSpeed = Constants.DriveConstants.kMaxRotationalVelocity;
@@ -105,7 +105,7 @@ public class Drivetrain extends SubsystemBase {
   public void drive(ChassisSpeeds chassisSpeeds, boolean fieldRelative) {
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            ChassisSpeeds.discretize(chassisSpeeds, Constants.kPeriod));
+            ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
