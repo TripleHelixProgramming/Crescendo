@@ -16,7 +16,7 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    m_swerve.setDefaultCommand(new JoystickDrive(m_swerve, m_controller));
+    m_swerve.setDefaultCommand(new JoystickDrive(m_swerve, m_controller, true));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData(
@@ -25,6 +25,9 @@ public class RobotContainer {
 
     new JoystickButton(m_controller, Button.kX.value)
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro()).ignoringDisable(true));
+
+    new JoystickButton(m_controller, Button.kLeftBumper.value)
+        .whileTrue(new JoystickDrive(m_swerve, m_controller, false));
   }
 
   public Command getAutonomousCommand() {
