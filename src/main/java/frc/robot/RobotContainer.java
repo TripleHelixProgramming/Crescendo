@@ -4,7 +4,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 // import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
+// import edu.wpi.first.wpilibj.XboxController.Button;
 // import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,10 +32,10 @@ public class RobotContainer {
         "Align Encoders",
         new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets()).ignoringDisable(true));
 
-    new JoystickButton(m_driver, Button.kX.value)
+    new JoystickButton(m_driver, OIConstants.kZorroDIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro()).ignoringDisable(true));
 
-    new JoystickButton(m_driver, Button.kLeftBumper.value)
+    new JoystickButton(m_driver, OIConstants.kZorroEDown)
         .whileTrue(new ZorroDrive(m_swerve, m_driver, false));
   }
 

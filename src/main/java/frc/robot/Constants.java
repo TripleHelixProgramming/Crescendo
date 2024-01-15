@@ -142,6 +142,21 @@ public final class Constants {
     public static int kZorroRightDial = 3;
     public static int kZorroRightXAxis = 4;
     public static int kZorroRightYAxis = 5;
+
+    public static int kZorroBDown = 1;
+    public static int kZorroBMid = 2;
+    public static int kZorroBUp = 3;
+    public static int kZorroEDown = 4;
+    public static int kZorroEUp = 5;
+    public static int kZorroAIn = 6;
+    public static int kZorroGIn = 7;
+    public static int kZorroCDown = 8;
+    public static int kZorroCMid = 9;
+    public static int kZorroCUp = 10;
+    public static int kZorroFDown = 11;
+    public static int kZorroFUp = 12;
+    public static int kZorroDIn = 13;
+    public static int kZorroHIn = 14;
   }
 
   public static final class AutoConstants {
