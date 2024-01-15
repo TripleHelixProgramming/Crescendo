@@ -209,7 +209,7 @@ public class SwerveModule {
   public void zeroAbsTurningEncoderOffset() {
     m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
 
-    Rotation2d magnetOffset = getAbsTurningEncoderOffset().minus(getAbsTurningPosition());
+    Rotation2d magnetOffset = getAbsTurningEncoderOffset().plus(getAbsTurningPosition());
     Preferences.setDouble(
         moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
         magnetOffset.getRotations());
