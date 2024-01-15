@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 // import edu.wpi.first.wpilibj.Joystick;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class JoystickDrive extends Drive {
+public class XBoxDrive extends Drive {
 
   XboxController m_controller;
 
@@ -21,7 +21,7 @@ public class JoystickDrive extends Drive {
 
   private boolean fieldRelative;
 
-  public JoystickDrive(Drivetrain subsystem, XboxController joysticks, boolean fieldRelative) {
+  public XBoxDrive(Drivetrain subsystem, XboxController joysticks, boolean fieldRelative) {
     super(subsystem);
     this.m_controller = joysticks;
     this.fieldRelative = fieldRelative;
