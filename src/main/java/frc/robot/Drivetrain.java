@@ -60,13 +60,17 @@ public class Drivetrain extends SubsystemBase {
           });
 
   public Drivetrain() {
-    m_gyro.reset();
+    resetGyro();
 
     for (SwerveModule module : modules) {
       module.resetDriveEncoder();
       module.initializeAbsoluteTurningEncoder();
       module.initializeRelativeTurningEncoder();
     }
+  }
+
+  public void resetGyro() {
+    m_gyro.reset();
   }
 
   @Override

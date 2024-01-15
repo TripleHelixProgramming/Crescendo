@@ -41,6 +41,6 @@ public class JoystickDrive extends Drive {
 
   @Override
   public boolean getFieldRelative() {
-    return false;
+    return true;
   }
 }
