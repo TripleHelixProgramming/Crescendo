@@ -27,7 +27,7 @@ public class ZorroDrive extends Drive {
 
   @Override
   public double getY() {
-    return -m_controller.getRawAxis(OIConstants.kZorroLeftXAxis);
+    return -m_controller.getRawAxis(OIConstants.kZorroRightXAxis);
   }
 
   @Override
