@@ -25,7 +25,7 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, true));
+    m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData(
@@ -34,9 +34,6 @@ public class RobotContainer {
 
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro()).ignoringDisable(true));
-
-    new JoystickButton(m_driver, OIConstants.kZorroEDown)
-        .whileTrue(new ZorroDrive(m_swerve, m_driver, false));
   }
 
   public Command getAutonomousCommand() {
