@@ -21,9 +21,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-
     // Starts recording to data log
-    //https://docs.wpilib.org/en/stable/docs/software/telemetry/datalog.html#logging-joystick-data
+    // https://docs.wpilib.org/en/stable/docs/software/telemetry/datalog.html#logging-joystick-data
     DataLogManager.start();
     DriverStation.startDataLog(DataLogManager.getLog());
   }
