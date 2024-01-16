@@ -6,7 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 
-public class JoystickDrive extends Drive {
+public class XBoxDrive extends Drive {
 
   XboxController m_controller;
 
@@ -15,12 +15,9 @@ public class JoystickDrive extends Drive {
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
-  private boolean fieldRelative;
-
-  public JoystickDrive(Drivetrain subsystem, XboxController joysticks, boolean fieldRelative) {
+  public XBoxDrive(Drivetrain subsystem, XboxController joysticks) {
     super(subsystem);
     this.m_controller = joysticks;
-    this.fieldRelative = fieldRelative;
   }
 
   @Override
@@ -40,6 +37,6 @@ public class JoystickDrive extends Drive {
 
   @Override
   public boolean getFieldRelative() {
-    return fieldRelative;
+    return m_controller.getLeftBumper();
   }
 }
