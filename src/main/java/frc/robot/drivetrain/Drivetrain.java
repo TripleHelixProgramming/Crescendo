@@ -2,9 +2,6 @@
 
 package frc.robot.drivetrain;
 
-import static frc.robot.Constants.DriveConstants;
-import static frc.robot.Constants.RobotConstants;
-
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -14,6 +11,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.RobotConstants;
 
 /** Constructs a swerve drive style drivetrain. */
 public class Drivetrain extends SubsystemBase {

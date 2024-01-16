@@ -2,10 +2,6 @@
 
 package frc.robot.drivetrain;
 
-import static frc.robot.Constants.DriveConstants;
-import static frc.robot.Constants.ModuleConstants;
-import static frc.robot.Constants.RobotConstants;
-
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
@@ -20,6 +16,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Preferences;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ModuleConstants;
+import frc.robot.Constants.RobotConstants;
 
 public class SwerveModule {
   public final String moduleName;

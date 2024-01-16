@@ -2,9 +2,8 @@
 
 package frc.robot.drivetrain;
 
-import static frc.robot.Constants.OIConstants;
-
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Constants.OIConstants;
 
 public class ZorroDrive extends Drive {
 
