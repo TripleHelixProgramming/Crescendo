@@ -172,14 +172,23 @@ public class SwerveModule {
   public Rotation2d getRelativeTurningPosition() {
     double relativePositionRotations = m_turningRelativeEncoder.getPosition();
     return Rotation2d.fromRotations(MathUtil.inputModulus(relativePositionRotations, -0.5, 0.5));
-    // return Rotation2d.fromRadians(m_turningRelativeEncoder.getPosition());
   }
 
   /**
+   * @param wait Period to wait for up-to-date status signal value
    * @return The absolute turning angle of the module
    */
-  public Rotation2d getAbsTurningPosition() {
-    return Rotation2d.fromRotations(m_turningAbsEncoder.getAbsolutePosition().getValue()).unaryMinus();
+  public Rotation2d getAbsTurningPosition(double waitPeriod) {
+    double absPositonRotations;
+
+    if (waitPeriod > 0.0) {
+      absPositonRotations =
+          m_turningAbsEncoder.getAbsolutePosition().waitForUpdate(waitPeriod).getValue();
+    } else {
+      absPositonRotations = m_turningAbsEncoder.getAbsolutePosition().getValue();
+    }
+
+    return Rotation2d.fromRotations(absPositonRotations);
   }
 
   /**
@@ -187,9 +196,7 @@ public class SwerveModule {
    * angle.
    */
   public void initializeRelativeTurningEncoder() {
-    double absPositonRotations =
-        -m_turningAbsEncoder.getAbsolutePosition().waitForUpdate(0.25).getValue();
-    m_turningRelativeEncoder.setPosition(MathUtil.inputModulus(absPositonRotations, -0.5, 0.5));
+    m_turningRelativeEncoder.setPosition(getAbsTurningPosition(0.25).getRotations());
   }
 
   /** Initializes the magnetic offset of the absolute turning encoder */
@@ -213,11 +220,7 @@ public class SwerveModule {
   public void zeroAbsTurningEncoderOffset() {
     m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
 
-    //currentAbsolutePosition and magnetOffset are in the same coordinate system, subtract them
-    Rotation2d currentAbsolutePosition = Rotation2d.fromRotations(
-      m_turningAbsEncoder.getAbsolutePosition().waitForUpdate(0.25).getValue());
-    Rotation2d magnetOffset = getAbsTurningEncoderOffset().minus(currentAbsolutePosition);
-
+    Rotation2d magnetOffset = getAbsTurningEncoderOffset().minus(getAbsTurningPosition(0.25));
     Preferences.setDouble(
         moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
         magnetOffset.getRotations());
@@ -236,7 +239,7 @@ public class SwerveModule {
     m_turningAbsEncoderConfig.MagnetSensor.AbsoluteSensorRange =
         AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     m_turningAbsEncoderConfig.MagnetSensor.SensorDirection =
-        SensorDirectionValue.Clockwise_Positive;
+        SensorDirectionValue.CounterClockwise_Positive;
     m_turningAbsEncoder.getConfigurator().apply(m_turningAbsEncoderConfig);
   }
 
