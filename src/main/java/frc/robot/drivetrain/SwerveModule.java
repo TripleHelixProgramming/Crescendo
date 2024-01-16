@@ -179,7 +179,7 @@ public class SwerveModule {
    * @return The absolute turning angle of the module
    */
   public Rotation2d getAbsTurningPosition() {
-    return Rotation2d.fromRotations(-m_turningAbsEncoder.getAbsolutePosition().getValue());
+    return Rotation2d.fromRotations(m_turningAbsEncoder.getAbsolutePosition().getValue()).unaryMinus();
   }
 
   /**
@@ -213,13 +213,16 @@ public class SwerveModule {
   public void zeroAbsTurningEncoderOffset() {
     m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
 
-    Rotation2d magnetOffset = getAbsTurningEncoderOffset().plus(getAbsTurningPosition());
+    //currentAbsolutePosition and magnetOffset are in the same coordinate system, subtract them
+    Rotation2d currentAbsolutePosition = Rotation2d.fromRotations(
+      m_turningAbsEncoder.getAbsolutePosition().waitForUpdate(0.25).getValue());
+    Rotation2d magnetOffset = getAbsTurningEncoderOffset().minus(currentAbsolutePosition);
+
     Preferences.setDouble(
         moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
         magnetOffset.getRotations());
     setAbsTurningEncoderOffset(magnetOffset.getRotations());
 
-    // m_turningRelativeEncoder.setPosition(0.0);
     initializeRelativeTurningEncoder();
   }
 
