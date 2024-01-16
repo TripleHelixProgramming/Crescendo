@@ -1,14 +1,10 @@
+// Copyright (c) Triple Helix Robotics, FRC 2363. All rights reserved.
+
 package frc.robot.drivetrain;
 
-// import frc.robot.Drivetrain;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
-
-// import com.team2363.utilities.ControllerMap;
-
-// import edu.wpi.first.wpilibj.Joystick;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class XBoxDrive extends Drive {
 

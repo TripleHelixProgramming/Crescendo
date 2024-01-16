@@ -1,6 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Copyright (c) Triple Helix Robotics, FRC 2363. All rights reserved.
 
 package frc.robot.drivetrain;
 
@@ -18,9 +16,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Preferences;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.Constants.RobotConstants;
 
 public class SwerveModule {
   public final String moduleName;
@@ -63,8 +61,8 @@ public class SwerveModule {
 
     m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDriveMotorCurrentLimit);
     m_turningMotor.setSmartCurrentLimit(ModuleConstants.kDriveMotorCurrentLimit);
-    m_driveMotor.enableVoltageCompensation(Constants.kNominalVoltage);
-    m_turningMotor.enableVoltageCompensation(Constants.kNominalVoltage);
+    m_driveMotor.enableVoltageCompensation(RobotConstants.kNominalVoltage);
+    m_turningMotor.enableVoltageCompensation(RobotConstants.kNominalVoltage);
 
     m_driveMotor.setInverted(false);
     m_turningMotor.setInverted(false);

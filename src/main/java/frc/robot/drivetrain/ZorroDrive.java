@@ -1,12 +1,9 @@
+// Copyright (c) Triple Helix Robotics, FRC 2363. All rights reserved.
+
 package frc.robot.drivetrain;
 
-// import frc.robot.Drivetrain;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.OIConstants;
-
-// import com.team2363.utilities.ControllerMap;
-// import edu.wpi.first.wpilibj.Joystick;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ZorroDrive extends Drive {
 
