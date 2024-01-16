@@ -116,8 +116,6 @@ public class SwerveModule {
   }
 
   /**
-   * Returns the current state of the module.
-   *
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
@@ -125,8 +123,6 @@ public class SwerveModule {
   }
 
   /**
-   * Returns the current position of the module.
-   *
    * @return The current position of the module.
    */
   public SwerveModulePosition getPosition() {
@@ -134,9 +130,7 @@ public class SwerveModule {
   }
 
   /**
-   * Sets the desired state for the module.
-   *
-   * @param desiredState Desired state with speed and angle.
+   * @param desiredState The desired state for the module, with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
     var encoderRotation = getRelativeTurningPosition();
@@ -175,7 +169,7 @@ public class SwerveModule {
   }
 
   /**
-   * @param wait Period to wait for up-to-date status signal value
+   * @param waitPeriod Period to wait for up-to-date status signal value
    * @return The absolute turning angle of the module
    */
   public Rotation2d getAbsTurningPosition(double waitPeriod) {
