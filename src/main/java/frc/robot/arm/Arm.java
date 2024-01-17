@@ -1,5 +1,6 @@
 package frc.robot.arm;
 
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -8,16 +9,16 @@ import com.revrobotics.SparkPIDController;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm {
-    private final CANSparkMax m_intakeMotorA;
-    private final CANSparkMax m_intakeMotorB;
+  private final CANSparkMax m_intakeMotorA;
+  private final CANSparkMax m_intakeMotorB;
 
-    private final RelativeEncoder m_intakeRelativeEncoderA;
-    private final RelativeEncoder m_intakeRelativeEncoderB;
+  private final RelativeEncoder m_intakeRelativeEncoderA;
+  private final RelativeEncoder m_intakeRelativeEncoderB;
 
-    private final SparkPIDController m_intakePIDControllerA;
-    private final SparkPIDController m_intakePIDControllerB;
+  private final SparkPIDController m_intakePIDControllerA;
+  private final SparkPIDController m_intakePIDControllerB;
 
-    public Arm() {
+  public Arm() {
     m_intakeMotorA = new CANSparkMax(ArmConstants.k_intakeMotorAPort, MotorType.kBrushless);
     m_intakeMotorB = new CANSparkMax(ArmConstants.k_intakeMotorBPort, MotorType.kBrushless);
 
@@ -56,5 +57,24 @@ public class Arm {
         ArmConstants.kIntakePositionConversionFactor);
     m_intakeRelativeEncoderB.setVelocityConversionFactor(
         ArmConstants.kIntakeVelocityConversionFactor);
-    }
+  }
+
+  public void setPosition(double targetPosition) {
+
+    m_intakePIDControllerA.setReference(targetPosition, ControlType.kPosition);
+
+    m_intakePIDControllerB.setReference(targetPosition, ControlType.kPosition);
+  }
+
+  public void setVelocity(double targetVelocity) {
+
+    m_intakePIDControllerA.setReference(targetVelocity, ControlType.kVelocity);
+
+    m_intakePIDControllerB.setReference(targetVelocity, ControlType.kVelocity);
+  }
+
+  public void resetIntakeEncoder() {
+    m_intakeRelativeEncoderA.setPosition(0.0);
+    m_intakeRelativeEncoderB.setPosition(0.0);
+  }
 }
