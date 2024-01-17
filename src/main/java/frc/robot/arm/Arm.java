@@ -77,16 +77,12 @@ public class Arm {
   }
 
   public void setPosition(double targetPosition) {
-
     m_intakePIDControllerA.setReference(targetPosition, ControlType.kPosition);
-
     m_intakePIDControllerB.setReference(targetPosition, ControlType.kPosition);
   }
 
   public void setVelocity(double targetVelocity) {
-
     m_intakePIDControllerA.setReference(targetVelocity, ControlType.kVelocity);
-
     m_intakePIDControllerB.setReference(targetVelocity, ControlType.kVelocity);
   }
 
