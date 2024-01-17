@@ -82,7 +82,7 @@ public class Drivetrain extends SubsystemBase {
 
       SmartDashboard.putNumber(
           module.getName() + "AbsoluteTurningPosition",
-          module.getAbsTurningPosition().getDegrees());
+          module.getAbsTurningPosition(0.0).getDegrees());
 
       SmartDashboard.putNumber(
           module.getName() + "RelativeDrivePosition", module.getRelativeDrivePosition());
