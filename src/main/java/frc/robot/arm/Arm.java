@@ -6,6 +6,9 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import frc.robot.Constants.ArmConstants;
 
 public class Arm {
@@ -17,6 +20,9 @@ public class Arm {
 
   private final SparkPIDController m_intakePIDControllerA;
   private final SparkPIDController m_intakePIDControllerB;
+
+  private final DoubleSolenoid m_armMoverLeft;
+  private final DoubleSolenoid m_armMoverRight;
 
   public Arm() {
     m_intakeMotorA = new CANSparkMax(ArmConstants.k_intakeMotorAPort, MotorType.kBrushless);
@@ -57,6 +63,17 @@ public class Arm {
         ArmConstants.kIntakePositionConversionFactor);
     m_intakeRelativeEncoderB.setVelocityConversionFactor(
         ArmConstants.kIntakeVelocityConversionFactor);
+
+    m_armMoverLeft =
+        new DoubleSolenoid(
+            PneumaticsModuleType.REVPH,
+            ArmConstants.kArmMoverLeftForwardChannel,
+            ArmConstants.kArmMoverLeftReverseChannel);
+    m_armMoverRight =
+        new DoubleSolenoid(
+            PneumaticsModuleType.REVPH,
+            ArmConstants.kArmMoverRightForwardChannel,
+            ArmConstants.kArmMoverRightReverseChannel);
   }
 
   public void setPosition(double targetPosition) {
@@ -76,5 +93,15 @@ public class Arm {
   public void resetIntakeEncoder() {
     m_intakeRelativeEncoderA.setPosition(0.0);
     m_intakeRelativeEncoderB.setPosition(0.0);
+  }
+
+  public void pneumaticDeploy() {
+    m_armMoverLeft.set(Value.kForward);
+    m_armMoverRight.set(Value.kForward);
+  }
+
+  public void pneumaticRetract() {
+    m_armMoverLeft.set(Value.kReverse);
+    m_armMoverRight.set(Value.kReverse);
   }
 }

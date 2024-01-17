@@ -171,6 +171,11 @@ public final class Constants {
         (kIntakeRollerDiameterMeters * Math.PI) / kIntakeGearRatio;
     public static final double kIntakeVelocityConversionFactor =
         kIntakePositionConversionFactor / 60.0;
+
+    public static final int kArmMoverLeftForwardChannel = 0;
+    public static final int kArmMoverLeftReverseChannel = 1;
+    public static final int kArmMoverRightForwardChannel = 2;
+    public static final int kArmMoverRightReverseChannel = 3;
   }
 
   public static final class AutoConstants {
