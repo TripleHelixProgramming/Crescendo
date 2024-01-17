@@ -1,137 +1,60 @@
 package frc.robot.arm;
 
-import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.RobotConstants;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
+import frc.robot.Constants.ArmConstants;
 
 public class Arm {
-    static double kMaxSpeed = Constants.DriveConstants.kMaxTranslationalVelocity;
-    static double kMaxAngularSpeed = Constants.DriveConstants.kMaxRotationalVelocity;
+    private final CANSparkMax m_intakeMotorA;
+    private final CANSparkMax m_intakeMotorB;
 
-    private final SwerveModule m_frontLeft =
-    new SwerveModule(
-        "FrontLeft",
-        DriveConstants.MotorControllers.kFrontLeftDriveMotorPort,
-        DriveConstants.MotorControllers.kFrontLeftTurningMotorPort,
-        DriveConstants.AbsoluteEncoders.kFrontLeftTurningEncoderPort);
-    private final SwerveModule m_frontRight =
-    new SwerveModule(
-        "FrontRight",
-        DriveConstants.MotorControllers.kFrontRightDriveMotorPort,
-        DriveConstants.MotorControllers.kFrontRightTurningMotorPort,
-        DriveConstants.AbsoluteEncoders.kFrontRightTurningEncoderPort);
-    private final SwerveModule m_rearLeft =
-    new SwerveModule(
-        "RearLeft",
-        DriveConstants.MotorControllers.kRearLeftDriveMotorPort,
-        DriveConstants.MotorControllers.kRearLeftTurningMotorPort,
-        DriveConstants.AbsoluteEncoders.kRearLeftTurningEncoderPort);
-    private final SwerveModule m_rearRight =
-    new SwerveModule(
-        "RearRight",
-        DriveConstants.MotorControllers.kRearRightDriveMotorPort,
-        DriveConstants.MotorControllers.kRearRightTurningMotorPort,
-        DriveConstants.AbsoluteEncoders.kRearRightTurningEncoderPort);
+    private final RelativeEncoder m_intakeRelativeEncoderA;
+    private final RelativeEncoder m_intakeRelativeEncoderB;
 
-    private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
+    private final SparkPIDController m_intakePIDControllerA;
+    private final SparkPIDController m_intakePIDControllerB;
 
-    private final AHRS m_gyro = new AHRS();
+    public Arm() {
+    m_intakeMotorA = new CANSparkMax(ArmConstants.k_intakeMotorAPort, MotorType.kBrushless);
+    m_intakeMotorB = new CANSparkMax(ArmConstants.k_intakeMotorBPort, MotorType.kBrushless);
 
-    private final SwerveDriveOdometry m_odometry =
-    new SwerveDriveOdometry(
-        DriveConstants.kDriveKinematics,
-        m_gyro.getRotation2d(),
-        new SwerveModulePosition[] {
-            m_frontLeft.getPosition(),
-            m_frontRight.getPosition(),
-            m_rearLeft.getPosition(),
-            m_rearRight.getPosition()
-        });
+    m_intakeMotorA.restoreFactoryDefaults();
+    m_intakeMotorB.restoreFactoryDefaults();
 
-    public Drivetrain() {
-    resetGyro();
+    m_intakeMotorA.setIdleMode(IdleMode.kBrake);
+    m_intakeMotorB.setIdleMode(IdleMode.kBrake);
 
-    for (SwerveModule module : modules) {
-    module.resetDriveEncoder();
-    module.initializeAbsoluteTurningEncoder();
-    module.initializeRelativeTurningEncoder();
-    }
-    }
+    m_intakeMotorA.setSmartCurrentLimit(ArmConstants.k_intakeMotorCurrentLimit);
+    m_intakeMotorB.setSmartCurrentLimit(ArmConstants.k_intakeMotorCurrentLimit);
 
-    public void resetGyro() {
-    m_gyro.reset();
-    }
+    m_intakeMotorA.setInverted(false);
+    m_intakeMotorB.setInverted(false);
 
-    @Override
-    public void periodic() {
-    for (SwerveModule module : modules) {
-    SmartDashboard.putNumber(
-        module.getName() + "RelativeTurningPosition",
-        module.getRelativeTurningPosition().getDegrees());
+    m_intakePIDControllerA = m_intakeMotorA.getPIDController();
+    m_intakePIDControllerB = m_intakeMotorB.getPIDController();
 
-    SmartDashboard.putNumber(
-        module.getName() + "AbsoluteTurningPosition",
-        module.getAbsTurningPosition().getDegrees());
+    m_intakePIDControllerA.setP(ArmConstants.kIntakeP);
+    m_intakePIDControllerA.setI(ArmConstants.kIntakeI);
+    m_intakePIDControllerA.setD(ArmConstants.kIntakeD);
 
-    SmartDashboard.putNumber(
-        module.getName() + "RelativeDrivePosition", module.getRelativeDrivePosition());
+    m_intakePIDControllerB.setP(ArmConstants.kIntakeP);
+    m_intakePIDControllerB.setI(ArmConstants.kIntakeI);
+    m_intakePIDControllerB.setD(ArmConstants.kIntakeD);
 
-    SmartDashboard.putNumber(
-        module.getName() + "AbsoluteMagnetOffset",
-        module.getAbsTurningEncoderOffset().getDegrees());
-    }
+    m_intakeRelativeEncoderA = m_intakeMotorA.getEncoder();
+    m_intakeRelativeEncoderB = m_intakeMotorB.getEncoder();
 
-    SmartDashboard.putNumber("GyroAngle", m_gyro.getRotation2d().getDegrees());
-    }
+    m_intakeRelativeEncoderA.setPositionConversionFactor(
+        ArmConstants.kIntakePositionConversionFactor);
+    m_intakeRelativeEncoderA.setVelocityConversionFactor(
+        ArmConstants.kIntakeVelocityConversionFactor);
 
-    /**
-   * Method to drive the robot using joystick info.
-   *
-   * @param chassisSpeeds x, y, and theta speeds
-   * @param fieldRelative Whether the provided x and y speeds are relative to the field.
-   */
-    public void drive(ChassisSpeeds chassisSpeeds, boolean fieldRelative) {
-    var swerveModuleStates =
-        DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
-    m_frontLeft.setDesiredState(swerveModuleStates[0]);
-    m_frontRight.setDesiredState(swerveModuleStates[1]);
-    m_rearLeft.setDesiredState(swerveModuleStates[2]);
-    m_rearRight.setDesiredState(swerveModuleStates[3]);
-    }
-
-  /** Updates the field relative position of the robot. */
-    public void updateOdometry() {
-    m_odometry.update(
-        m_gyro.getRotation2d(),
-        new SwerveModulePosition[] {
-        m_frontLeft.getPosition(),
-        m_frontRight.getPosition(),
-        m_rearLeft.getPosition(),
-        m_rearRight.getPosition()
-        });
-    }
-
-  /** Reconfigures all swerve module steering angles using external alignment device */
-    public void zeroAbsTurningEncoderOffsets() {
-    for (SwerveModule module : modules) {
-    module.zeroAbsTurningEncoderOffset();
-    }
-    }
-
-    /**
-   * @return The heading of the robot
-   */
-    public Rotation2d getHeading() {
-    return m_gyro.getRotation2d();
+    m_intakeRelativeEncoderB.setPositionConversionFactor(
+        ArmConstants.kIntakePositionConversionFactor);
+    m_intakeRelativeEncoderB.setVelocityConversionFactor(
+        ArmConstants.kIntakeVelocityConversionFactor);
     }
 }

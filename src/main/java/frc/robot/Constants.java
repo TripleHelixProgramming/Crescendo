@@ -154,6 +154,25 @@ public final class Constants {
     public static int kZorroHIn = 14;
   }
 
+  public static final class ArmConstants {
+    public static final int k_intakeMotorAPort = 16;
+    public static final int k_intakeMotorBPort = 17;
+
+    public static final int k_intakeMotorCurrentLimit = 5;
+
+    public static final double kIntakeP = 0.0;
+    public static final double kIntakeI = 0.0;
+    public static final double kIntakeD = 0.0;
+
+    public static final double kIntakeRollerDiameterMeters = 0.0508; // 2 inches
+    public static final double kIntakeGearRatio = 10.0;
+
+    public static final double kIntakePositionConversionFactor =
+        (kIntakeRollerDiameterMeters * Math.PI) / kIntakeGearRatio;
+    public static final double kIntakeVelocityConversionFactor =
+        kIntakePositionConversionFactor / 60.0;
+  }
+
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 3.0;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
