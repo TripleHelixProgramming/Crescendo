@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
-import frc.robot.drivetrain.ZorroDrive;
+import frc.robot.drivetrain.commands.ZorroDrive;
 
 public class RobotContainer {
 
