@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
@@ -41,6 +42,12 @@ public class RobotContainer {
 
     new JoystickButton(m_operator, Button.kRightBumper.value)
         .onTrue(new InstantCommand(() -> m_arm.pneumaticDeploy()));
+
+    new JoystickButton(m_operator, Button.kX.value)
+        .whileTrue(new RunCommand(() -> m_arm.setVelocity(1.0)).until(m_arm.m_noteSensor::get));
+
+    new JoystickButton(m_operator, Button.kY.value)
+        .whileTrue(new RunCommand(() -> m_arm.setVelocity(1.0)));
   }
 
   public Command getAutonomousCommand() {

@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -23,6 +24,8 @@ public class Arm {
 
   private final DoubleSolenoid m_armMoverLeft;
   private final DoubleSolenoid m_armMoverRight;
+
+  public final DigitalInput m_noteSensor;
 
   public Arm() {
     m_intakeMotorA = new CANSparkMax(ArmConstants.k_intakeMotorAPort, MotorType.kBrushless);
@@ -74,6 +77,8 @@ public class Arm {
             PneumaticsModuleType.REVPH,
             ArmConstants.kArmMoverRightForwardChannel,
             ArmConstants.kArmMoverRightReverseChannel);
+
+    m_noteSensor = new DigitalInput(ArmConstants.kNoteSensorDIOPort);
   }
 
   public void setPosition(double targetPosition) {
