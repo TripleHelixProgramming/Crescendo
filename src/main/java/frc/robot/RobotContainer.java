@@ -26,47 +26,52 @@ public class RobotContainer {
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
-  private StartEndCommand lowerArmCommand =
-      new StartEndCommand(() -> m_arm.pneumaticRetract(), () -> {}, m_arm);
+  // spotless:off
+  private StartEndCommand lowerArmCommand = new StartEndCommand(
+    () -> m_arm.pneumaticRetract(),
+    () -> {}, 
+    m_arm);
 
-  private StartEndCommand raiseArmCommand =
-      new StartEndCommand(() -> m_arm.pneumaticDeploy(), () -> {}, m_arm);
+  private StartEndCommand raiseArmCommand = new StartEndCommand(
+    () -> m_arm.pneumaticDeploy(),
+    () -> {},
+    m_arm);
 
   public RobotContainer() {
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver));
 
     // Create a button on Smart Dashboard to reset the encoders.
-    SmartDashboard.putData(
-        "Align Encoders",
-        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets()).ignoringDisable(true));
+    SmartDashboard.putData("Align Encoders",
+        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
+        .ignoringDisable(true));
 
     // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
-        .onTrue(new InstantCommand(() -> m_swerve.resetGyro()).ignoringDisable(true));
+        .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
+        .ignoringDisable(true));
 
     // Operator controller buttons
     new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(lowerArmCommand);
     new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(raiseArmCommand);
-
+    
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue(
-            new RunCommand(() -> m_intake.setVelocity(1.0))
-                .until(m_intake.m_noteSensor::get)
-                .onlyIf(lowerArmCommand::isScheduled));
+        .whileTrue(new RunCommand(() -> m_intake.setVelocity(1.0))
+        .until(m_intake.m_noteSensor::get)
+        .onlyIf(lowerArmCommand::isScheduled));
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kA.value)
-        .onTrue(
-            new InstantCommand(() -> m_intake.resetIntakeEncoder())
-                .andThen(new RunCommand(() -> m_intake.setPosition(0.2))));
+        .onTrue(new InstantCommand(() -> m_intake.resetIntakeEncoder())
+        .andThen(new RunCommand(() -> m_intake.setPosition(0.2))));
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kY.value)
-        .whileTrue(
-            new RunCommand(() -> m_intake.setVelocity(1.0)).onlyIf(raiseArmCommand::isScheduled));
+        .whileTrue(new RunCommand(() -> m_intake.setVelocity(1.0))
+        .onlyIf(raiseArmCommand::isScheduled));
   }
+  // spotless:on
 
   public Command getAutonomousCommand() {
     Command autoCommand = null;
