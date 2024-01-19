@@ -79,4 +79,8 @@ public class Intake extends SubsystemBase {
     m_intakeRelativeEncoderA.setPosition(0.0);
     m_intakeRelativeEncoderB.setPosition(0.0);
   }
+
+  public boolean hasGamePiece() {
+    return m_noteSensor.get();
+  }
 }
