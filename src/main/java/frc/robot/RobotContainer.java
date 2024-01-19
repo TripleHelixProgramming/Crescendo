@@ -27,12 +27,12 @@ public class RobotContainer {
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
   // spotless:off
-  private StartEndCommand lowerArmCommand = new StartEndCommand(
+  public StartEndCommand m_lowerArmCommand = new StartEndCommand(
     () -> m_arm.pneumaticRetract(),
     () -> {}, 
     m_arm);
 
-  private StartEndCommand raiseArmCommand = new StartEndCommand(
+  private StartEndCommand m_raiseArmCommand = new StartEndCommand(
     () -> m_arm.pneumaticDeploy(),
     () -> {},
     m_arm);
@@ -52,14 +52,14 @@ public class RobotContainer {
         .ignoringDisable(true));
 
     // Operator controller buttons
-    new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(lowerArmCommand);
-    new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(raiseArmCommand);
+    new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(m_lowerArmCommand);
+    new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(m_raiseArmCommand);
     
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kX.value)
         .whileTrue(new RunCommand(() -> m_intake.setVelocity(1.0))
         .until(m_intake.m_noteSensor::get)
-        .onlyIf(lowerArmCommand::isScheduled));
+        .onlyIf(m_lowerArmCommand::isScheduled));
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kA.value)
@@ -69,7 +69,7 @@ public class RobotContainer {
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kY.value)
         .whileTrue(new RunCommand(() -> m_intake.setVelocity(1.0))
-        .onlyIf(raiseArmCommand::isScheduled));
+        .onlyIf(m_raiseArmCommand::isScheduled));
   }
   // spotless:on
 
