@@ -2,28 +2,26 @@
 
 package frc.robot;
 
-// import static edu.wpi.first.wpilibj.XboxController.Button;
-
 import edu.wpi.first.wpilibj.Joystick;
-// import edu.wpi.first.wpilibj.XboxController;
-// import edu.wpi.first.wpilibj.XboxController.Button;
-// import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
+import frc.robot.arm.Arm;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDrive;
 
 public class RobotContainer {
 
   private final Drivetrain m_swerve = new Drivetrain();
+  private final Arm m_arm = new Arm();
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
-
-  // private final XboxController m_controller = new
-  // XboxController(OIConstants.kDriverControllerPort);
+  private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
   public RobotContainer() {
 
@@ -34,8 +32,22 @@ public class RobotContainer {
         "Align Encoders",
         new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets()).ignoringDisable(true));
 
+    // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro()).ignoringDisable(true));
+
+    // Operator controller buttons
+    new JoystickButton(m_operator, Button.kLeftBumper.value)
+        .onTrue(new InstantCommand(() -> m_arm.pneumaticRetract()));
+
+    new JoystickButton(m_operator, Button.kRightBumper.value)
+        .onTrue(new InstantCommand(() -> m_arm.pneumaticDeploy()));
+
+    new JoystickButton(m_operator, Button.kX.value)
+        .whileTrue(new RunCommand(() -> m_arm.setVelocity(1.0)).until(m_arm.m_noteSensor::get));
+
+    new JoystickButton(m_operator, Button.kY.value)
+        .whileTrue(new RunCommand(() -> m_arm.setVelocity(1.0)));
   }
 
   public Command getAutonomousCommand() {
