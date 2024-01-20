@@ -1,6 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Copyright (c) Triple Helix Robotics, FRC 2363. All rights reserved.
 
 package frc.robot.drivetrain;
 
@@ -18,9 +16,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Preferences;
-import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.Constants.RobotConstants;
 
 public class SwerveModule {
   public final String moduleName;
@@ -63,8 +61,8 @@ public class SwerveModule {
 
     m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDriveMotorCurrentLimit);
     m_turningMotor.setSmartCurrentLimit(ModuleConstants.kDriveMotorCurrentLimit);
-    m_driveMotor.enableVoltageCompensation(Constants.kNominalVoltage);
-    m_turningMotor.enableVoltageCompensation(Constants.kNominalVoltage);
+    m_driveMotor.enableVoltageCompensation(RobotConstants.kNominalVoltage);
+    m_turningMotor.enableVoltageCompensation(RobotConstants.kNominalVoltage);
 
     m_driveMotor.setInverted(false);
     m_turningMotor.setInverted(false);
@@ -116,8 +114,6 @@ public class SwerveModule {
   }
 
   /**
-   * Returns the current state of the module.
-   *
    * @return The current state of the module.
    */
   public SwerveModuleState getState() {
@@ -125,8 +121,6 @@ public class SwerveModule {
   }
 
   /**
-   * Returns the current position of the module.
-   *
    * @return The current position of the module.
    */
   public SwerveModulePosition getPosition() {
@@ -134,9 +128,7 @@ public class SwerveModule {
   }
 
   /**
-   * Sets the desired state for the module.
-   *
-   * @param desiredState Desired state with speed and angle.
+   * @param desiredState The desired state for the module, with speed and angle.
    */
   public void setDesiredState(SwerveModuleState desiredState) {
     var encoderRotation = getRelativeTurningPosition();
@@ -172,14 +164,23 @@ public class SwerveModule {
   public Rotation2d getRelativeTurningPosition() {
     double relativePositionRotations = m_turningRelativeEncoder.getPosition();
     return Rotation2d.fromRotations(MathUtil.inputModulus(relativePositionRotations, -0.5, 0.5));
-    // return Rotation2d.fromRadians(m_turningRelativeEncoder.getPosition());
   }
 
   /**
+   * @param waitPeriod Period to wait for up-to-date status signal value
    * @return The absolute turning angle of the module
    */
-  public Rotation2d getAbsTurningPosition() {
-    return Rotation2d.fromRotations(-m_turningAbsEncoder.getAbsolutePosition().getValue());
+  public Rotation2d getAbsTurningPosition(double waitPeriod) {
+    double absPositonRotations;
+
+    if (waitPeriod > 0.0) {
+      absPositonRotations =
+          m_turningAbsEncoder.getAbsolutePosition().waitForUpdate(waitPeriod).getValue();
+    } else {
+      absPositonRotations = m_turningAbsEncoder.getAbsolutePosition().getValue();
+    }
+
+    return Rotation2d.fromRotations(absPositonRotations);
   }
 
   /**
@@ -187,9 +188,7 @@ public class SwerveModule {
    * angle.
    */
   public void initializeRelativeTurningEncoder() {
-    double absPositonRotations =
-        -m_turningAbsEncoder.getAbsolutePosition().waitForUpdate(0.25).getValue();
-    m_turningRelativeEncoder.setPosition(MathUtil.inputModulus(absPositonRotations, -0.5, 0.5));
+    m_turningRelativeEncoder.setPosition(getAbsTurningPosition(0.25).getRotations());
   }
 
   /** Initializes the magnetic offset of the absolute turning encoder */
@@ -213,13 +212,12 @@ public class SwerveModule {
   public void zeroAbsTurningEncoderOffset() {
     m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
 
-    Rotation2d magnetOffset = getAbsTurningEncoderOffset().plus(getAbsTurningPosition());
+    Rotation2d magnetOffset = getAbsTurningEncoderOffset().minus(getAbsTurningPosition(0.25));
     Preferences.setDouble(
         moduleName + DriveConstants.AbsoluteEncoders.kAbsEncoderMagnetOffsetKey,
         magnetOffset.getRotations());
     setAbsTurningEncoderOffset(magnetOffset.getRotations());
 
-    // m_turningRelativeEncoder.setPosition(0.0);
     initializeRelativeTurningEncoder();
   }
 
@@ -233,7 +231,7 @@ public class SwerveModule {
     m_turningAbsEncoderConfig.MagnetSensor.AbsoluteSensorRange =
         AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
     m_turningAbsEncoderConfig.MagnetSensor.SensorDirection =
-        SensorDirectionValue.Clockwise_Positive;
+        SensorDirectionValue.CounterClockwise_Positive;
     m_turningAbsEncoder.getConfigurator().apply(m_turningAbsEncoderConfig);
   }
 

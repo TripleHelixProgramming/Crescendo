@@ -1,6 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Copyright (c) Triple Helix Robotics, FRC 2363. All rights reserved.
 
 package frc.robot;
 
@@ -9,17 +7,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.TimedRobot;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
-  public static final double kNominalVoltage = 12.0;
-  public static final double kPeriod = TimedRobot.kDefaultPeriod;
+  public static final class RobotConstants {
+    public static final double kNominalVoltage = 12.0;
+    public static final double kPeriod = TimedRobot.kDefaultPeriod;
+  }
 
   public static final class DriveConstants {
     // Define the conventional order of our modules when putting them into arrays
@@ -136,9 +128,9 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
 
-    // zorro joystick
-    // RadioMaster Zorro Joystick Axis
+    // RadioMaster Zorro joystick axis
     public static int kZorroLeftXAxis = 0;
     public static int kZorroLeftYAxis = 1;
     public static int kZorroLeftDial = 2;
@@ -146,6 +138,7 @@ public final class Constants {
     public static int kZorroRightXAxis = 4;
     public static int kZorroRightYAxis = 5;
 
+    // RadioMaster Zorro buttons
     public static int kZorroBDown = 1;
     public static int kZorroBMid = 2;
     public static int kZorroBUp = 3;
@@ -160,6 +153,32 @@ public final class Constants {
     public static int kZorroFUp = 12;
     public static int kZorroDIn = 13;
     public static int kZorroHIn = 14;
+  }
+
+  public static final class ArmConstants {
+    public static final int k_intakeMotorAPort = 16;
+    public static final int k_intakeMotorBPort = 17;
+
+    public static final int k_intakeMotorCurrentLimit = 5;
+
+    public static final double kIntakeP = 0.0;
+    public static final double kIntakeI = 0.0;
+    public static final double kIntakeD = 0.0;
+
+    public static final double kIntakeRollerDiameterMeters = 0.0508; // 2 inches
+    public static final double kIntakeGearRatio = 10.0;
+
+    public static final double kIntakePositionConversionFactor =
+        (kIntakeRollerDiameterMeters * Math.PI) / kIntakeGearRatio;
+    public static final double kIntakeVelocityConversionFactor =
+        kIntakePositionConversionFactor / 60.0;
+
+    public static final int kArmMoverLeftForwardChannel = 0;
+    public static final int kArmMoverLeftReverseChannel = 1;
+    public static final int kArmMoverRightForwardChannel = 2;
+    public static final int kArmMoverRightReverseChannel = 3;
+
+    public static final int kNoteSensorDIOPort = 3;
   }
 
   public static final class AutoConstants {

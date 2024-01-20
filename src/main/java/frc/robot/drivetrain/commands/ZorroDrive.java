@@ -1,23 +1,18 @@
-package frc.robot.drivetrain;
+// Copyright (c) Triple Helix Robotics, FRC 2363. All rights reserved.
 
-// import frc.robot.Drivetrain;
+package frc.robot.drivetrain.commands;
+
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.OIConstants;
-
-// import com.team2363.utilities.ControllerMap;
-// import edu.wpi.first.wpilibj.Joystick;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.drivetrain.Drivetrain;
 
 public class ZorroDrive extends Drive {
 
   Joystick m_controller;
 
-  private boolean fieldRelative;
-
-  public ZorroDrive(Drivetrain subsystem, Joystick joysticks, boolean fieldRelative) {
+  public ZorroDrive(Drivetrain subsystem, Joystick joysticks) {
     super(subsystem);
     this.m_controller = joysticks;
-    this.fieldRelative = fieldRelative;
   }
 
   @Override
@@ -37,6 +32,6 @@ public class ZorroDrive extends Drive {
 
   @Override
   public boolean getFieldRelative() {
-    return fieldRelative;
+    return m_controller.getRawButton(OIConstants.kZorroEUp);
   }
 }

@@ -1,16 +1,13 @@
-package frc.robot.drivetrain;
+// Copyright (c) Triple Helix Robotics, FRC 2363. All rights reserved.
 
-// import frc.robot.Drivetrain;
+package frc.robot.drivetrain.commands;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.drivetrain.Drivetrain;
 
-// import com.team2363.utilities.ControllerMap;
-
-// import edu.wpi.first.wpilibj.Joystick;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-public class JoystickDrive extends Drive {
+public class XBoxDrive extends Drive {
 
   XboxController m_controller;
 
@@ -19,12 +16,9 @@ public class JoystickDrive extends Drive {
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
-  private boolean fieldRelative;
-
-  public JoystickDrive(Drivetrain subsystem, XboxController joysticks, boolean fieldRelative) {
+  public XBoxDrive(Drivetrain subsystem, XboxController joysticks) {
     super(subsystem);
     this.m_controller = joysticks;
-    this.fieldRelative = fieldRelative;
   }
 
   @Override
@@ -44,6 +38,6 @@ public class JoystickDrive extends Drive {
 
   @Override
   public boolean getFieldRelative() {
-    return fieldRelative;
+    return m_controller.getLeftBumper();
   }
 }
