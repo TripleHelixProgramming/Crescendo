@@ -108,12 +108,9 @@ public class Drivetrain extends SubsystemBase {
   }
 
   /**
-   * Method to drive the robot using joystick info.
-   *
    * @param chassisSpeeds x, y, and theta speeds
-   * @param fieldRelative Whether the provided x and y speeds are relative to the field.
    */
-  public void drive(ChassisSpeeds chassisSpeeds, boolean fieldRelative) {
+  public void drive(ChassisSpeeds chassisSpeeds) {
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
@@ -123,6 +120,7 @@ public class Drivetrain extends SubsystemBase {
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
+  
 
 
 
@@ -196,7 +194,7 @@ public class Drivetrain extends SubsystemBase {
             ()->this.getPose(), // Robot pose supplier
             this::resetOdometry,
              this::getCurrentRobotChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
                         new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
@@ -217,10 +215,6 @@ public class Drivetrain extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
-
-
-
-
-
+  }
 
 }
