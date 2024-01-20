@@ -2,6 +2,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 // import static edu.wpi.first.wpilibj.XboxController.Button;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -37,9 +39,11 @@ public class RobotContainer {
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro()).ignoringDisable(true));
   }
-
+  
+  
   public Command getAutonomousCommand() {
-    Command autoCommand = null;
-    return autoCommand;
-  }
+    return new PathPlannerAuto("DriveForward3meters");
+}
+
+
 }
