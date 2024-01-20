@@ -185,7 +185,13 @@ public class Drivetrain extends SubsystemBase {
   }
   
   public ChassisSpeeds getCurrentRobotChassisSpeeds() {
-    return toChassisSpeeds(getHeading(), this.vxMetersPerSecond, this.vyMetersPerSecond);
+    //return toChassisSpeeds(getHeading(), this.vxMetersPerSecond, this.vyMetersPerSecond);
+    ChassisSpeeds chassisSpeeds = SwerveDriveKinematics.toChassisSpeeds(m_frontLeft.getState(),
+                                                                        m_frontRight.getState(),
+                                                                        m_rearLeft.getState(),
+                                                                        m_rearRight.getState());
+    return chassisSpeeds;
+  
   }
   
 
