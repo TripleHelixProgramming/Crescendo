@@ -2,6 +2,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -16,6 +18,11 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    // Starts recording to data log
+    // https://docs.wpilib.org/en/stable/docs/software/telemetry/datalog.html#logging-joystick-data
+    DataLogManager.start();
+    DriverStation.startDataLog(DataLogManager.getLog());
   }
 
   @Override
@@ -46,6 +53,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    m_robotContainer.teleopInit();
   }
 
   @Override
