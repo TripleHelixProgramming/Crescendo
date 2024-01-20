@@ -21,6 +21,8 @@ import frc.robot.drivetrain.ZorroDrive;
 public class RobotContainer {
 
   private final Drivetrain m_swerve = new Drivetrain();
+  
+  
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
 
@@ -30,6 +32,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver));
+    m_swerve.configurePathPlanner();
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData(
