@@ -3,13 +3,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
-// import static edu.wpi.first.wpilibj.XboxController.Button;
-
 import edu.wpi.first.wpilibj.Joystick;
-// import edu.wpi.first.wpilibj.XboxController;
-// import edu.wpi.first.wpilibj.XboxController.Button;
-// import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -21,8 +15,6 @@ import frc.robot.drivetrain.ZorroDrive;
 public class RobotContainer {
 
   private final Drivetrain m_swerve = new Drivetrain();
-  
-  
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
 
@@ -42,11 +34,8 @@ public class RobotContainer {
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro()).ignoringDisable(true));
   }
-  
-  
+
   public Command getAutonomousCommand() {
     return new PathPlannerAuto("DriveForward3meters");
-}
-
-
+  }
 }
