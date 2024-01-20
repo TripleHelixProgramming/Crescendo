@@ -42,8 +42,8 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
             .ignoringDisable(true));
 
-    Command lowerArmCommand = m_arm.lowerArmCommand();
-    Command raiseArmCommmand = m_arm.raiseArmCommand();
+    Command lowerArmCommand = m_arm.createLowerArmCommand();
+    Command raiseArmCommmand = m_arm.createRaiseArmCommand();
     // Operator controller buttons
     new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(lowerArmCommand);
     new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(raiseArmCommmand);
@@ -72,6 +72,6 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    m_arm.lowerArmCommand().schedule();
+    m_arm.createLowerArmCommand().schedule();
   }
 }
