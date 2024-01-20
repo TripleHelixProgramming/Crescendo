@@ -38,7 +38,7 @@ public abstract class Drive extends Command {
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xDot, yDot, thetaDot, drivetrain.getHeading())
             : new ChassisSpeeds(xDot, yDot, thetaDot);
 
-    drivetrain.drive(chassisSpeeds, true);
+    drivetrain.drive(chassisSpeeds);
   }
 
   public abstract double getX();

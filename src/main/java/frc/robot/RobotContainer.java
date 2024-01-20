@@ -2,6 +2,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -28,6 +29,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver));
+    m_swerve.configurePathPlanner();
 
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
 
@@ -66,8 +68,7 @@ public class RobotContainer {
   // spotless:on
 
   public Command getAutonomousCommand() {
-    Command autoCommand = null;
-    return autoCommand;
+    return new PathPlannerAuto("DriveForward3meters");
   }
 
   public void teleopInit() {

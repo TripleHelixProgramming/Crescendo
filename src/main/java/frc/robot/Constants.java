@@ -61,6 +61,9 @@ public final class Constants {
     // Distance between front and rear wheels on robot
     public static final double kWheelBase = 0.622; // 2023 Competion Robot
 
+    // Robot Radius
+    public static final double kRadius = 0.423;
+
     // Units are meters per second
     public static final double kMaxTranslationalVelocity = 4.0; // 2023 Competion Robot // max 4.5
 
