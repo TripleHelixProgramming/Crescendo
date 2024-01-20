@@ -65,6 +65,11 @@ public class Intake extends SubsystemBase {
     m_noteSensor = new DigitalInput(ArmConstants.kNoteSensorDIOPort);
   }
 
+  public void stopIntake() {
+    m_intakeMotorA.setVoltage(0.0);
+    m_intakeMotorB.setVoltage(0.0);
+  }
+
   public void setPosition(double targetPosition) {
     m_intakePIDControllerA.setReference(targetPosition, ControlType.kPosition);
     m_intakePIDControllerB.setReference(targetPosition, ControlType.kPosition);

@@ -30,6 +30,8 @@ public class RobotContainer {
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver));
 
+    m_intake.setDefaultCommand(new RunCommand(() -> m_intake.stopIntake(), m_intake));
+
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
         new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
