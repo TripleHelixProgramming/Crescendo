@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
@@ -30,7 +29,7 @@ public class RobotContainer {
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver));
 
-    m_intake.setDefaultCommand(new RunCommand(() -> m_intake.stopIntake(), m_intake));
+    m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
@@ -50,18 +49,18 @@ public class RobotContainer {
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue(new RunCommand(() -> m_intake.setVelocity(1.0))
+        .whileTrue((m_intake.createSetVelocityCommand(1.0))
         .until(m_intake::hasGamePiece)
         .onlyIf(lowerArmCommand::isScheduled));
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kA.value)
-        .onTrue(new InstantCommand(() -> m_intake.resetIntakeEncoder())
-            .andThen(new RunCommand(() -> m_intake.setPosition(0.2))));
+        .onTrue((m_intake.createResetEncoderCommand())
+            .andThen(m_intake.createSetPositionCommand(0.2)));
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kY.value)
-        .whileTrue(new RunCommand(() -> m_intake.setVelocity(1.0))
+        .whileTrue((m_intake.createSetVelocityCommand(1.0))
             .onlyIf(raiseArmCommmand::isScheduled));
   }
   // spotless:on
