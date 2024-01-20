@@ -19,9 +19,12 @@ public class XBoxDrive extends Drive {
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
-  public XBoxDrive(Drivetrain subsystem, XboxController joysticks) {
+  private boolean fieldRelative;
+
+  public XBoxDrive(Drivetrain subsystem, XboxController joysticks, boolean fieldRelative) {
     super(subsystem);
     this.m_controller = joysticks;
+    this.fieldRelative = fieldRelative;
   }
 
   @Override
@@ -41,6 +44,6 @@ public class XBoxDrive extends Drive {
 
   @Override
   public boolean getFieldRelative() {
-    return m_controller.getLeftBumper();
+    return fieldRelative;
   }
 }
