@@ -13,21 +13,26 @@ public class Arm extends SubsystemBase {
   private final DoubleSolenoid m_armMoverRight;
 
   public Arm() {
-    m_armMoverLeft = new DoubleSolenoid(
-        PneumaticsModuleType.REVPH,
-        ArmConstants.kArmMoverLeftForwardChannel,
-        ArmConstants.kArmMoverLeftReverseChannel);
-    m_armMoverRight = new DoubleSolenoid(
-        PneumaticsModuleType.REVPH,
-        ArmConstants.kArmMoverRightForwardChannel,
-        ArmConstants.kArmMoverRightReverseChannel);
+    m_armMoverLeft =
+        new DoubleSolenoid(
+            PneumaticsModuleType.REVPH,
+            ArmConstants.kArmMoverLeftForwardChannel,
+            ArmConstants.kArmMoverLeftReverseChannel);
+    m_armMoverRight =
+        new DoubleSolenoid(
+            PneumaticsModuleType.REVPH,
+            ArmConstants.kArmMoverRightForwardChannel,
+            ArmConstants.kArmMoverRightReverseChannel);
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
     // Publish the arm state to telemetry.
-    builder.addBooleanProperty("ArmRaised", () -> (m_armMoverLeft.get() == Value.kForward) && (m_armMoverRight.get() == Value.kForward), null);
+    builder.addBooleanProperty(
+        "ArmRaised",
+        () -> (m_armMoverLeft.get() == Value.kForward) && (m_armMoverRight.get() == Value.kForward),
+        null);
   }
 
   public void pneumaticDeploy() {
@@ -45,12 +50,10 @@ public class Arm extends SubsystemBase {
   // https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#instance-command-factory-methods
 
   public Command lowerArmCommand() {
-    return this.startEnd(() -> this.pneumaticRetract(), () -> {
-    });
+    return this.startEnd(() -> this.pneumaticRetract(), () -> {});
   }
 
   public Command raiseArmCommand() {
-    return this.startEnd(() -> this.pneumaticDeploy(), () -> {
-    });
+    return this.startEnd(() -> this.pneumaticDeploy(), () -> {});
   }
 }
