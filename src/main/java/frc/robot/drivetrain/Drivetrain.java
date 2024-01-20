@@ -200,7 +200,7 @@ public class Drivetrain extends SubsystemBase {
                             Constants.ModuleConstants.kDriveI, 
                             Constants.ModuleConstants.kDriveD), // Rotation PID constants
             Constants.DriveConstants.kMaxTranslationalVelocity, // Max module speed, in m/s
-            0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+            Constants.DriveConstants.kRadius, // Drive base radius in meters. Distance from robot center to furthest module.
             new ReplanningConfig() // Default path replanning config. See the API for the options
             // here
             ),
