@@ -2,38 +2,34 @@
 
 package frc.robot.drivetrain;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-
 
 public class AutoDrive extends Drive {
 
-    ChassisSpeeds chasy;
-    
-    public AutoDrive(Drivetrain subsystem, ChassisSpeeds chasy) {
-        super(subsystem);
-        this.chasy = chasy;
+  ChassisSpeeds chasy;
 
-        
-    }
+  public AutoDrive(Drivetrain subsystem, ChassisSpeeds chasy) {
+    super(subsystem);
+    this.chasy = chasy;
+  }
 
-    @Override
-    public double getX() {
-        return chasy.vxMetersPerSecond;
-    }
+  @Override
+  public double getX() {
+    return chasy.vxMetersPerSecond;
+  }
 
-    @Override
-    public double getY() {
-        return chasy.vyMetersPerSecond;
-    }
+  @Override
+  public double getY() {
+    return chasy.vyMetersPerSecond;
+  }
 
-    @Override
-    public double getTheta() {
-        return chasy.omegaRadiansPerSecond;
-    }
+  @Override
+  public double getTheta() {
+    return chasy.omegaRadiansPerSecond;
+  }
 
-    @Override
-    public boolean getFieldRelative() {
-        return false;
-    }
+  @Override
+  public boolean getFieldRelative() {
+    return false;
+  }
 }

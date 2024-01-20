@@ -2,11 +2,6 @@
 
 package frc.robot;
 
-import java.util.List;
-
-import com.pathplanner.lib.path.PathPlannerTrajectory;
-import com.pathplanner.lib.util.PIDConstants;
-
 // import static edu.wpi.first.wpilibj.XboxController.Button;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -47,7 +42,4 @@ public class RobotContainer {
     Command autoCommand = null;
     return autoCommand;
   }
-
-
-  
 }
