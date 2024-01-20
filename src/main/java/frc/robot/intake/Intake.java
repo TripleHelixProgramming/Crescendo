@@ -7,8 +7,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
 public class Intake extends SubsystemBase {
@@ -81,7 +81,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Command createSetPositionCommand(double targetPosition) {
-    return this.startEnd(() -> this.setPosition(targetPosition), () -> {}); 
+    return this.startEnd(() -> this.setPosition(targetPosition), () -> {});
   }
 
   private void setVelocity(double targetVelocity) {
