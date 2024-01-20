@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
   private final SparkPIDController m_intakePIDControllerA;
   private final SparkPIDController m_intakePIDControllerB;
 
-  public final DigitalInput m_noteSensor;
+  private final DigitalInput m_noteSensor;
 
   public Intake() {
     m_intakeMotorA = new CANSparkMax(ArmConstants.k_intakeMotorAPort, MotorType.kBrushless);
@@ -78,5 +78,9 @@ public class Intake extends SubsystemBase {
   public void resetIntakeEncoder() {
     m_intakeRelativeEncoderA.setPosition(0.0);
     m_intakeRelativeEncoderB.setPosition(0.0);
+  }
+
+  public boolean hasGamePiece() {
+    return m_noteSensor.get();
   }
 }

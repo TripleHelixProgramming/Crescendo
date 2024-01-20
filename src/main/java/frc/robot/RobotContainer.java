@@ -49,8 +49,8 @@ public class RobotContainer {
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kX.value)
         .whileTrue(new RunCommand(() -> m_intake.setVelocity(1.0))
-            .until(m_intake.m_noteSensor::get)
-            .onlyIf(lowerArmCommand::isScheduled));
+        .until(m_intake::hasGamePiece)
+        .onlyIf(lowerArmCommand::isScheduled));
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kA.value)
