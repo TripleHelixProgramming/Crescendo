@@ -8,11 +8,15 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -64,7 +68,7 @@ public class Drivetrain extends SubsystemBase {
             m_rearRight.getPosition()
           });
 
-  public AutoBuilder bob;
+  
 
   public Drivetrain() {
     resetGyro();
@@ -75,27 +79,6 @@ public class Drivetrain extends SubsystemBase {
       module.initializeRelativeTurningEncoder();
     }
 
-    // sets up auto builder
-    bob = new AutoBuilder();
-    bob.configureHolonomic(
-        this::getPose, // Robot pose supplier
-        this::resetPose, // Method to reset odometry (will be called if your auto has a starting
-        // pose)
-        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE
-        // ChassisSpeeds
-        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in
-            // your Constants class
-            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-            new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-            4.5, // Max module speed, in m/s
-            0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-            new ReplanningConfig() // Default path replanning config. See the API for the options
-            // here
-            ),
-        true,
-        this // Reference to this subsystem to set requirements
-        );
   }
 
   public void resetGyro() {
@@ -141,6 +124,10 @@ public class Drivetrain extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
+
+
+
+
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
     m_odometry.update(
@@ -152,6 +139,7 @@ public class Drivetrain extends SubsystemBase {
           m_rearRight.getPosition()
         });
   }
+
 
   /** Reconfigures all swerve module steering angles using external alignment device */
   public void zeroAbsTurningEncoderOffsets() {
@@ -166,4 +154,73 @@ public class Drivetrain extends SubsystemBase {
   public Rotation2d getHeading() {
     return m_gyro.getRotation2d();
   }
+
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
+
+
+  public void resetOdometry(Pose2d pose) {
+    resetGyro();
+    m_odometry.resetPosition(getHeading(),getSwerveModulePositions(),pose);
+  }
+
+  public SwerveModulePosition[] getSwerveModulePositions(){
+    SwerveModulePosition[] bill = {   
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition()};
+    return bill;
+  }
+
+
+  public SwerveModuleState[] getModuleStates() {
+
+    SwerveModuleState[] states = new SwerveModuleState[4];
+
+    for (int i = 0; i <= 3; i++) {
+      states[i++] = modules[i].getState();
+    }
+
+    return states;
+  }
+  
+  public ChassisSpeeds getCurrentRobotChassisSpeeds() {
+    return toChassisSpeeds(getHeading(), this.vxMetersPerSecond, this.vyMetersPerSecond);
+  }
+  
+
+  public void configurePathPlanner() {
+        AutoBuilder.configureHolonomic(
+            ()->this.getPose(), // Robot pose supplier
+            this::resetOdometry,
+             this::getCurrentRobotChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                        4.5, // Max module speed, in m/s
+                        0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                ),
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this // Reference to this subsystem to set requirements
+        );
+
+
+
+
+
+
 }
