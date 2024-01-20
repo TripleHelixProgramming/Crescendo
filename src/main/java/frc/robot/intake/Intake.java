@@ -8,6 +8,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmConstants;
 
 public class Intake extends SubsystemBase {
@@ -65,24 +66,40 @@ public class Intake extends SubsystemBase {
     m_noteSensor = new DigitalInput(ArmConstants.kNoteSensorDIOPort);
   }
 
-  public void stopIntake() {
+  private void stopIntake() {
     m_intakeMotorA.setVoltage(0.0);
     m_intakeMotorB.setVoltage(0.0);
   }
 
-  public void setPosition(double targetPosition) {
+  public Command createStopIntakeCommand() {
+    return this.runOnce(() -> this.stopIntake());
+  }
+
+  private void setPosition(double targetPosition) {
     m_intakePIDControllerA.setReference(targetPosition, ControlType.kPosition);
     m_intakePIDControllerB.setReference(targetPosition, ControlType.kPosition);
   }
 
-  public void setVelocity(double targetVelocity) {
+  public Command createSetPositionCommand(double targetPosition) {
+    return this.startEnd(() -> this.setPosition(targetPosition), () -> {}); 
+  }
+
+  private void setVelocity(double targetVelocity) {
     m_intakePIDControllerA.setReference(targetVelocity, ControlType.kVelocity);
     m_intakePIDControllerB.setReference(targetVelocity, ControlType.kVelocity);
   }
 
-  public void resetIntakeEncoder() {
+  public Command createSetVelocityCommand(double targetVelocity) {
+    return this.startEnd(() -> this.setVelocity(targetVelocity), () -> {});
+  }
+
+  private void resetIntakeEncoder() {
     m_intakeRelativeEncoderA.setPosition(0.0);
     m_intakeRelativeEncoderB.setPosition(0.0);
+  }
+
+  public Command createResetEncoderCommand() {
+    return this.runOnce(() -> this.resetIntakeEncoder());
   }
 
   public boolean hasGamePiece() {
