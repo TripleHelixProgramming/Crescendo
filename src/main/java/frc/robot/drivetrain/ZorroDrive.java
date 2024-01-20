@@ -12,9 +12,12 @@ public class ZorroDrive extends Drive {
 
   Joystick m_controller;
 
-  public ZorroDrive(Drivetrain subsystem, Joystick joysticks) {
+  private boolean fieldRelative;
+
+  public ZorroDrive(Drivetrain subsystem, Joystick joysticks, boolean fieldRelative) {
     super(subsystem);
     this.m_controller = joysticks;
+    this.fieldRelative = fieldRelative;
   }
 
   @Override
@@ -34,6 +37,6 @@ public class ZorroDrive extends Drive {
 
   @Override
   public boolean getFieldRelative() {
-    return m_controller.getRawButton(OIConstants.kZorroEUp);
+    return fieldRelative;
   }
 }
