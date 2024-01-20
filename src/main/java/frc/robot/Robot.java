@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    m_robotContainer.m_lowerArmCommand.schedule();
+    m_robotContainer.teleopInit();
   }
 
   @Override
