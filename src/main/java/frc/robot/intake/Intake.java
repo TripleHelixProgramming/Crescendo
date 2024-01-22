@@ -12,63 +12,43 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 
 public class Intake extends SubsystemBase {
-  private final CANSparkMax m_intakeMotorA;
-  private final CANSparkMax m_intakeMotorB;
+  private final CANSparkMax m_intakeMotor;
 
-  private final RelativeEncoder m_intakeRelativeEncoderA;
-  private final RelativeEncoder m_intakeRelativeEncoderB;
+  private final RelativeEncoder m_intakeRelativeEncoder;
 
-  private final SparkPIDController m_intakePIDControllerA;
-  private final SparkPIDController m_intakePIDControllerB;
+  private final SparkPIDController m_intakePIDController;
 
   private final DigitalInput m_noteSensor;
 
   public Intake() {
-    m_intakeMotorA = new CANSparkMax(ArmConstants.k_intakeMotorAPort, MotorType.kBrushless);
-    m_intakeMotorB = new CANSparkMax(ArmConstants.k_intakeMotorBPort, MotorType.kBrushless);
+    m_intakeMotor = new CANSparkMax(ArmConstants.k_intakeMotorPort, MotorType.kBrushless);
 
-    m_intakeMotorA.restoreFactoryDefaults();
-    m_intakeMotorB.restoreFactoryDefaults();
+    m_intakeMotor.restoreFactoryDefaults();
 
-    m_intakeMotorA.setIdleMode(IdleMode.kBrake);
-    m_intakeMotorB.setIdleMode(IdleMode.kBrake);
+    m_intakeMotor.setIdleMode(IdleMode.kBrake);
 
-    m_intakeMotorA.setSmartCurrentLimit(ArmConstants.k_intakeMotorCurrentLimit);
-    m_intakeMotorB.setSmartCurrentLimit(ArmConstants.k_intakeMotorCurrentLimit);
+    m_intakeMotor.setSmartCurrentLimit(ArmConstants.k_intakeMotorCurrentLimit);
 
-    m_intakeMotorA.setInverted(false);
-    m_intakeMotorB.setInverted(false);
+    m_intakeMotor.setInverted(false);
 
-    m_intakePIDControllerA = m_intakeMotorA.getPIDController();
-    m_intakePIDControllerB = m_intakeMotorB.getPIDController();
+    m_intakePIDController = m_intakeMotor.getPIDController();
 
-    m_intakePIDControllerA.setP(ArmConstants.kIntakeP);
-    m_intakePIDControllerA.setI(ArmConstants.kIntakeI);
-    m_intakePIDControllerA.setD(ArmConstants.kIntakeD);
+    m_intakePIDController.setP(ArmConstants.kIntakeP);
+    m_intakePIDController.setI(ArmConstants.kIntakeI);
+    m_intakePIDController.setD(ArmConstants.kIntakeD);
 
-    m_intakePIDControllerB.setP(ArmConstants.kIntakeP);
-    m_intakePIDControllerB.setI(ArmConstants.kIntakeI);
-    m_intakePIDControllerB.setD(ArmConstants.kIntakeD);
+    m_intakeRelativeEncoder = m_intakeMotor.getEncoder();
 
-    m_intakeRelativeEncoderA = m_intakeMotorA.getEncoder();
-    m_intakeRelativeEncoderB = m_intakeMotorB.getEncoder();
-
-    m_intakeRelativeEncoderA.setPositionConversionFactor(
+    m_intakeRelativeEncoder.setPositionConversionFactor(
         ArmConstants.kIntakePositionConversionFactor);
-    m_intakeRelativeEncoderA.setVelocityConversionFactor(
-        ArmConstants.kIntakeVelocityConversionFactor);
-
-    m_intakeRelativeEncoderB.setPositionConversionFactor(
-        ArmConstants.kIntakePositionConversionFactor);
-    m_intakeRelativeEncoderB.setVelocityConversionFactor(
+    m_intakeRelativeEncoder.setVelocityConversionFactor(
         ArmConstants.kIntakeVelocityConversionFactor);
 
     m_noteSensor = new DigitalInput(ArmConstants.kNoteSensorDIOPort);
   }
 
   private void stopIntake() {
-    m_intakeMotorA.setVoltage(0.0);
-    m_intakeMotorB.setVoltage(0.0);
+    m_intakeMotor.setVoltage(0.0);
   }
 
   public Command createStopIntakeCommand() {
@@ -76,8 +56,7 @@ public class Intake extends SubsystemBase {
   }
 
   private void setPosition(double targetPosition) {
-    m_intakePIDControllerA.setReference(targetPosition, ControlType.kPosition);
-    m_intakePIDControllerB.setReference(targetPosition, ControlType.kPosition);
+    m_intakePIDController.setReference(targetPosition, ControlType.kPosition);
   }
 
   public Command createSetPositionCommand(double targetPosition) {
@@ -85,8 +64,7 @@ public class Intake extends SubsystemBase {
   }
 
   private void setVelocity(double targetVelocity) {
-    m_intakePIDControllerA.setReference(targetVelocity, ControlType.kVelocity);
-    m_intakePIDControllerB.setReference(targetVelocity, ControlType.kVelocity);
+    m_intakePIDController.setReference(targetVelocity, ControlType.kVelocity);
   }
 
   public Command createSetVelocityCommand(double targetVelocity) {
@@ -94,8 +72,7 @@ public class Intake extends SubsystemBase {
   }
 
   private void resetIntakeEncoder() {
-    m_intakeRelativeEncoderA.setPosition(0.0);
-    m_intakeRelativeEncoderB.setPosition(0.0);
+    m_intakeRelativeEncoder.setPosition(0.0);
   }
 
   public Command createResetEncoderCommand() {

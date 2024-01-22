@@ -159,8 +159,7 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
-    public static final int k_intakeMotorAPort = 16;
-    public static final int k_intakeMotorBPort = 17;
+    public static final int k_intakeMotorPort = 16;
 
     public static final int k_intakeMotorCurrentLimit = 5;
 
