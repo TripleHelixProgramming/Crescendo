@@ -68,7 +68,7 @@ public class RobotContainer {
   // spotless:on
 
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("move-forward-2-meters");
+    return new PathPlannerAuto("LAuto");
   }
 
   public void teleopInit() {
