@@ -43,6 +43,12 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
             .ignoringDisable(true));
 
+
+    //test button for adjusting angle command
+    new JoystickButton(m_driver, OIConstants.kZorroAIn)
+        .onTrue(new InstantCommand(() -> m_swerve.angleAdjust(90))
+            .ignoringDisable(true));
+
     Command lowerArmCommand = m_arm.createLowerArmCommand();
     Command raiseArmCommmand = m_arm.createRaiseArmCommand();
     // Operator controller buttons

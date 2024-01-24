@@ -80,7 +80,14 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void resetGyro() {
+    //required to remove adjustment there may be a better way
+    m_gyro.setAngleAdjustment(0.00);
     m_gyro.reset();
+  }
+
+  //used before autos to set angle in correct orientation
+  public void angleAdjust(double angle){
+    m_gyro.setAngleAdjustment(angle);
   }
 
   @Override
