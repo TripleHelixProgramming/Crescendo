@@ -43,12 +43,6 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
             .ignoringDisable(true));
 
-
-    //test button for adjusting angle command
-    new JoystickButton(m_driver, OIConstants.kZorroAIn)
-        .onTrue(new InstantCommand(() -> m_swerve.angleAdjust(90))
-            .ignoringDisable(true));
-
     Command lowerArmCommand = m_arm.createLowerArmCommand();
     Command raiseArmCommmand = m_arm.createRaiseArmCommand();
     // Operator controller buttons
@@ -64,12 +58,12 @@ public class RobotContainer {
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kA.value)
         .onTrue((m_intake.createResetEncoderCommand())
-            .andThen(m_intake.createSetPositionCommand(0.2)));
+        .andThen(m_intake.createSetPositionCommand(0.2)));
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kY.value)
         .whileTrue((m_intake.createSetVelocityCommand(1.0))
-            .onlyIf(raiseArmCommmand::isScheduled));
+        .onlyIf(raiseArmCommmand::isScheduled));
   }
   // spotless:on
 
