@@ -92,6 +92,9 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+
+    updateOdometry();
+
     for (SwerveModule module : modules) {
       SmartDashboard.putNumber(
           module.getName() + "RelativeTurningPosition",
@@ -149,7 +152,8 @@ public class Drivetrain extends SubsystemBase {
    * @return The heading of the robot
    */
   public Rotation2d getHeading() {
-    return m_gyro.getRotation2d();
+    // return m_gyro.getRotation2d();
+    return m_odometry.getPoseMeters().getRotation();
   }
 
   public Pose2d getPose() {
@@ -157,8 +161,8 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void resetOdometry(Pose2d pose) {
-    resetGyro();
-    m_odometry.resetPosition(getHeading(), getSwerveModulePositions(), pose);
+    // resetGyro();
+    m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
   }
 
   public SwerveModulePosition[] getSwerveModulePositions() {
