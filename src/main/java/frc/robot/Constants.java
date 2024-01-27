@@ -8,6 +8,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 public final class Constants {
+
+  public static enum Alliance {
+    RED_ALLIANCE,
+    BLUE_ALLIANCE
+  }
+
   public static final class RobotConstants {
     public static final double kNominalVoltage = 12.0;
     public static final double kPeriod = TimedRobot.kDefaultPeriod;
@@ -21,15 +27,15 @@ public final class Constants {
     public static final int REAR_RIGHT = 3;
 
     public static final class MotorControllers {
-      public static final int kRearRightDriveMotorPort = 12;
-      public static final int kFrontRightDriveMotorPort = 26;
-      public static final int kFrontLeftDriveMotorPort = 28;
-      public static final int kRearLeftDriveMotorPort = 10;
+      public static final int kRearRightDriveMotorPort = 12; // 2023 comp robot
+      public static final int kFrontRightDriveMotorPort = 26; // 2023 comp robot
+      public static final int kFrontLeftDriveMotorPort = 28; // 2023 comp robot
+      public static final int kRearLeftDriveMotorPort = 10; // 2023 comp robot
 
-      public static final int kRearRightTurningMotorPort = 13;
-      public static final int kFrontRightTurningMotorPort = 27;
-      public static final int kFrontLeftTurningMotorPort = 29;
-      public static final int kRearLeftTurningMotorPort = 11;
+      public static final int kRearRightTurningMotorPort = 13; // 2023 comp robot
+      public static final int kFrontRightTurningMotorPort = 27; // 2023 comp robot
+      public static final int kFrontLeftTurningMotorPort = 29; // 2023 comp robot
+      public static final int kRearLeftTurningMotorPort = 11; // 2023 comp robot
     }
 
     public static final class AbsoluteEncoders {
@@ -184,6 +190,12 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
+    public static enum Auto {
+      NONE,
+      B_DRIVEFWD2M,
+      R_DRIVEFWD2M,
+    }
+
     public static final double kMaxSpeedMetersPerSecond = 3.0;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
