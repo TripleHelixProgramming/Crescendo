@@ -3,8 +3,8 @@
     "robotConfiguration": {
         "mass": 74.08797700309194,
         "rotationalInertia": 6,
-        "motorMaxTorque": 1.162295081967213,
-        "motorMaxVelocity": 4800,
+        "motorMaxTorque": 1.087292817679558,
+        "motorMaxVelocity": 4704,
         "gearing": 6.75,
         "wheelbase": 0.5778496879611685,
         "trackWidth": 0.5778496879611685,
@@ -141,14 +141,14 @@
                         "first"
                     ],
                     "type": "StopPoint",
-                    "uuid": "115c7c43-5f33-4747-82aa-61f0afd42b41"
+                    "uuid": "ab966539-54c9-4a03-932a-cdaed4cb60db"
                 },
                 {
                     "scope": [
                         "last"
                     ],
                     "type": "StopPoint",
-                    "uuid": "d0a56ddf-6cf8-44a6-a5ae-8f1010a0bfd5"
+                    "uuid": "afded1c0-d353-4d30-8260-35d50fe2e833"
                 }
             ],
             "usesControlIntervalGuessing": true,
