@@ -168,7 +168,7 @@ public final class Constants {
     public static final double kIntakeD = 0.0;
 
     public static final double kIntakeRollerDiameterMeters = 0.0508; // 2 inches
-    public static final double kIntakeGearRatio = 10.0;
+    public static final double kIntakeGearRatio = 20.0; // could change
 
     public static final double kIntakePositionConversionFactor =
         (kIntakeRollerDiameterMeters * Math.PI) / kIntakeGearRatio;
