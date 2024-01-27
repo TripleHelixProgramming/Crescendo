@@ -32,12 +32,12 @@ public class RobotContainer {
   // spotless:off
   public RobotContainer() {
 
-    m_selectedAuto = Auto.R_DRIVEFWD2M;
+    m_selectedAuto = Auto.B_DRIVERIGHTTURNTORIGHT;
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
     m_swerve.configurePathPlanner();
 
-    //m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
+    //`m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
@@ -79,6 +79,8 @@ public class RobotContainer {
         return new PathPlannerAuto("B-driveFwd2m");
       case R_DRIVEFWD2M:
         return new PathPlannerAuto("R-driveFwd2m");
+      case B_DRIVERIGHTTURNTORIGHT:
+        return new PathPlannerAuto("B-DriveRightTurnToRight");
       default:
         return null;
     }
@@ -89,6 +91,7 @@ public class RobotContainer {
       case R_DRIVEFWD2M:
         return Alliance.RED_ALLIANCE;
       case B_DRIVEFWD2M:
+      case B_DRIVERIGHTTURNTORIGHT:
       default:
         return Alliance.BLUE_ALLIANCE;
     }

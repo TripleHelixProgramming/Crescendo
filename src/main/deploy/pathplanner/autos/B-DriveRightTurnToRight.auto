@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4101017713546753,
-      "y": 2.0002646446228027
+      "x": 1.4630082845687866,
+      "y": 7.23887300491333
     },
-    "rotation": 0.0
+    "rotation": 0.44431241073873906
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "move-forward-2-meters"
+            "pathName": "B-driveRightTurnRight"
           }
         }
       ]
