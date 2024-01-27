@@ -21,8 +21,8 @@ import frc.robot.intake.Intake;
 public class RobotContainer {
 
   private final Drivetrain m_swerve = new Drivetrain();
-  //private final Arm m_arm = new Arm();
-  //private final Intake m_intake = new Intake();
+  private final Arm m_arm = new Arm();
+  private final Intake m_intake = new Intake();
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
@@ -37,7 +37,7 @@ public class RobotContainer {
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
     m_swerve.configurePathPlanner();
 
-    //`m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
+    m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
@@ -49,26 +49,26 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
             .ignoringDisable(true));
 
-    //Command lowerArmCommand = m_arm.createLowerArmCommand();
-    //Command raiseArmCommmand = m_arm.createRaiseArmCommand();
+    Command lowerArmCommand = m_arm.createLowerArmCommand();
+    Command raiseArmCommmand = m_arm.createRaiseArmCommand();
     // Operator controller buttons
-    //new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(lowerArmCommand);
-    //new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(raiseArmCommmand);
+    new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(lowerArmCommand);
+    new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(raiseArmCommmand);
 
     // Intake Note from floor
-    //new JoystickButton(m_operator, Button.kX.value)
-    //    .whileTrue((m_intake.createSetVoltageCommand(10.0)));
-        // .until(m_intake::hasGamePiece));
-        // .onlyIf(lowerArmCommand::isScheduled));
+    new JoystickButton(m_operator, Button.kX.value)
+        .whileTrue((m_intake.createSetVoltageCommand(10.0)));
+        //.until(m_intake::hasGamePiece));
+        //.onlyIf(lowerArmCommand::isScheduled));
 
     // Shift Note further into Intake
-    // new JoystickButton(m_operator, Button.kA.value)
-    //    .onTrue((m_intake.createResetEncoderCommand())
-     //   .andThen(m_intake.createSetPositionCommand(0.2)));
+    new JoystickButton(m_operator, Button.kA.value)
+        .onTrue((m_intake.createResetEncoderCommand())
+        .andThen(m_intake.createSetPositionCommand(0.2)));
 
     // Shoot Note into Amp
-    // new JoystickButton(m_operator, Button.kY.value)
-    //     .whileTrue((m_intake.createSetVoltageCommand(10.0)));
+    new JoystickButton(m_operator, Button.kY.value)
+        .whileTrue((m_intake.createSetVoltageCommand(10.0)));
     //     // .onlyIf(raiseArmCommmand::isScheduled));
   }
   // spotless:on
@@ -98,7 +98,7 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    //m_arm.createLowerArmCommand().schedule();
+    m_arm.createLowerArmCommand().schedule();
   }
 
   public void periodic() {
