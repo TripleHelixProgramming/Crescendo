@@ -194,6 +194,7 @@ public final class Constants {
       NONE,
       B_DRIVEFWD2M,
       R_DRIVEFWD2M,
+      B_DRIVERIGHTTURNTORIGHT
     }
 
     public static final double kMaxSpeedMetersPerSecond = 3.0;

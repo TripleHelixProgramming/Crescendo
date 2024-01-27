@@ -79,6 +79,8 @@ public class RobotContainer {
         return new PathPlannerAuto("B-driveFwd2m");
       case R_DRIVEFWD2M:
         return new PathPlannerAuto("R-driveFwd2m");
+      case B_DRIVERIGHTTURNTORIGHT:
+        return new PathPlannerAuto("B_SpinForward");
       default:
         return null;
     }
@@ -89,6 +91,7 @@ public class RobotContainer {
       case R_DRIVEFWD2M:
         return Alliance.RED_ALLIANCE;
       case B_DRIVEFWD2M:
+      case B_DRIVERIGHTTURNTORIGHT:
       default:
         return Alliance.BLUE_ALLIANCE;
     }
