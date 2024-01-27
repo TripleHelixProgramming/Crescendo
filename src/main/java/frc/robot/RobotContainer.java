@@ -51,9 +51,9 @@ public class RobotContainer {
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue((m_intake.createSetVelocityCommand(1.0))
-        .until(m_intake::hasGamePiece)
-        .onlyIf(lowerArmCommand::isScheduled));
+        .whileTrue((m_intake.createSetVoltageCommand(10.0)));
+        // .until(m_intake::hasGamePiece));
+        // .onlyIf(lowerArmCommand::isScheduled));
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kA.value)
@@ -62,8 +62,8 @@ public class RobotContainer {
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kY.value)
-        .whileTrue((m_intake.createSetVelocityCommand(1.0))
-        .onlyIf(raiseArmCommmand::isScheduled));
+        .whileTrue((m_intake.createSetVoltageCommand(10.0)));
+        // .onlyIf(raiseArmCommmand::isScheduled));
   }
   // spotless:on
 

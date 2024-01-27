@@ -163,7 +163,7 @@ public final class Constants {
 
     public static final int k_intakeMotorCurrentLimit = 5;
 
-    public static final double kIntakeP = 0.0;
+    public static final double kIntakeP = 1.0;
     public static final double kIntakeI = 0.0;
     public static final double kIntakeD = 0.0;
 

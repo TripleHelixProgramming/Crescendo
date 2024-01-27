@@ -71,6 +71,14 @@ public class Intake extends SubsystemBase {
     return this.startEnd(() -> this.setVelocity(targetVelocity), () -> {});
   }
 
+  private void setVoltage(double targetVoltage) {
+    m_intakePIDController.setReference(targetVoltage, ControlType.kVoltage);
+  }
+
+  public Command createSetVoltageCommand(double targetVoltage) {
+    return this.startEnd(() -> this.setVoltage(targetVoltage), () -> {});
+  }
+
   private void resetIntakeEncoder() {
     m_intakeRelativeEncoder.setPosition(0.0);
   }
