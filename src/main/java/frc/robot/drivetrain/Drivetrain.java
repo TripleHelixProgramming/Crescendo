@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.Alliance;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
 
@@ -68,8 +69,6 @@ public class Drivetrain extends SubsystemBase {
           });
 
   public Drivetrain() {
-    resetGyro();
-
     for (SwerveModule module : modules) {
       module.resetDriveEncoder();
       module.initializeAbsoluteTurningEncoder();
@@ -77,8 +76,18 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  public void resetGyro() {
-    m_gyro.reset();
+  public void resetGyro(Alliance alliance) {
+    switch (alliance) {
+      case RED_ALLIANCE:
+      m_gyro.reset();
+      m_gyro.setAngleAdjustment(0.0);
+        break;
+      case BLUE_ALLIANCE:
+      default:
+        m_gyro.reset();
+        m_gyro.setAngleAdjustment(180.0);
+        break;
+    }
   }
 
   @Override

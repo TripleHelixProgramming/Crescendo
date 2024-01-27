@@ -42,7 +42,7 @@ public class RobotContainer {
 
     // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
-        .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
+        .onTrue(new InstantCommand(() -> m_swerve.resetGyro(getAlliance()))
             .ignoringDisable(true));
 
   //   Command lowerArmCommand = m_arm.createLowerArmCommand();
@@ -95,6 +95,7 @@ public class RobotContainer {
 
   public void teleopInit() {
     // m_arm.createLowerArmCommand().schedule();
+    m_swerve.resetGyro(getAlliance());
   }
 
   public void periodic() {
