@@ -28,7 +28,7 @@ public class RobotContainer {
   // spotless:off
   public RobotContainer() {
 
-    m_selectedAuto = Auto.R_DRIVEFWD2M;
+    m_selectedAuto = Auto.B_DRIVERIGHTTURNTORIGHT;
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
     m_swerve.configurePathPlanner();
@@ -76,7 +76,9 @@ public class RobotContainer {
       case R_DRIVEFWD2M:
         return new PathPlannerAuto("R-driveFwd2m");
       case B_DRIVERIGHTTURNTORIGHT:
-        return new PathPlannerAuto("B_SpinForward");
+        return new PathPlannerAuto("B-DriveRightTurnForward");
+      case R_DRIVELEFTTURNTOLEFT:
+        return new PathPlannerAuto("R-SpinForward");
       default:
         return null;
     }
@@ -85,6 +87,7 @@ public class RobotContainer {
   public Alliance getAlliance() {
     switch (m_selectedAuto) {
       case R_DRIVEFWD2M:
+      case R_DRIVELEFTTURNTOLEFT:
         return Alliance.RED_ALLIANCE;
       case B_DRIVEFWD2M:
       case B_DRIVERIGHTTURNTORIGHT:
