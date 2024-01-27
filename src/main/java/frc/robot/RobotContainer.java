@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants.Alliance;
 import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
 import frc.robot.drivetrain.Drivetrain;
@@ -25,10 +26,13 @@ public class RobotContainer {
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
+  private Alliance m_alliance;
+  private Command m_autoCommand;
+
   // spotless:off
   public RobotContainer() {
 
-    m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver));
+    m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
     m_swerve.configurePathPlanner();
 
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
@@ -67,8 +71,19 @@ public class RobotContainer {
   }
   // spotless:on
 
+  public void updateAutonomousSelection() {
+    m_autoCommand = new PathPlannerAuto("LAuto");
+    m_alliance = Alliance.BLUE_ALLIANCE;
+  }
+
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("LAuto");
+    updateAutonomousSelection();
+    return m_autoCommand;
+  }
+
+  public Alliance getAlliance() {
+    updateAutonomousSelection();
+    return m_alliance;
   }
 
   public void teleopInit() {

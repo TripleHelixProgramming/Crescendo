@@ -8,6 +8,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 public final class Constants {
+
+  public static enum Alliance {
+    RED_ALLIANCE,
+    BLUE_ALLIANCE
+  }
+
   public static final class RobotConstants {
     public static final double kNominalVoltage = 12.0;
     public static final double kPeriod = TimedRobot.kDefaultPeriod;
