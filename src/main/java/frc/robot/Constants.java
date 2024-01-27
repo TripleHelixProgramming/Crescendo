@@ -190,6 +190,11 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
+    public static enum Auto {
+      B_DRIVEFWD2M,
+      R_DRIVEFWD2M,
+    }
+
     public static final double kMaxSpeedMetersPerSecond = 3.0;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;

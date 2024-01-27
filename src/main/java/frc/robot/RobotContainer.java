@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Alliance;
+import frc.robot.Constants.AutoConstants.Auto;
 import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
 import frc.robot.drivetrain.Drivetrain;
@@ -26,11 +27,14 @@ public class RobotContainer {
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
+  private Auto m_selectedAuto;
   private Alliance m_alliance;
   private Command m_autoCommand;
 
   // spotless:off
   public RobotContainer() {
+
+    m_selectedAuto = Auto.B_DRIVEFWD2M;
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
     m_swerve.configurePathPlanner();
@@ -72,8 +76,19 @@ public class RobotContainer {
   // spotless:on
 
   public void updateAutonomousSelection() {
-    m_autoCommand = new PathPlannerAuto("LAuto");
-    m_alliance = Alliance.BLUE_ALLIANCE;
+    switch (m_selectedAuto) {
+      case B_DRIVEFWD2M:
+        m_autoCommand = new PathPlannerAuto("B-driveFwd2m");
+        m_alliance = Alliance.BLUE_ALLIANCE;
+        break;
+      case R_DRIVEFWD2M:
+        m_autoCommand = new PathPlannerAuto("R-driveFwd2m");
+        m_alliance = Alliance.RED_ALLIANCE;
+        break;
+      default:
+        m_autoCommand = null;
+        m_alliance = Alliance.BLUE_ALLIANCE;
+    }
   }
 
   public Command getAutonomousCommand() {
