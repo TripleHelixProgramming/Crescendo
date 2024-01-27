@@ -85,12 +85,12 @@ public class RobotContainer {
   }
 
   public Alliance getAlliance() {
-      switch (m_selectedAuto) {
-        case R_DRIVEFWD2M:
-          return Alliance.RED_ALLIANCE;
-        case B_DRIVEFWD2M:
-        default:
-          return Alliance.BLUE_ALLIANCE;
+    switch (m_selectedAuto) {
+      case R_DRIVEFWD2M:
+        return Alliance.RED_ALLIANCE;
+      case B_DRIVEFWD2M:
+      default:
+        return Alliance.BLUE_ALLIANCE;
     }
   }
 

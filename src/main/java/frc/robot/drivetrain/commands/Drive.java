@@ -36,7 +36,7 @@ public abstract class Drive extends Command {
     thetaDot = getTheta() * DriveConstants.kMaxRotationalVelocity;
     fieldRelative = getFieldRelative();
     alliance = getAlliance();
-    
+
     chassisSpeeds =
         fieldRelative
             ? (alliance == Alliance.RED_ALLIANCE)
