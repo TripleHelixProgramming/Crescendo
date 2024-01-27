@@ -70,6 +70,10 @@ public class RobotContainer {
     new JoystickButton(m_operator, Button.kY.value)
         .whileTrue((m_intake.createSetVoltageCommand(10.0)));
         // .onlyIf(raiseArmCommmand::isScheduled));
+    
+    // Reverses intake
+    new JoystickButton(m_operator, Button.kB.value)
+        .whileTrue((m_intake.createSetVoltageCommand(-10.0)));
   }
   // spotless:on
 
