@@ -58,17 +58,17 @@ public class RobotContainer {
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kA.value)
         .onTrue((m_intake.createResetEncoderCommand())
-            .andThen(m_intake.createSetPositionCommand(0.2)));
+        .andThen(m_intake.createSetPositionCommand(0.2)));
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kY.value)
         .whileTrue((m_intake.createSetVelocityCommand(1.0))
-            .onlyIf(raiseArmCommmand::isScheduled));
+        .onlyIf(raiseArmCommmand::isScheduled));
   }
   // spotless:on
 
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("DriveForward3meters");
+    return new PathPlannerAuto("LAuto");
   }
 
   public void teleopInit() {
