@@ -21,25 +21,23 @@ import frc.robot.intake.Intake;
 public class RobotContainer {
 
   private final Drivetrain m_swerve = new Drivetrain();
-  private final Arm m_arm = new Arm();
-  private final Intake m_intake = new Intake();
+  //private final Arm m_arm = new Arm();
+  //private final Intake m_intake = new Intake();
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
-  private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
+  //private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
   private Auto m_selectedAuto;
-  private Alliance m_alliance;
-  private Command m_autoCommand;
 
   // spotless:off
   public RobotContainer() {
 
-    m_selectedAuto = Auto.B_DRIVEFWD2M;
+    m_selectedAuto = Auto.R_DRIVEFWD2M;
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
     m_swerve.configurePathPlanner();
 
-    m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
+    //m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
@@ -51,57 +49,56 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
             .ignoringDisable(true));
 
-    Command lowerArmCommand = m_arm.createLowerArmCommand();
-    Command raiseArmCommmand = m_arm.createRaiseArmCommand();
-    // Operator controller buttons
-    new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(lowerArmCommand);
-    new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(raiseArmCommmand);
+    // Command lowerArmCommand = m_arm.createLowerArmCommand();
+    // Command raiseArmCommmand = m_arm.createRaiseArmCommand();
+    // // Operator controller buttons
+    // new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(lowerArmCommand);
+    // new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(raiseArmCommmand);
 
-    // Intake Note from floor
-    new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue((m_intake.createSetVelocityCommand(1.0))
-        .until(m_intake::hasGamePiece)
-        .onlyIf(lowerArmCommand::isScheduled));
+    // // Intake Note from floor
+    // new JoystickButton(m_operator, Button.kX.value)
+    //     .whileTrue((m_intake.createSetVelocityCommand(1.0))
+    //     .until(m_intake::hasGamePiece)
+    //     .onlyIf(lowerArmCommand::isScheduled));
 
-    // Shift Note further into Intake
-    new JoystickButton(m_operator, Button.kA.value)
-        .onTrue((m_intake.createResetEncoderCommand())
-        .andThen(m_intake.createSetPositionCommand(0.2)));
+    // // Shift Note further into Intake
+    // new JoystickButton(m_operator, Button.kA.value)
+    //     .onTrue((m_intake.createResetEncoderCommand())
+    //     .andThen(m_intake.createSetPositionCommand(0.2)));
 
-    // Shoot Note into Amp
-    new JoystickButton(m_operator, Button.kY.value)
-        .whileTrue((m_intake.createSetVelocityCommand(1.0))
-        .onlyIf(raiseArmCommmand::isScheduled));
+    // // Shoot Note into Amp
+    // new JoystickButton(m_operator, Button.kY.value)
+    //     .whileTrue((m_intake.createSetVelocityCommand(1.0))
+    //     .onlyIf(raiseArmCommmand::isScheduled));
   }
   // spotless:on
 
-  public void updateAutonomousSelection() {
+  public Command getAutonomousCommand() {
     switch (m_selectedAuto) {
       case B_DRIVEFWD2M:
-        m_autoCommand = new PathPlannerAuto("B-driveFwd2m");
-        m_alliance = Alliance.BLUE_ALLIANCE;
-        break;
+        return new PathPlannerAuto("B-driveFwd2m");
       case R_DRIVEFWD2M:
-        m_autoCommand = new PathPlannerAuto("R-driveFwd2m");
-        m_alliance = Alliance.RED_ALLIANCE;
-        break;
+        return new PathPlannerAuto("R-driveFwd2m");
       default:
-        m_autoCommand = null;
-        m_alliance = Alliance.BLUE_ALLIANCE;
+        return null;
     }
   }
 
-  public Command getAutonomousCommand() {
-    updateAutonomousSelection();
-    return m_autoCommand;
-  }
-
   public Alliance getAlliance() {
-    updateAutonomousSelection();
-    return m_alliance;
+      switch (m_selectedAuto) {
+        case R_DRIVEFWD2M:
+          return Alliance.RED_ALLIANCE;
+        case B_DRIVEFWD2M:
+        default:
+          return Alliance.BLUE_ALLIANCE;
+    }
   }
 
   public void teleopInit() {
-    m_arm.createLowerArmCommand().schedule();
+    //m_arm.createLowerArmCommand().schedule();
+  }
+
+  public void periodic() {
+    SmartDashboard.putString("Alliance", getAlliance().toString());
   }
 }

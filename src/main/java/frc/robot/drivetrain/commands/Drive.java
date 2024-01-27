@@ -2,6 +2,7 @@
 
 package frc.robot.drivetrain.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.Alliance;
@@ -35,12 +36,12 @@ public abstract class Drive extends Command {
     thetaDot = getTheta() * DriveConstants.kMaxRotationalVelocity;
     fieldRelative = getFieldRelative();
     alliance = getAlliance();
-
+    
     chassisSpeeds =
         fieldRelative
             ? (alliance == Alliance.RED_ALLIANCE)
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                    xDot, yDot, thetaDot, drivetrain.getHeading().unaryMinus())
+                    xDot, yDot, thetaDot, drivetrain.getHeading().rotateBy(new Rotation2d(Math.PI)))
                 : ChassisSpeeds.fromFieldRelativeSpeeds(
                     xDot, yDot, thetaDot, drivetrain.getHeading())
             : new ChassisSpeeds(xDot, yDot, thetaDot);
