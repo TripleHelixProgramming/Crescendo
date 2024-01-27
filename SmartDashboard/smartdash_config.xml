@@ -1,5 +1,9 @@
 <xml version="1.0">
   <dashboard>
+    <widget field="Alliance" type="String"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="171" y="260" />
+    </widget>
     <widget field="RearRightAbsoluteMagnetOffset" type="Number"
       class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
       <location x="356" y="152" />

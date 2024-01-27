@@ -4,16 +4,19 @@ package frc.robot.drivetrain.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Constants.Alliance;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
 
 public class ZorroDrive extends Drive {
 
   Joystick m_controller;
+  private Alliance alliance;
 
-  public ZorroDrive(Drivetrain subsystem, Joystick joysticks) {
+  public ZorroDrive(Drivetrain subsystem, Joystick joysticks, Alliance alliance) {
     super(subsystem);
     this.m_controller = joysticks;
+    this.alliance = alliance;
   }
 
   @Override
@@ -37,5 +40,10 @@ public class ZorroDrive extends Drive {
   @Override
   public boolean getFieldRelative() {
     return m_controller.getRawButton(OIConstants.kZorroEUp);
+  }
+
+  @Override
+  public Alliance getAlliance() {
+    return alliance;
   }
 }

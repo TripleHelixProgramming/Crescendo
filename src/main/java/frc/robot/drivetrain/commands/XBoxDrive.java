@@ -5,20 +5,23 @@ package frc.robot.drivetrain.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Constants.Alliance;
 import frc.robot.drivetrain.Drivetrain;
 
 public class XBoxDrive extends Drive {
 
   XboxController m_controller;
+  private Alliance alliance;
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
-  public XBoxDrive(Drivetrain subsystem, XboxController joysticks) {
+  public XBoxDrive(Drivetrain subsystem, XboxController joysticks, Alliance alliance) {
     super(subsystem);
     this.m_controller = joysticks;
+    this.alliance = alliance;
   }
 
   @Override
@@ -39,5 +42,10 @@ public class XBoxDrive extends Drive {
   @Override
   public boolean getFieldRelative() {
     return m_controller.getLeftBumper();
+  }
+
+  @Override
+  public Alliance getAlliance() {
+    return alliance;
   }
 }
