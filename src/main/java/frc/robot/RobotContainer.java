@@ -45,27 +45,27 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro(getAlliance()))
             .ignoringDisable(true));
 
-  //   Command lowerArmCommand = m_arm.createLowerArmCommand();
-  //   Command raiseArmCommmand = m_arm.createRaiseArmCommand();
-  //   // Operator controller buttons
-  //   new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(lowerArmCommand);
-  //   new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(raiseArmCommmand);
+    // Command lowerArmCommand = m_arm.createLowerArmCommand();
+    // Command raiseArmCommmand = m_arm.createRaiseArmCommand();
+    // // Operator controller buttons
+    // new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(lowerArmCommand);
+    // new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(raiseArmCommmand);
 
-  //   // Intake Note from floor
-  //   new JoystickButton(m_operator, Button.kX.value)
-  //       .whileTrue((m_intake.createSetVoltageCommand(10.0)));
-  //       // .until(m_intake::hasGamePiece));
-  //       // .onlyIf(lowerArmCommand::isScheduled));
+    // // Intake Note from floor
+    // new JoystickButton(m_operator, Button.kX.value)
+    //     .whileTrue((m_intake.createSetVoltageCommand(10.0)));
+    //     // .until(m_intake::hasGamePiece));
+    //     // .onlyIf(lowerArmCommand::isScheduled));
 
-  //   // Shift Note further into Intake
-  //   new JoystickButton(m_operator, Button.kA.value)
-  //       .onTrue((m_intake.createResetEncoderCommand())
-  //       .andThen(m_intake.createSetPositionCommand(0.2)));
+    // // Shift Note further into Intake
+    // new JoystickButton(m_operator, Button.kA.value)
+    //     .onTrue((m_intake.createResetEncoderCommand())
+    //     .andThen(m_intake.createSetPositionCommand(0.2)));
 
-  //   // Shoot Note into Amp
-  //   new JoystickButton(m_operator, Button.kY.value)
-  //       .whileTrue((m_intake.createSetVoltageCommand(10.0)));
-  //       // .onlyIf(raiseArmCommmand::isScheduled));
+    // // Shoot Note into Amp
+    // new JoystickButton(m_operator, Button.kY.value)
+    //     .whileTrue((m_intake.createSetVoltageCommand(10.0)));
+    //     // .onlyIf(raiseArmCommmand::isScheduled));
   }
   // spotless:on
 
@@ -98,7 +98,6 @@ public class RobotContainer {
 
   public void teleopInit() {
     // m_arm.createLowerArmCommand().schedule();
-    m_swerve.resetGyro(getAlliance());
   }
 
   public void periodic() {
