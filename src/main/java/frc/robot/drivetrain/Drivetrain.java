@@ -69,24 +69,12 @@ public class Drivetrain extends SubsystemBase {
           });
 
   public Drivetrain() {
+    m_gyro.reset();
+
     for (SwerveModule module : modules) {
       module.resetDriveEncoder();
       module.initializeAbsoluteTurningEncoder();
       module.initializeRelativeTurningEncoder();
-    }
-  }
-
-  public void resetGyro(Alliance alliance) {
-    switch (alliance) {
-      case RED_ALLIANCE:
-      m_gyro.reset();
-      m_gyro.setAngleAdjustment(0.0);
-        break;
-      case BLUE_ALLIANCE:
-      default:
-        m_gyro.reset();
-        m_gyro.setAngleAdjustment(180.0);
-        break;
     }
   }
 
@@ -165,6 +153,23 @@ public class Drivetrain extends SubsystemBase {
    * @param pose The robot pose
    */
   public void setPose(Pose2d pose) {
+    m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
+  }
+
+  /**
+   * @param alliance The current alliance color
+   */
+  public void setHeading(Alliance alliance) {
+    Pose2d pose;
+
+    switch (alliance) {
+      case RED_ALLIANCE:
+        pose = new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI));
+      case BLUE_ALLIANCE:
+      default:
+        pose = new Pose2d(getPose().getTranslation(), new Rotation2d());
+    }
+
     m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
   }
 

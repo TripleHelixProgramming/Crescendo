@@ -42,7 +42,7 @@ public class RobotContainer {
 
     // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
-        .onTrue(new InstantCommand(() -> m_swerve.resetGyro(getAlliance()))
+        .onTrue(new InstantCommand(() -> m_swerve.setHeading(getAlliance()))
             .ignoringDisable(true));
 
     // Command lowerArmCommand = m_arm.createLowerArmCommand();
