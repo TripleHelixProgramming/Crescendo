@@ -159,15 +159,17 @@ public class Drivetrain extends SubsystemBase {
   /**
    * @param alliance The current alliance color
    */
-  public void setHeading(Alliance alliance) {
+  public void resetHeading(Alliance alliance) {
     Pose2d pose;
 
     switch (alliance) {
       case RED_ALLIANCE:
         pose = new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI));
+        break;
       case BLUE_ALLIANCE:
       default:
         pose = new Pose2d(getPose().getTranslation(), new Rotation2d());
+        break;
     }
 
     m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);

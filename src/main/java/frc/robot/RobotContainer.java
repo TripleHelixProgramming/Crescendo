@@ -28,6 +28,7 @@ public class RobotContainer {
   // spotless:off
   public RobotContainer() {
 
+    //m_selectedAuto = Auto.R_DRIVELEFTTURNTOLEFT;
     m_selectedAuto = Auto.B_DRIVERIGHTTURNTORIGHT;
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
@@ -42,7 +43,7 @@ public class RobotContainer {
 
     // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
-        .onTrue(new InstantCommand(() -> m_swerve.setHeading(getAlliance()))
+        .onTrue(new InstantCommand(() -> m_swerve.resetHeading(getAlliance()))
             .ignoringDisable(true));
 
     // Command lowerArmCommand = m_arm.createLowerArmCommand();
