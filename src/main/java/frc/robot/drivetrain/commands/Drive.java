@@ -46,12 +46,6 @@ public abstract class Drive extends Command {
                     xDot, yDot, thetaDot, drivetrain.getHeading())
             : new ChassisSpeeds(xDot, yDot, thetaDot);
 
-    // chassisSpeeds =
-    //     fieldRelative
-    //         ? ChassisSpeeds.fromFieldRelativeSpeeds(xDot, yDot, thetaDot,
-    // drivetrain.getHeading())
-    //         : new ChassisSpeeds(xDot, yDot, thetaDot);
-
     drivetrain.drive(chassisSpeeds);
   }
 
