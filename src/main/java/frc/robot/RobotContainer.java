@@ -102,16 +102,16 @@ public class RobotContainer {
     private final String filename;
     private final Alliance alliance;
 
-    public Autonomous(String filename, Alliance alliance) {
+    private Autonomous(String filename, Alliance alliance) {
       this.filename = filename;
       this.alliance = alliance;
     }
 
-    public Command getPathPlannerAuto() {
+    private Command getPathPlannerAuto() {
       return new PathPlannerAuto(filename);
     }
 
-    public Alliance getAlliance() {
+    private Alliance getAlliance() {
       return alliance;
     }
   }
