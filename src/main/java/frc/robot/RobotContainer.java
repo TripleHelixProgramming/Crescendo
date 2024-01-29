@@ -73,6 +73,7 @@ public class RobotContainer {
    */
   public Autonomous getSelectedAutonomous() {
     return new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
+    // return new Autonomous("B_SpinForward", Alliance.BLUE_ALLIANCE);
   }
 
   /**
