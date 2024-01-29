@@ -68,14 +68,23 @@ public class RobotContainer {
   }
   // spotless:on
 
+  /**
+   * @return The selected autonomous mode
+   */
   public Autonomous getSelectedAutonomous() {
     return new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
   }
 
+  /**
+   * @return The Command that runs the selected autonomous mode
+   */
   public Command getAutonomousCommand() {
     return getSelectedAutonomous().getPathPlannerAuto();
   }
 
+  /**
+   * @return The alliance color corresponding to the selected autonomous mode
+   */
   public Alliance getAlliance() {
     return getSelectedAutonomous().getAlliance();
   }
