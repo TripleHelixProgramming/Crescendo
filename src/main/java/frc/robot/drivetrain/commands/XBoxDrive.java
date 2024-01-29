@@ -40,12 +40,12 @@ public class XBoxDrive extends Drive {
   }
 
   @Override
-  public boolean getFieldRelative() {
+  public boolean fieldRelative() {
     return m_controller.getLeftBumper();
   }
 
   @Override
-  public Alliance getAlliance() {
-    return alliance;
+  public boolean rotateField() {
+    return (alliance == Alliance.RED_ALLIANCE);
   }
 }

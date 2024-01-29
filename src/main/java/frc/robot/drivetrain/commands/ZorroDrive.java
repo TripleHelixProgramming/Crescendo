@@ -38,12 +38,12 @@ public class ZorroDrive extends Drive {
   }
 
   @Override
-  public boolean getFieldRelative() {
+  public boolean fieldRelative() {
     return m_controller.getRawButton(OIConstants.kZorroEUp);
   }
 
   @Override
-  public Alliance getAlliance() {
-    return alliance;
+  public boolean rotateField() {
+    return (alliance == Alliance.RED_ALLIANCE);
   }
 }
