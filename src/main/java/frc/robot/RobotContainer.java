@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Alliance;
-import frc.robot.Constants.AutoConstants.Auto;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDrive;
@@ -21,15 +20,11 @@ public class RobotContainer {
   // private final Intake m_intake = new Intake();
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
-  // private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
-  private Auto m_selectedAuto;
+  // private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
   // spotless:off
   public RobotContainer() {
-
-    //m_selectedAuto = Auto.R_DRIVELEFTTURNTOLEFT;
-    m_selectedAuto = Auto.B_DRIVERIGHTTURNTORIGHT;
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
     m_swerve.configurePathPlanner();
@@ -70,31 +65,26 @@ public class RobotContainer {
   }
   // spotless:on
 
-  public Command getAutonomousCommand() {
-    switch (m_selectedAuto) {
-      case B_DRIVEFWD2M:
-        return new PathPlannerAuto("B-driveFwd2m");
-      case R_DRIVEFWD2M:
-        return new PathPlannerAuto("R-driveFwd2m");
-      case B_DRIVERIGHTTURNTORIGHT:
-        return new PathPlannerAuto("B-DriveRightTurnForward");
-      case R_DRIVELEFTTURNTOLEFT:
-        return new PathPlannerAuto("R-SpinForward");
-      default:
-        return null;
-    }
+  /**
+   * @return The selected autonomous mode
+   */
+  public Autonomous getSelectedAutonomous() {
+    return new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
+    // return new Autonomous("B_SpinForward", Alliance.BLUE_ALLIANCE);
   }
 
+  /**
+   * @return The Command that runs the selected autonomous mode
+   */
+  public Command getAutonomousCommand() {
+    return getSelectedAutonomous().getPathPlannerAuto();
+  }
+
+  /**
+   * @return The alliance color corresponding to the selected autonomous mode
+   */
   public Alliance getAlliance() {
-    switch (m_selectedAuto) {
-      case R_DRIVEFWD2M:
-      case R_DRIVELEFTTURNTOLEFT:
-        return Alliance.RED_ALLIANCE;
-      case B_DRIVEFWD2M:
-      case B_DRIVERIGHTTURNTORIGHT:
-      default:
-        return Alliance.BLUE_ALLIANCE;
-    }
+    return getSelectedAutonomous().getAlliance();
   }
 
   public void teleopInit() {
@@ -103,5 +93,24 @@ public class RobotContainer {
 
   public void periodic() {
     SmartDashboard.putString("Alliance", getAlliance().toString());
+  }
+
+  private class Autonomous {
+
+    private final String filename;
+    private final Alliance alliance;
+
+    private Autonomous(String filename, Alliance alliance) {
+      this.filename = filename;
+      this.alliance = alliance;
+    }
+
+    private Command getPathPlannerAuto() {
+      return new PathPlannerAuto(filename);
+    }
+
+    private Alliance getAlliance() {
+      return alliance;
+    }
   }
 }
