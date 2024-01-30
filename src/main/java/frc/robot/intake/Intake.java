@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
@@ -18,8 +17,6 @@ public class Intake extends SubsystemBase {
   private final RelativeEncoder m_intakeRelativeEncoder;
 
   private final SparkPIDController m_intakePIDController;
-
-  private final DigitalInput m_noteSensor;
 
   public Intake() {
     m_intakeMotor = new CANSparkMax(ArmConstants.k_intakeMotorPort, MotorType.kBrushless);
@@ -48,8 +45,6 @@ public class Intake extends SubsystemBase {
         ArmConstants.kIntakePositionConversionFactor);
     m_intakeRelativeEncoder.setVelocityConversionFactor(
         ArmConstants.kIntakeVelocityConversionFactor);
-
-    m_noteSensor = new DigitalInput(ArmConstants.kNoteSensorDIOPort);
   }
 
   private void stopIntake() {
@@ -94,6 +89,6 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean hasGamePiece() {
-    return m_noteSensor.get();
+    return m_intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
   }
 }

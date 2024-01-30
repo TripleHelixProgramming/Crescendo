@@ -51,11 +51,11 @@ public class Arm extends SubsystemBase {
   // https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#instance-command-factory-methods
 
   public Command createLowerArmCommand() {
-    return this.startEnd(() -> this.pneumaticRetract(), () -> {});
+    return this.runOnce(() -> this.pneumaticRetract());
   }
 
   public Command createRaiseArmCommand() {
-    return this.startEnd(() -> this.pneumaticDeploy(), () -> {});
+    return this.runOnce(() -> this.pneumaticDeploy());
   }
 
   public BooleanSupplier isArmRaised() {

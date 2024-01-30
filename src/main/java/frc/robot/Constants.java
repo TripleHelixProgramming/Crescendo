@@ -185,8 +185,6 @@ public final class Constants {
     public static final int kArmMoverLeftReverseChannel = 1;
     public static final int kArmMoverRightForwardChannel = 2;
     public static final int kArmMoverRightReverseChannel = 3;
-
-    public static final int kNoteSensorDIOPort = 3;
   }
 
   public static final class AutoConstants {
