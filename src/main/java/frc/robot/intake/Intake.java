@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -30,6 +31,8 @@ public class Intake extends SubsystemBase {
     m_intakeMotor.setSmartCurrentLimit(ArmConstants.k_intakeMotorCurrentLimit);
 
     m_intakeMotor.setInverted(false);
+
+    m_intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).enableLimitSwitch(false);
 
     m_intakePIDController = m_intakeMotor.getPIDController();
 
@@ -76,7 +79,8 @@ public class Intake extends SubsystemBase {
   }
 
   public Command createSetVoltageCommand(double targetVoltage) {
-    return this.startEnd(() -> this.setVoltage(targetVoltage), () -> {});
+    // return this.startEnd(() -> this.setVoltage(targetVoltage), () -> {});
+    return this.run(() -> this.setVoltage(targetVoltage));
   }
 
   private void resetIntakeEncoder() {
