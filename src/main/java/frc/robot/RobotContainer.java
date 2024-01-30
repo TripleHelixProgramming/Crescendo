@@ -32,7 +32,7 @@ public class RobotContainer {
   // spotless:off
   public RobotContainer() {
 
-    m_selectedAuto = Auto.R_DRIVEFWD2M;
+    m_selectedAuto = Auto.B_DRIVEFWD2M;
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
     m_swerve.configurePathPlanner();
@@ -57,19 +57,23 @@ public class RobotContainer {
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue((m_intake.createSetVoltageCommand(10.0)));
-        // .until(m_intake::hasGamePiece));
-        // .onlyIf(lowerArmCommand::isScheduled));
+        .whileTrue(m_intake.createSetVoltageCommand(10.0));
+        // .until(m_intake::hasGamePiece);
+        // .onlyIf(lowerArmCommand::isScheduled)));
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kA.value)
-        .onTrue((m_intake.createResetEncoderCommand())
-        .andThen(m_intake.createSetPositionCommand(0.2)));
+        .onTrue((m_intake.createResetEncoderCommand()
+        .andThen(m_intake.createSetPositionCommand(0.2))));
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kY.value)
-        .whileTrue((m_intake.createSetVoltageCommand(10.0)));
-        // .onlyIf(raiseArmCommmand::isScheduled));
+        .whileTrue(m_intake.createSetVoltageCommand(10.0));
+        // .onlyIf(raiseArmCommmand::isScheduled)));
+
+    // Reverses intake
+    new JoystickButton(m_operator, Button.kB.value)
+        .whileTrue(m_intake.createSetVoltageCommand(-10.0));
   }
   // spotless:on
 
