@@ -4,8 +4,8 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,7 +32,9 @@ public class Intake extends SubsystemBase {
 
     m_intakeMotor.setInverted(false);
 
-    m_intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).enableLimitSwitch(false);
+    m_intakeMotor
+        .getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen)
+        .enableLimitSwitch(false);
 
     m_intakePIDController = m_intakeMotor.getPIDController();
 
