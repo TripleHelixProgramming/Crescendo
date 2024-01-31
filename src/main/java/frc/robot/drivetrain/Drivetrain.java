@@ -100,6 +100,10 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber(
           module.getName() + "AbsoluteMagnetOffset",
           module.getAbsTurningEncoderOffset().getDegrees());
+
+      SmartDashboard.putNumber(
+          module.getName() + "OutputCurrent",
+          module.getDriveMotorCurrent());
     }
 
     SmartDashboard.putNumber("GyroAngle", m_gyro.getRotation2d().getDegrees());

@@ -248,4 +248,8 @@ public class SwerveModule {
   public String getName() {
     return moduleName;
   }
+
+  public double getDriveMotorCurrent() {
+    return m_driveMotor.getOutputCurrent();
+  }
 }

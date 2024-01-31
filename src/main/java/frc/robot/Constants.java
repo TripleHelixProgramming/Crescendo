@@ -167,14 +167,14 @@ public final class Constants {
   public static final class ArmConstants {
     public static final int k_intakeMotorPort = 16;
 
-    public static final int k_intakeMotorCurrentLimit = 5;
+    public static final int k_intakeMotorCurrentLimit = 15;
 
     public static final double kIntakeP = 1.0;
     public static final double kIntakeI = 0.0;
     public static final double kIntakeD = 0.0;
 
     public static final double kIntakeRollerDiameterMeters = 0.0508; // 2 inches
-    public static final double kIntakeGearRatio = 20.0; // could change
+    public static final double kIntakeGearRatio = 10.0;
 
     public static final double kIntakePositionConversionFactor =
         (kIntakeRollerDiameterMeters * Math.PI) / kIntakeGearRatio;

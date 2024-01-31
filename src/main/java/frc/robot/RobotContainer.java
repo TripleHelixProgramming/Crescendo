@@ -57,7 +57,7 @@ public class RobotContainer {
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue(m_intake.createSetVoltageCommand(10.0)
+        .whileTrue(m_intake.createSetVoltageCommand(12.0)
         .until(m_intake::hasGamePiece)
         .onlyIf(m_arm.isArmLowered()));
 
@@ -68,12 +68,12 @@ public class RobotContainer {
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kY.value)
-        .whileTrue(m_intake.createSetVoltageCommand(10.0)
+        .whileTrue(m_intake.createSetVoltageCommand(12.0)
         .onlyIf(m_arm.isArmRaised()));
 
     // Reverses intake
     new JoystickButton(m_operator, Button.kB.value)
-        .whileTrue(m_intake.createSetVoltageCommand(-10.0));
+        .whileTrue(m_intake.createSetVoltageCommand(-12.0));
   }
   // spotless:on
 
