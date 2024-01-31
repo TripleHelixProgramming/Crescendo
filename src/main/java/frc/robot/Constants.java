@@ -169,9 +169,13 @@ public final class Constants {
 
     public static final int k_intakeMotorCurrentLimit = 15;
 
-    public static final double kIntakeP = 1.0;
-    public static final double kIntakeI = 0.0;
-    public static final double kIntakeD = 0.0;
+    public static final double kIntakeVelocityP = 1.0;
+    public static final double kIntakeVelocityI = 0.0;
+    public static final double kIntakeVelocityD = 0.0;
+
+    public static final double kIntakePositionP = 2.0;
+    public static final double kIntakePositionI = 0.0;
+    public static final double kIntakePositionD = 0.0;
 
     public static final double kIntakeRollerDiameterMeters = 0.0508; // 2 inches
     public static final double kIntakeGearRatio = 10.0;

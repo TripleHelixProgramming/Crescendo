@@ -37,10 +37,6 @@ public class Intake extends SubsystemBase {
 
     m_intakePIDController = m_intakeMotor.getPIDController();
 
-    m_intakePIDController.setP(ArmConstants.kIntakeP);
-    m_intakePIDController.setI(ArmConstants.kIntakeI);
-    m_intakePIDController.setD(ArmConstants.kIntakeD);
-
     m_intakeRelativeEncoder = m_intakeMotor.getEncoder();
 
     m_intakeRelativeEncoder.setPositionConversionFactor(
@@ -58,6 +54,9 @@ public class Intake extends SubsystemBase {
   }
 
   private void setPosition(double targetPosition) {
+    m_intakePIDController.setP(ArmConstants.kIntakePositionP);
+    m_intakePIDController.setI(ArmConstants.kIntakePositionI);
+    m_intakePIDController.setD(ArmConstants.kIntakePositionD);
     m_intakePIDController.setReference(targetPosition, ControlType.kPosition);
   }
 
@@ -66,6 +65,9 @@ public class Intake extends SubsystemBase {
   }
 
   private void setVelocity(double targetVelocity) {
+    m_intakePIDController.setP(ArmConstants.kIntakeVelocityP);
+    m_intakePIDController.setI(ArmConstants.kIntakeVelocityI);
+    m_intakePIDController.setD(ArmConstants.kIntakeVelocityD);
     m_intakePIDController.setReference(targetVelocity, ControlType.kVelocity);
   }
 
