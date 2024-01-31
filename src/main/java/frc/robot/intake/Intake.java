@@ -57,6 +57,7 @@ public class Intake extends SubsystemBase {
     m_intakePIDController.setP(ArmConstants.kIntakePositionP);
     m_intakePIDController.setI(ArmConstants.kIntakePositionI);
     m_intakePIDController.setD(ArmConstants.kIntakePositionD);
+    m_intakeRelativeEncoder.setPosition(0.0);
     m_intakePIDController.setReference(targetPosition, ControlType.kPosition);
   }
 
@@ -84,7 +85,7 @@ public class Intake extends SubsystemBase {
     return this.run(() -> this.setVoltage(targetVoltage));
   }
 
-  private void resetIntakeEncoder() {
+  public void resetIntakeEncoder() {
     m_intakeRelativeEncoder.setPosition(0.0);
   }
 
