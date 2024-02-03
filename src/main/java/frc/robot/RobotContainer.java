@@ -3,6 +3,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
+
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -17,6 +19,8 @@ import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDrive;
 import frc.robot.intake.Intake;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+
 public class RobotContainer {
 
   private final Drivetrain m_swerve = new Drivetrain();
@@ -26,8 +30,22 @@ public class RobotContainer {
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
+  //digital Inputs
+  private final DigitalInput[] autoSwitches = new DigitalInput[Constants.dioPortNumbers.length];
+  
+  private final DigitalInput allianceSelectionSwitch;
+
+
+
   // spotless:off
   public RobotContainer() {
+
+    for(int i = 0; i < Constants.dioPortNumbers.length; i++){
+      autoSwitches[i] = new DigitalInput(Constants.dioPortNumbers[i]);
+    }    
+
+    allianceSelectionSwitch = new DigitalInput(Constants.dioAllianceSwitchPort);
+    
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
     m_swerve.configurePathPlanner();
@@ -72,8 +90,57 @@ public class RobotContainer {
    * @return The selected autonomous mode
    */
   public Autonomous getSelectedAutonomous() {
-    return new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
-    // return new Autonomous("B_SpinForward", Alliance.BLUE_ALLIANCE);
+
+    int selectedSwitch = getSelectedDIO();
+
+    switch(selectedSwitch){
+      case 0:
+      return getAllianceSwitchIsBlue()
+        ?  new Autonomous("B-driveFwd2m", Alliance.BLUE_ALLIANCE)
+        :  new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
+      case 1:
+      return getAllianceSwitchIsBlue()
+        ?  new Autonomous("B_SpinForward", Alliance.BLUE_ALLIANCE)
+        :  new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
+
+      case 2:
+        
+      
+      case 3:
+        
+      
+      case 4:
+        
+
+      case 5:
+        
+      
+      case 6:
+        
+      
+      case 7:
+        
+
+      default:
+        return null;
+
+
+    }
+  }
+
+  public int getSelectedDIO(){
+
+    for(int dioPort = 0; dioPort< autoSwitches.length; dioPort++){
+      if(autoSwitches[dioPort].get()){
+        return dioPort;
+      }
+    }
+
+    return -1;
+  }
+
+  public boolean getAllianceSwitchIsBlue(){
+    return allianceSelectionSwitch.get();
   }
 
   /**
@@ -96,7 +163,9 @@ public class RobotContainer {
 
   public void periodic() {
     SmartDashboard.putString("Alliance", getAlliance().toString());
+    SmartDashboard.putString("Auto", getSelectedAutonomous().getFilename());
   }
+  
 
   private class Autonomous {
 
@@ -114,6 +183,10 @@ public class RobotContainer {
 
     private Alliance getAlliance() {
       return alliance;
+    }
+
+    private String getFilename() {
+      return filename;
     }
   }
 }

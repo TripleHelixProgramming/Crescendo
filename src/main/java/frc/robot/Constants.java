@@ -6,13 +6,18 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.TimedRobot;
-
 public final class Constants {
 
   public static enum Alliance {
     RED_ALLIANCE,
     BLUE_ALLIANCE
   }
+
+
+  public static final int dioAllianceSwitchPort = 10;
+
+  //length is 8
+  public static final int[] dioPortNumbers = {11, 12, 13, 18, 19, 20, 21, 22};
 
   public static final class RobotConstants {
     public static final double kNominalVoltage = 12.0;
@@ -199,9 +204,12 @@ public final class Constants {
     public static final double kPYController = 1.0;
     public static final double kPThetaController = 1.0;
 
+
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
         new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
+
+  
 }
