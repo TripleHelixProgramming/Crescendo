@@ -173,7 +173,7 @@ public final class Constants {
     public static final double kIntakeVelocityI = 0.0;
     public static final double kIntakeVelocityD = 0.0;
 
-    public static final double kIntakePositionP = 40.0;
+    public static final double kIntakePositionP = 10.0;
     public static final double kIntakePositionI = 0.0;
     public static final double kIntakePositionD = 0.0;
 

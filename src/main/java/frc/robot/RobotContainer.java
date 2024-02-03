@@ -59,12 +59,12 @@ public class RobotContainer {
     new JoystickButton(m_operator, Button.kX.value)
         .whileTrue(m_intake.createSetVoltageCommand(12.0)
         .until(m_intake::hasGamePiece)
-        .andThen(m_intake.createSetPositionCommand(0.2)));
-        //.onlyIf(m_arm.isArmLowered()));
+        .andThen(m_intake.createSetPositionCommand(0.18))
+        .onlyIf(m_arm.isArmLowered()));
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kA.value)
-        .whileTrue(m_intake.createSetPositionCommand(0.2));
+        .whileTrue(m_intake.createSetPositionCommand(0.05));
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kY.value)
