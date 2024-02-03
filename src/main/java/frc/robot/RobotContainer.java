@@ -112,12 +112,6 @@ public class RobotContainer {
     }
   }
 
-  // private void updateAllianceColor() {
-  //   m_swerve.setAlliance(
-  //       allianceSelectionSwitch.get() ? AllianceColor.RED_ALLIANCE :
-  // AllianceColor.BLUE_ALLIANCE);
-  // }
-
   /** Updates the autonomous based on the physical selector switch */
   private void updateSelectedAutonomous() {
     switch (getSelectedAutonomousMode()) {
