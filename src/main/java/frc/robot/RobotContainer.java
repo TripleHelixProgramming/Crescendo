@@ -52,22 +52,22 @@ public class RobotContainer {
     Command lowerArmCommand = m_arm.createLowerArmCommand();
     Command raiseArmCommmand = m_arm.createRaiseArmCommand();
     // Operator controller buttons
-    new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(lowerArmCommand);
-    new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(raiseArmCommmand);
+    new JoystickButton(m_operator, Button.kA.value).onTrue(lowerArmCommand);
+    new JoystickButton(m_operator, Button.kY.value).onTrue(raiseArmCommmand);
 
     // Intake Note from floor
-    new JoystickButton(m_operator, Button.kX.value)
+    new JoystickButton(m_operator, Button.kRightBumper.value)
         .whileTrue(m_intake.createSetVoltageCommand(12.0)
         .until(m_intake::hasGamePiece)
         .andThen(m_intake.createSetPositionCommand(0.18))
         .onlyIf(m_arm.isArmLowered()));
 
     // Shift Note further into Intake
-    new JoystickButton(m_operator, Button.kA.value)
+    new JoystickButton(m_operator, Button.kX.value)
         .whileTrue(m_intake.createSetPositionCommand(0.05));
 
     // Shoot Note into Amp
-    new JoystickButton(m_operator, Button.kY.value)
+    new JoystickButton(m_operator, Button.kLeftBumper.value)
         .whileTrue(m_intake.createSetVoltageCommand(12.0)
         .onlyIf(m_arm.isArmRaised()));
 
