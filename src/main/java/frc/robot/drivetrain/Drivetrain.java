@@ -110,7 +110,7 @@ public class Drivetrain extends SubsystemBase {
   /**
    * @param chassisSpeeds Robot-relative chassis speeds (x, y, theta)
    */
-  public void drive(ChassisSpeeds chassisSpeeds) {
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
@@ -223,7 +223,7 @@ public class Drivetrain extends SubsystemBase {
         this::getPose,
         this::setPose,
         this::getChassisSpeeds,
-        this::drive,
+        this::setChassisSpeeds,
 
         // update these to fit our robot
         new HolonomicPathFollowerConfig(
