@@ -110,7 +110,7 @@ public class Drivetrain extends SubsystemBase {
     SmartDashboard.putBoolean("isRed", getRedAlliance());
     SmartDashboard.putNumber("GyroAngle", m_gyro.getRotation2d().getDegrees());
   }
-  
+
   /**
    * @param chassisSpeeds Robot-relative chassis speeds (x, y, theta)
    */
@@ -166,9 +166,10 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void resetHeading() {
-    Pose2d pose = getRedAlliance()
-      ? new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI))
-      : new Pose2d(getPose().getTranslation(), new Rotation2d());
+    Pose2d pose =
+        getRedAlliance()
+            ? new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI))
+            : new Pose2d(getPose().getTranslation(), new Rotation2d());
 
     m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
   }
