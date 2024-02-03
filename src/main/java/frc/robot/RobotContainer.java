@@ -127,7 +127,7 @@ public class RobotContainer {
   }
 
   public boolean getAllianceSwitchIsBlue() {
-    return allianceSelectionSwitch.get();
+    return !allianceSelectionSwitch.get();
   }
 
   /**
