@@ -18,19 +18,16 @@ public class ZorroDrive extends Drive {
 
   @Override
   public double getX() {
-    // return -m_controller.getRawAxis(OIConstants.kZorroRightYAxis);
     return -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightYAxis), 0.05);
   }
 
   @Override
   public double getY() {
-    // return -m_controller.getRawAxis(OIConstants.kZorroRightXAxis);
     return -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightXAxis), 0.05);
   }
 
   @Override
   public double getTheta() {
-    // return -m_controller.getRawAxis(OIConstants.kZorroLeftXAxis);
     return -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroLeftXAxis), 0.05);
   }
 

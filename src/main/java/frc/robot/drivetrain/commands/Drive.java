@@ -43,7 +43,6 @@ public abstract class Drive extends Command {
             ? drivetrain.getFieldRotated()
                 ? ChassisSpeeds.fromFieldRelativeSpeeds(
                     xDot, yDot, thetaDot, drivetrain.getHeading().rotateBy(new Rotation2d(Math.PI)))
-                    //xDot, yDot, thetaDot, drivetrain.getHeading())
                 : ChassisSpeeds.fromFieldRelativeSpeeds(
                     xDot, yDot, thetaDot, drivetrain.getHeading())
             : new ChassisSpeeds(xDot, yDot, thetaDot);
