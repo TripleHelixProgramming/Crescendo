@@ -9,8 +9,9 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.Alliance;
 import frc.robot.Constants.AutoConstants.Auto;
 import frc.robot.Constants.OIConstants;
@@ -81,9 +82,9 @@ public class RobotContainer {
         .whileTrue(m_intake.createSetPositionCommand(-0.27));
 
     // Gives note to teammates
-    ParallelCommandGroup giveToTeam = new ParallelCommandGroup(m_arm.createRaiseArmCommand(), 
-        m_intake.createSetVoltageCommand(-12));
-    new JoystickButton(m_operator, Button.kBack.value).onTrue(giveToTeam);
+    WaitCommand createWaitCommand = new WaitCommand(0.8);
+    ParallelCommandGroup giveGamePieceCommand = new ParallelCommandGroup(raiseArmCommmand.alongWith(createWaitCommand.andThen(m_intake.createSetVoltageCommand(-12))));
+    new JoystickButton(m_operator, Button.kBack.value).onTrue(giveGamePieceCommand);
   }
   // spotless:on
 
