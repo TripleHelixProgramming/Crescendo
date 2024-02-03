@@ -14,10 +14,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.Alliance;
+import frc.robot.Constants.AllianceColor;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
 
@@ -27,6 +28,8 @@ public class Drivetrain extends SubsystemBase {
   static double kMaxAngularSpeed = Constants.DriveConstants.kMaxRotationalVelocity;
 
   private final SwerveDriveKinematics m_kinematics = DriveConstants.kDriveKinematics;
+
+  private AllianceColor m_alliance;
 
   private final SwerveModule m_frontLeft =
       new SwerveModule(
@@ -68,8 +71,12 @@ public class Drivetrain extends SubsystemBase {
             m_rearRight.getPosition()
           });
 
+  private final Field2d m_field = new Field2d();
+
   public Drivetrain() {
     m_gyro.reset();
+
+    SmartDashboard.putData("Field", m_field);
 
     for (SwerveModule module : modules) {
       module.resetDriveEncoder();
@@ -78,14 +85,10 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  public void resetGyro() {
-
-    m_gyro.reset();
-  }
-
   @Override
   public void periodic() {
     updateOdometry();
+    m_field.setRobotPose(m_odometry.getPoseMeters());
 
     for (SwerveModule module : modules) {
       SmartDashboard.putNumber(
@@ -104,9 +107,10 @@ public class Drivetrain extends SubsystemBase {
           module.getAbsTurningEncoderOffset().getDegrees());
     }
 
+    SmartDashboard.putBoolean("isRed", getRedAlliance());
     SmartDashboard.putNumber("GyroAngle", m_gyro.getRotation2d().getDegrees());
   }
-
+  
   /**
    * @param chassisSpeeds Robot-relative chassis speeds (x, y, theta)
    */
@@ -161,21 +165,10 @@ public class Drivetrain extends SubsystemBase {
     m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
   }
 
-  /**
-   * @param alliance The current alliance color
-   */
-  public void resetHeading(Alliance alliance) {
-    Pose2d pose;
-
-    switch (alliance) {
-      case RED_ALLIANCE:
-        pose = new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI));
-        break;
-      case BLUE_ALLIANCE:
-      default:
-        pose = new Pose2d(getPose().getTranslation(), new Rotation2d());
-        break;
-    }
+  public void resetHeading() {
+    Pose2d pose = getRedAlliance()
+      ? new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI))
+      : new Pose2d(getPose().getTranslation(), new Rotation2d());
 
     m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
   }
@@ -246,5 +239,21 @@ public class Drivetrain extends SubsystemBase {
         }, // Never mirror path
         this // Reference to this subsystem to set requirements
         );
+  }
+
+  public void setAlliance(AllianceColor alliance) {
+    this.m_alliance = alliance;
+  }
+
+  public AllianceColor getAlliance() {
+    return this.m_alliance;
+  }
+
+  public boolean getFieldRotated() {
+    return m_alliance == AllianceColor.RED_ALLIANCE;
+  }
+
+  public boolean getRedAlliance() {
+    return m_alliance == AllianceColor.RED_ALLIANCE;
   }
 }

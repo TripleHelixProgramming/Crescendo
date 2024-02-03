@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 
 public final class Constants {
 
-  public static enum Alliance {
+  public static enum AllianceColor {
     RED_ALLIANCE,
     BLUE_ALLIANCE
   }

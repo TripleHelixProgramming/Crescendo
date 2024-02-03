@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.Alliance;
+import frc.robot.Constants.AllianceColor;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDrive;
@@ -38,7 +38,7 @@ public class RobotContainer {
 
     allianceSelectionSwitch = new DigitalInput(Constants.dioAllianceSwitchPort);
 
-    m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
+    m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver));
     m_swerve.configurePathPlanner();
 
     // m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
@@ -50,7 +50,7 @@ public class RobotContainer {
 
     // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
-        .onTrue(new InstantCommand(() -> m_swerve.resetGyro()).ignoringDisable(true));
+        .onTrue(new InstantCommand(() -> m_swerve.resetHeading()).ignoringDisable(true));
     // Command lowerArmCommand = m_arm.createLowerArmCommand();
     // Command raiseArmCommmand = m_arm.createRaiseArmCommand();
     // // Operator controller buttons
@@ -84,25 +84,15 @@ public class RobotContainer {
     return m_autonomous.getPathPlannerAuto();
   }
 
-  /**
-   * @return The alliance color corresponding to the physical selection switch
-   */
-  public Alliance getAlliance() {
-    return getAllianceSwitchIsBlue() ? Alliance.BLUE_ALLIANCE : Alliance.RED_ALLIANCE;
-  }
-
   public void teleopInit() {
     // m_arm.createLowerArmCommand().schedule();
   }
 
   public void periodic() {
     updateSelectedAutonomous();
-
     if (m_autonomous != null) {
-      SmartDashboard.putString("Alliance", getAlliance().toString());
       SmartDashboard.putString("Auto", m_autonomous.getFilename());
     } else {
-      SmartDashboard.putString("Alliance", "Null");
       SmartDashboard.putString("Auto", "Null");
     }
   }
@@ -111,7 +101,7 @@ public class RobotContainer {
 
     private final String filename;
 
-    private Autonomous(String filename, Alliance alliance) {
+    private Autonomous(String filename, AllianceColor alliance) {
       this.filename = filename;
     }
 
@@ -124,21 +114,28 @@ public class RobotContainer {
     }
   }
 
+  private void updateAllianceColor() {
+    m_swerve.setAlliance(
+        allianceSelectionSwitch.get() ? AllianceColor.RED_ALLIANCE : AllianceColor.BLUE_ALLIANCE);
+  }
+
   /** Updates the autonomous based on the physical selector switch */
   private void updateSelectedAutonomous() {
+    updateAllianceColor();
+
     switch (getSelectedAutonomousMode()) {
       case 0:
         m_autonomous =
-            getAllianceSwitchIsBlue()
-                ? new Autonomous("B-driveFwd2m", Alliance.BLUE_ALLIANCE)
-                : new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
+            m_swerve.getRedAlliance()
+                ? new Autonomous("R-driveFwd2m", AllianceColor.RED_ALLIANCE)
+                : new Autonomous("B-driveFwd2m", AllianceColor.BLUE_ALLIANCE);
         break;
 
       case 1:
         m_autonomous =
-            getAllianceSwitchIsBlue()
-                ? new Autonomous("B_SpinForward", Alliance.BLUE_ALLIANCE)
-                : new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
+            m_swerve.getRedAlliance()
+                ? new Autonomous("R-driveFwd2m", AllianceColor.RED_ALLIANCE)
+                : new Autonomous("B_SpinForward", AllianceColor.BLUE_ALLIANCE);
         break;
 
       case 2:
@@ -168,12 +165,5 @@ public class RobotContainer {
       }
     }
     return -1; // failure of the physical switch
-  }
-
-  /**
-   * @return True if alliance color switch is blue
-   */
-  private boolean getAllianceSwitchIsBlue() {
-    return !allianceSelectionSwitch.get();
   }
 }
