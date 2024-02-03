@@ -59,7 +59,7 @@ public class RobotContainer {
     new JoystickButton(m_operator, Button.kRightBumper.value)
         .whileTrue(m_intake.createSetVoltageCommand(12.0)
         .until(m_intake::hasGamePiece)
-        .andThen(m_intake.createSetPositionCommand(0.18))
+        .andThen(m_intake.createSetPositionCommand(0.2))
         .onlyIf(m_arm.isArmLowered()));
 
     // Shift Note further into Intake
