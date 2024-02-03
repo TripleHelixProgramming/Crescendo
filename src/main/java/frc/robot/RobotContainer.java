@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+// import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.Alliance;
@@ -33,6 +33,7 @@ public class RobotContainer {
 
   // spotless:off
   public RobotContainer() {
+    WaitCommand createWaitCommand = new WaitCommand(0.8);
 
     m_selectedAuto = Auto.B_DRIVEFWD2M;
 
@@ -51,11 +52,11 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
             .ignoringDisable(true));
 
-    Command lowerArmCommand = m_arm.createLowerArmCommand();
-    Command raiseArmCommmand = m_arm.createRaiseArmCommand();
+    // Command lowerArmCommand = m_arm.createLowerArmCommand();
+    // Command raiseArmCommmand = m_arm.createRaiseArmCommand();
     // Operator controller buttons
-    new JoystickButton(m_operator, Button.kA.value).onTrue(lowerArmCommand);
-    new JoystickButton(m_operator, Button.kY.value).onTrue(raiseArmCommmand);
+    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
+    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
@@ -82,9 +83,14 @@ public class RobotContainer {
         .whileTrue(m_intake.createSetPositionCommand(-0.27));
 
     // Gives note to teammates
-    WaitCommand createWaitCommand = new WaitCommand(0.8);
-    ParallelCommandGroup giveGamePieceCommand = new ParallelCommandGroup(raiseArmCommmand.alongWith(createWaitCommand.andThen(m_intake.createSetVoltageCommand(-12))));
-    new JoystickButton(m_operator, Button.kBack.value).onTrue(giveGamePieceCommand);
+    /*  ParallelCommandGroup giveGamePieceCommand = 
+        new ParallelCommandGroup(m_arm.createRaiseArmCommand()
+        .alongWith(createWaitCommand
+        .andThen(m_intake.createSetVoltageCommand(-12)))); */
+    new JoystickButton(m_operator, Button.kBack.value)
+        .onTrue(m_arm.createRaiseArmCommand()
+        .alongWith(createWaitCommand
+        .andThen(m_intake.createSetVoltageCommand(-12))));
   }
   // spotless:on
 
