@@ -17,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.Alliance;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
 
@@ -68,7 +69,7 @@ public class Drivetrain extends SubsystemBase {
           });
 
   public Drivetrain() {
-    resetGyro();
+    m_gyro.reset();
 
     for (SwerveModule module : modules) {
       module.resetDriveEncoder();
@@ -77,10 +78,12 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+
   public void resetGyro() {
 
     m_gyro.reset();
   }
+
 
   @Override
   public void periodic() {
@@ -157,6 +160,25 @@ public class Drivetrain extends SubsystemBase {
    * @param pose The robot pose
    */
   public void setPose(Pose2d pose) {
+    m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
+  }
+
+  /**
+   * @param alliance The current alliance color
+   */
+  public void resetHeading(Alliance alliance) {
+    Pose2d pose;
+
+    switch (alliance) {
+      case RED_ALLIANCE:
+        pose = new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI));
+        break;
+      case BLUE_ALLIANCE:
+      default:
+        pose = new Pose2d(getPose().getTranslation(), new Rotation2d());
+        break;
+    }
+
     m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
   }
 
