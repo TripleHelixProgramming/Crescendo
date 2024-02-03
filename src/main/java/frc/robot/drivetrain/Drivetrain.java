@@ -14,11 +14,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.AllianceColor;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
 
@@ -28,8 +29,6 @@ public class Drivetrain extends SubsystemBase {
   static double kMaxAngularSpeed = Constants.DriveConstants.kMaxRotationalVelocity;
 
   private final SwerveDriveKinematics m_kinematics = DriveConstants.kDriveKinematics;
-
-  private AllianceColor m_alliance;
 
   private final SwerveModule m_frontLeft =
       new SwerveModule(
@@ -72,6 +71,8 @@ public class Drivetrain extends SubsystemBase {
           });
 
   private final Field2d m_field = new Field2d();
+
+  private final DigitalInput allianceSelectionSwitch = new DigitalInput(AutoConstants.kAllianceColorSelectorPort);
 
   public Drivetrain() {
     m_gyro.reset();
@@ -242,19 +243,11 @@ public class Drivetrain extends SubsystemBase {
         );
   }
 
-  public void setAlliance(AllianceColor alliance) {
-    this.m_alliance = alliance;
-  }
-
-  public AllianceColor getAlliance() {
-    return this.m_alliance;
-  }
-
   public boolean getFieldRotated() {
-    return m_alliance == AllianceColor.RED_ALLIANCE;
+    return allianceSelectionSwitch.get();
   }
 
   public boolean getRedAlliance() {
-    return m_alliance == AllianceColor.RED_ALLIANCE;
+    return allianceSelectionSwitch.get();
   }
 }

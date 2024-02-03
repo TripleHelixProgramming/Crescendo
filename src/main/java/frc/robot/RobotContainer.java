@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.AllianceColor;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDrive;
@@ -25,18 +25,15 @@ public class RobotContainer {
   // private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
   // digital inputs for autonomous selection
-  private final DigitalInput[] autonomousModes = new DigitalInput[Constants.dioPortNumbers.length];
-  private final DigitalInput allianceSelectionSwitch;
+  private final DigitalInput[] autonomousModes = new DigitalInput[AutoConstants.kAutonomousModeSelectorPorts.length];
 
   private Autonomous m_autonomous;
 
   public RobotContainer() {
 
-    for (int i = 0; i < Constants.dioPortNumbers.length; i++) {
-      autonomousModes[i] = new DigitalInput(Constants.dioPortNumbers[i]);
+    for (int i = 0; i < AutoConstants.kAutonomousModeSelectorPorts.length; i++) {
+      autonomousModes[i] = new DigitalInput(AutoConstants.kAutonomousModeSelectorPorts[i]);
     }
-
-    allianceSelectionSwitch = new DigitalInput(Constants.dioAllianceSwitchPort);
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver));
     m_swerve.configurePathPlanner();
@@ -101,7 +98,7 @@ public class RobotContainer {
 
     private final String filename;
 
-    private Autonomous(String filename, AllianceColor alliance) {
+    private Autonomous(String filename) {
       this.filename = filename;
     }
 
@@ -114,28 +111,26 @@ public class RobotContainer {
     }
   }
 
-  private void updateAllianceColor() {
-    m_swerve.setAlliance(
-        allianceSelectionSwitch.get() ? AllianceColor.RED_ALLIANCE : AllianceColor.BLUE_ALLIANCE);
-  }
+  // private void updateAllianceColor() {
+  //   m_swerve.setAlliance(
+  //       allianceSelectionSwitch.get() ? AllianceColor.RED_ALLIANCE : AllianceColor.BLUE_ALLIANCE);
+  // }
 
   /** Updates the autonomous based on the physical selector switch */
   private void updateSelectedAutonomous() {
-    updateAllianceColor();
-
     switch (getSelectedAutonomousMode()) {
       case 0:
         m_autonomous =
             m_swerve.getRedAlliance()
-                ? new Autonomous("R-driveFwd2m", AllianceColor.RED_ALLIANCE)
-                : new Autonomous("B-driveFwd2m", AllianceColor.BLUE_ALLIANCE);
+                ? new Autonomous("R-driveFwd2m")
+                : new Autonomous("B-driveFwd2m");
         break;
 
       case 1:
         m_autonomous =
             m_swerve.getRedAlliance()
-                ? new Autonomous("R-driveFwd2m", AllianceColor.RED_ALLIANCE)
-                : new Autonomous("B_SpinForward", AllianceColor.BLUE_ALLIANCE);
+                ? new Autonomous("R-driveFwd2m")
+                : new Autonomous("B_SpinForward");
         break;
 
       case 2:
