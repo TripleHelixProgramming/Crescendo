@@ -3,7 +3,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -19,8 +18,8 @@ import frc.robot.drivetrain.commands.ZorroDrive;
 public class RobotContainer {
 
   private final Drivetrain m_swerve = new Drivetrain();
-  //private final Arm m_arm = new Arm();
-  //private final Intake m_intake = new Intake();
+  // private final Arm m_arm = new Arm();
+  // private final Intake m_intake = new Intake();
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
@@ -29,32 +28,30 @@ public class RobotContainer {
   private final DigitalInput[] autoSwitches = new DigitalInput[Constants.dioPortNumbers.length];
 
   private final DigitalInput allianceSelectionSwitch;
-  
+
   private Autonomous m_autonomous;
 
   public RobotContainer() {
 
-    for(int i = 0; i < Constants.dioPortNumbers.length; i++){
+    for (int i = 0; i < Constants.dioPortNumbers.length; i++) {
       autoSwitches[i] = new DigitalInput(Constants.dioPortNumbers[i]);
-    }    
+    }
 
     allianceSelectionSwitch = new DigitalInput(Constants.dioAllianceSwitchPort);
-    
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
     m_swerve.configurePathPlanner();
 
-    //m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
+    // m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
 
     // Create a button on Smart Dashboard to reset the encoders.
-    SmartDashboard.putData("Align Encoders",
-        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
-            .ignoringDisable(true));
+    SmartDashboard.putData(
+        "Align Encoders",
+        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets()).ignoringDisable(true));
 
     // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
-        .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
-            .ignoringDisable(true));
+        .onTrue(new InstantCommand(() -> m_swerve.resetGyro()).ignoringDisable(true));
 
     // Command lowerArmCommand = m_arm.createLowerArmCommand();
     // Command raiseArmCommmand = m_arm.createRaiseArmCommand();
@@ -78,6 +75,7 @@ public class RobotContainer {
     //     .whileTrue((m_intake.createSetVoltageCommand(10.0)));
     //     // .onlyIf(raiseArmCommmand::isScheduled));
   }
+
   // spotless:on
 
   /**
@@ -89,15 +87,17 @@ public class RobotContainer {
 
     switch (selectedSwitch) {
       case 0:
-          m_autonomous = getAllianceSwitchIsBlue()
-            ? new Autonomous("B-driveFwd2m", Alliance.BLUE_ALLIANCE)
-            : new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
-            break;
+        m_autonomous =
+            getAllianceSwitchIsBlue()
+                ? new Autonomous("B-driveFwd2m", Alliance.BLUE_ALLIANCE)
+                : new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
+        break;
       case 1:
-          m_autonomous = getAllianceSwitchIsBlue()
-            ? new Autonomous("B_SpinForward", Alliance.BLUE_ALLIANCE)
-            : new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
-            break;
+        m_autonomous =
+            getAllianceSwitchIsBlue()
+                ? new Autonomous("B_SpinForward", Alliance.BLUE_ALLIANCE)
+                : new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
+        break;
 
       case 2:
 
@@ -137,17 +137,15 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     updateSelectedAutonomous();
     return m_autonomous.getPathPlannerAuto();
-    
-    //return getSelectedAutonomous().getPathPlannerAuto();
+
+    // return getSelectedAutonomous().getPathPlannerAuto();
   }
 
   /**
    * @return The alliance color corresponding to the selected autonomous mode
    */
   public Alliance getAlliance() {
-    return getAllianceSwitchIsBlue()
-      ? Alliance.BLUE_ALLIANCE
-      : Alliance.RED_ALLIANCE;
+    return getAllianceSwitchIsBlue() ? Alliance.BLUE_ALLIANCE : Alliance.RED_ALLIANCE;
   }
 
   public void teleopInit() {
@@ -156,11 +154,10 @@ public class RobotContainer {
 
   public void periodic() {
     updateSelectedAutonomous();
-    if(m_autonomous != null){
-    SmartDashboard.putString("Alliance", getAlliance().toString());
-    SmartDashboard.putString("Auto", m_autonomous.getFilename());
-    }
-    else{
+    if (m_autonomous != null) {
+      SmartDashboard.putString("Alliance", getAlliance().toString());
+      SmartDashboard.putString("Auto", m_autonomous.getFilename());
+    } else {
       SmartDashboard.putString("Alliance", "Null");
       SmartDashboard.putString("Auto", "Null");
     }
@@ -178,10 +175,6 @@ public class RobotContainer {
 
     private Command getPathPlannerAuto() {
       return new PathPlannerAuto(filename);
-    }
-
-    private Alliance getAlliance() {
-      return alliance;
     }
 
     private String getFilename() {
