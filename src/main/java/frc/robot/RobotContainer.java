@@ -30,6 +30,7 @@ public class RobotContainer {
 
   private Autonomous m_autonomous;
 
+  // spotless:off
   public RobotContainer() {
 
     for (int i = 0; i < AutoConstants.kAutonomousModeSelectorPorts.length; i++) {
@@ -42,13 +43,13 @@ public class RobotContainer {
     // m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
 
     // Create a button on Smart Dashboard to reset the encoders.
-    SmartDashboard.putData(
-        "Align Encoders",
+    SmartDashboard.putData("Align Encoders",
         new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets()).ignoringDisable(true));
 
     // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetHeading()).ignoringDisable(true));
+    
     // Command lowerArmCommand = m_arm.createLowerArmCommand();
     // Command raiseArmCommmand = m_arm.createRaiseArmCommand();
     // // Operator controller buttons
@@ -71,7 +72,6 @@ public class RobotContainer {
     //     .whileTrue((m_intake.createSetVoltageCommand(10.0)));
     //     // .onlyIf(raiseArmCommmand::isScheduled));
   }
-
   // spotless:on
 
   /**
