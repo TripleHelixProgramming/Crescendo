@@ -16,7 +16,7 @@ public class XBoxDrive extends Drive {
   private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
-  public XBoxDrive(Drivetrain subsystem, XboxController joysticks, boolean rotateField) {
+  public XBoxDrive(Drivetrain subsystem, XboxController joysticks) {
     super(subsystem);
     this.m_controller = joysticks;
   }
