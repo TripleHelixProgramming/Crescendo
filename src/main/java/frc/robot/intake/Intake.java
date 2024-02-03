@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase {
 
   private final SparkPIDController m_intakePIDController;
 
-  private final DigitalInput m_noteSensor = new DigitalInput(1);
+  private final DigitalInput m_noteSensor = new DigitalInput(ArmConstants.kNoteSensorDIOPort);
 
   public Intake() {
     m_intakeMotor = new CANSparkMax(ArmConstants.k_intakeMotorPort, MotorType.kBrushless);
