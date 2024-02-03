@@ -189,6 +189,23 @@ public final class Constants {
     public static final int kNoteSensorDIOPort = 3;
   }
 
+  public static final class ClimberConstants {
+    public static final int kLeftClimberMotorPort = 24;
+    public static final int kRightClimberMotorPort = 23;
+
+    public static final int kClimberMotorCurrentLimit = 20;
+
+    public static final double kClimberP = 1.0;
+    public static final double kClimberI = 0.0;
+    public static final double kClimberD = 0.0;
+
+    public static final double kClimberGearRatio = 5.0; // gear ratio of climber motor
+    public static final double kClimberPitch = 10.0 * 39.37; // pitch is 10 * 39.37 turns per meter
+
+    public static final double kClimberPositionConversionFactor = 1/(kClimberGearRatio * kClimberPitch); // meters per rotation
+    public static final double kClimberVelocityConversionFactor = kClimberPositionConversionFactor / 60.0; // meters per second
+  }
+
   public static final class AutoConstants {
     public static enum Auto {
       NONE,
