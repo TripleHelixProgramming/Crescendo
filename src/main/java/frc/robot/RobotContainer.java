@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Constants.Alliance;
 import frc.robot.Constants.AutoConstants.Auto;
 import frc.robot.Constants.OIConstants;
@@ -64,7 +65,7 @@ public class RobotContainer {
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue(m_intake.createSetPositionCommand(0.05));
+        .whileTrue(m_intake.createSetPositionCommand(0.25));
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kLeftBumper.value)
@@ -72,8 +73,17 @@ public class RobotContainer {
         .onlyIf(m_arm.isArmRaised()));
 
     // Reverses intake
+    // new JoystickButton(m_operator, Button.kB.value)
+    //     .whileTrue(m_intake.createSetVoltageCommand(-12.0));
+
+    // Moves note back in order to place in trap
     new JoystickButton(m_operator, Button.kB.value)
-        .whileTrue(m_intake.createSetVoltageCommand(-12.0));
+        .whileTrue(m_intake.createSetPositionCommand(-0.27));
+
+    // Gives note to teammates
+    ParallelCommandGroup giveToTeam = new ParallelCommandGroup(m_arm.createRaiseArmCommand(), 
+        m_intake.createSetVoltageCommand(-12));
+    new JoystickButton(m_operator, Button.kBack.value).onTrue(giveToTeam);
   }
   // spotless:on
 
