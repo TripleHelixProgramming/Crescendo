@@ -5,7 +5,6 @@ package frc.robot;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -22,11 +21,10 @@ public class RobotContainer {
   // private final Intake m_intake = new Intake();
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
-  private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
+  // private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
-  // digital Inputs
-  private final DigitalInput[] autoSwitches = new DigitalInput[Constants.dioPortNumbers.length];
-
+  // digital inputs for autonomous selection
+  private final DigitalInput[] autonomousModes = new DigitalInput[Constants.dioPortNumbers.length];
   private final DigitalInput allianceSelectionSwitch;
 
   private Autonomous m_autonomous;
@@ -34,7 +32,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     for (int i = 0; i < Constants.dioPortNumbers.length; i++) {
-      autoSwitches[i] = new DigitalInput(Constants.dioPortNumbers[i]);
+      autonomousModes[i] = new DigitalInput(Constants.dioPortNumbers[i]);
     }
 
     allianceSelectionSwitch = new DigitalInput(Constants.dioAllianceSwitchPort);
@@ -79,19 +77,63 @@ public class RobotContainer {
   // spotless:on
 
   /**
-   * @return The selected autonomous mode
+   * @return The Command that runs the selected autonomous mode
    */
-  public void updateSelectedAutonomous() {
+  public Command getAutonomousCommand() {
+    updateSelectedAutonomous();
+    return m_autonomous.getPathPlannerAuto();
+  }
 
-    int selectedSwitch = getSelectedDIO();
+  /**
+   * @return The alliance color corresponding to the physical selection switch
+   */
+  public Alliance getAlliance() {
+    return getAllianceSwitchIsBlue() ? Alliance.BLUE_ALLIANCE : Alliance.RED_ALLIANCE;
+  }
 
-    switch (selectedSwitch) {
+  public void teleopInit() {
+    // m_arm.createLowerArmCommand().schedule();
+  }
+
+  public void periodic() {
+    updateSelectedAutonomous();
+
+    if (m_autonomous != null) {
+      SmartDashboard.putString("Alliance", getAlliance().toString());
+      SmartDashboard.putString("Auto", m_autonomous.getFilename());
+    } else {
+      SmartDashboard.putString("Alliance", "Null");
+      SmartDashboard.putString("Auto", "Null");
+    }
+  }
+
+  private class Autonomous {
+
+    private final String filename;
+
+    private Autonomous(String filename, Alliance alliance) {
+      this.filename = filename;
+    }
+
+    private Command getPathPlannerAuto() {
+      return new PathPlannerAuto(filename);
+    }
+
+    private String getFilename() {
+      return filename;
+    }
+  }
+
+  /** Updates the autonomous based on the physical selector switch */
+  private void updateSelectedAutonomous() {
+    switch (getSelectedAutonomousMode()) {
       case 0:
         m_autonomous =
             getAllianceSwitchIsBlue()
                 ? new Autonomous("B-driveFwd2m", Alliance.BLUE_ALLIANCE)
                 : new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
         break;
+
       case 1:
         m_autonomous =
             getAllianceSwitchIsBlue()
@@ -116,69 +158,22 @@ public class RobotContainer {
     }
   }
 
-  public int getSelectedDIO() {
-
-    for (int dioPort = 0; dioPort < autoSwitches.length; dioPort++) {
-      if (!autoSwitches[dioPort].get()) {
-        return dioPort;
+  /**
+   * @return Index in array of Digital Inputs corresponding to selected auto mode
+   */
+  private int getSelectedAutonomousMode() {
+    for (int port = 0; port < autonomousModes.length; port++) {
+      if (!autonomousModes[port].get()) {
+        return port;
       }
     }
-
-    return -1;
+    return -1; // failure of the physical switch
   }
 
-  public boolean getAllianceSwitchIsBlue() {
+  /**
+   * @return True if alliance color switch is blue
+   */
+  private boolean getAllianceSwitchIsBlue() {
     return !allianceSelectionSwitch.get();
-  }
-
-  /**
-   * @return The Command that runs the selected autonomous mode
-   */
-  public Command getAutonomousCommand() {
-    updateSelectedAutonomous();
-    return m_autonomous.getPathPlannerAuto();
-
-    // return getSelectedAutonomous().getPathPlannerAuto();
-  }
-
-  /**
-   * @return The alliance color corresponding to the selected autonomous mode
-   */
-  public Alliance getAlliance() {
-    return getAllianceSwitchIsBlue() ? Alliance.BLUE_ALLIANCE : Alliance.RED_ALLIANCE;
-  }
-
-  public void teleopInit() {
-    // m_arm.createLowerArmCommand().schedule();
-  }
-
-  public void periodic() {
-    updateSelectedAutonomous();
-    if (m_autonomous != null) {
-      SmartDashboard.putString("Alliance", getAlliance().toString());
-      SmartDashboard.putString("Auto", m_autonomous.getFilename());
-    } else {
-      SmartDashboard.putString("Alliance", "Null");
-      SmartDashboard.putString("Auto", "Null");
-    }
-  }
-
-  private class Autonomous {
-
-    private final String filename;
-    private final Alliance alliance;
-
-    private Autonomous(String filename, Alliance alliance) {
-      this.filename = filename;
-      this.alliance = alliance;
-    }
-
-    private Command getPathPlannerAuto() {
-      return new PathPlannerAuto(filename);
-    }
-
-    private String getFilename() {
-      return filename;
-    }
   }
 }
