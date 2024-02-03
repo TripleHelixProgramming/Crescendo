@@ -97,6 +97,7 @@ public class RobotContainer {
           m_autonomous = getAllianceSwitchIsBlue()
             ? new Autonomous("B_SpinForward", Alliance.BLUE_ALLIANCE)
             : new Autonomous("R-driveFwd2m", Alliance.RED_ALLIANCE);
+            break;
 
       case 2:
 
@@ -144,8 +145,9 @@ public class RobotContainer {
    * @return The alliance color corresponding to the selected autonomous mode
    */
   public Alliance getAlliance() {
-    updateSelectedAutonomous();
-    return m_autonomous.getAlliance();
+    return getAllianceSwitchIsBlue()
+      ? Alliance.BLUE_ALLIANCE
+      : Alliance.RED_ALLIANCE;
   }
 
   public void teleopInit() {
@@ -153,6 +155,7 @@ public class RobotContainer {
   }
 
   public void periodic() {
+    updateSelectedAutonomous();
     if(m_autonomous != null){
     SmartDashboard.putString("Alliance", getAlliance().toString());
     SmartDashboard.putString("Auto", m_autonomous.getFilename());
