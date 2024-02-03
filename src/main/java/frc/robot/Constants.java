@@ -11,7 +11,8 @@ public final class Constants {
 
   public static enum Alliance {
     RED_ALLIANCE,
-    BLUE_ALLIANCE
+    BLUE_ALLIANCE,
+    NONE_BAD
   }
 
   public static final int dioAllianceSwitchPort = 10;
