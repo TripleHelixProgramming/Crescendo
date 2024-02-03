@@ -78,6 +78,11 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
+  public void resetGyro() {
+
+    m_gyro.reset();
+  }
+
   @Override
   public void periodic() {
     updateOdometry();
