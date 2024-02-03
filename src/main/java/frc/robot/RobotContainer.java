@@ -25,7 +25,8 @@ public class RobotContainer {
   // private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
   // digital inputs for autonomous selection
-  private final DigitalInput[] autonomousModes = new DigitalInput[AutoConstants.kAutonomousModeSelectorPorts.length];
+  private final DigitalInput[] autonomousModes =
+      new DigitalInput[AutoConstants.kAutonomousModeSelectorPorts.length];
 
   private Autonomous m_autonomous;
 
@@ -113,7 +114,8 @@ public class RobotContainer {
 
   // private void updateAllianceColor() {
   //   m_swerve.setAlliance(
-  //       allianceSelectionSwitch.get() ? AllianceColor.RED_ALLIANCE : AllianceColor.BLUE_ALLIANCE);
+  //       allianceSelectionSwitch.get() ? AllianceColor.RED_ALLIANCE :
+  // AllianceColor.BLUE_ALLIANCE);
   // }
 
   /** Updates the autonomous based on the physical selector switch */

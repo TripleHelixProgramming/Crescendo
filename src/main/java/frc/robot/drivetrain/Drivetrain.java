@@ -72,7 +72,8 @@ public class Drivetrain extends SubsystemBase {
 
   private final Field2d m_field = new Field2d();
 
-  private final DigitalInput allianceSelectionSwitch = new DigitalInput(AutoConstants.kAllianceColorSelectorPort);
+  private final DigitalInput allianceSelectionSwitch =
+      new DigitalInput(AutoConstants.kAllianceColorSelectorPort);
 
   public Drivetrain() {
     m_gyro.reset();
