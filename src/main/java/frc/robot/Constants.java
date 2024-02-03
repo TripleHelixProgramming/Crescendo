@@ -9,16 +9,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 
 public final class Constants {
 
-  public static enum AllianceColor {
-    RED_ALLIANCE,
-    BLUE_ALLIANCE
-  }
-
-  public static final int dioAllianceSwitchPort = 10;
-
-  // length is 8
-  public static final int[] dioPortNumbers = {11, 12, 13, 18, 19, 20, 21, 22};
-
   public static final class RobotConstants {
     public static final double kNominalVoltage = 12.0;
     public static final double kPeriod = TimedRobot.kDefaultPeriod;
@@ -195,6 +185,11 @@ public final class Constants {
   }
 
   public static final class AutoConstants {
+    public static final int kAllianceColorSelectorPort = 10;
+
+    // length is 8
+    public static final int[] kAutonomousModeSelectorPorts = {11, 12, 13, 18, 19, 20, 21, 22};
+
     public static final double kMaxSpeedMetersPerSecond = 3.0;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
