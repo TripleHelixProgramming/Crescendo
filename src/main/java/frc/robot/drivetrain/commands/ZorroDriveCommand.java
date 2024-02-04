@@ -7,11 +7,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
 
-public class ZorroDrive extends Drive {
+public class ZorroDriveCommand extends DriveCommand {
 
   Joystick m_controller;
 
-  public ZorroDrive(Drivetrain subsystem, Joystick joysticks) {
+  public ZorroDriveCommand(Drivetrain subsystem, Joystick joysticks) {
     super(subsystem);
     this.m_controller = joysticks;
   }
