@@ -2,6 +2,7 @@
 
 package frc.robot;
 
+// spotless:off
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
@@ -17,6 +18,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
 // import frc.robot.intake.Intake;
+// spotless:on
 
 public class RobotContainer {
 
