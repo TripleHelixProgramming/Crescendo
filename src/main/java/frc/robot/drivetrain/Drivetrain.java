@@ -5,7 +5,6 @@ package frc.robot.drivetrain;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -214,35 +213,28 @@ public class Drivetrain extends SubsystemBase {
         m_rearRight.getState());
   }
 
+  // spotless:off
   public void configurePathPlanner() {
     AutoBuilder.configureHolonomic(
-        this::getPose,
-        this::setPose,
-        this::getChassisSpeeds,
-        this::setChassisSpeeds,
+        this::getPose, // Supplier for the current pose
+        this::setPose, // Consumer for resetting the pose
+        this::getChassisSpeeds, // Supplier for the current robot-relative chassis speeds
+        this::setChassisSpeeds, // Consumer for setting the robot-relative chassis speeds
 
-        // update these to fit our robot
+        // Configuring the path following commands
         new HolonomicPathFollowerConfig(
-            // Translation PID constants
-            new PIDConstants(
-                Constants.ModuleConstants.kDriveP,
-                Constants.ModuleConstants.kDriveI,
-                Constants.ModuleConstants.kDriveD),
-            // Rotation PID constants
-            new PIDConstants(
-                Constants.ModuleConstants.kTurningP,
-                Constants.ModuleConstants.kDriveI,
-                Constants.ModuleConstants.kDriveD),
-            Constants.DriveConstants.kMaxTranslationalVelocity, // Max module speed, in m/s
-            Constants.DriveConstants.kRadius, // Drive base radius in meters
+            AutoConstants.kTranslationControllerGains, // Translation PID constants
+            AutoConstants.kRotationControllerGains, // Rotation PID constants
+            DriveConstants.kMaxTranslationalVelocity, // Max module speed, in m/s
+            DriveConstants.kRadius, // Drive base radius in meters
             new ReplanningConfig() // Default path replanning config
             ),
-        () -> {
-          return false;
-        }, // Never mirror path
-        this // Reference to this subsystem to set requirements
+        
+        () -> {return false;}, // Never mirror path
+        this // Requires this subsystem
         );
   }
+  // spotless:on
 
   public boolean getFieldRotated() {
     return allianceSelectionSwitch.get();
