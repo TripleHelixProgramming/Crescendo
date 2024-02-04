@@ -2,9 +2,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 public final class Constants {
@@ -190,18 +190,17 @@ public final class Constants {
     // length is 8
     public static final int[] kAutonomousModeSelectorPorts = {11, 12, 13, 18, 19, 20, 21, 22};
 
-    public static final double kMaxSpeedMetersPerSecond = 3.0;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
-    public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
-    public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
+    // public static final double kMaxSpeedMetersPerSecond = 3.0;
+    // public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
+    // public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
+    // public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-    public static final double kPXController = 1.0;
-    public static final double kPYController = 1.0;
-    public static final double kPThetaController = 1.0;
+    public static final PIDConstants kTranslationControllerGains = new PIDConstants(1.0, 0.0, 0.0);
+    public static final PIDConstants kRotationControllerGains = new PIDConstants(1.0, 0.0, 0.0);
 
     // Constraint for the motion profilied robot angle controller
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
-        new TrapezoidProfile.Constraints(
-            kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
+    // public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
+    //     new TrapezoidProfile.Constraints(
+    //         kMaxAngularSpeedRadiansPerSecond, kMaxAngularSpeedRadiansPerSecondSquared);
   }
 }
