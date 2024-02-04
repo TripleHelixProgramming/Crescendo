@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
-import frc.robot.drivetrain.commands.ZorroDrive;
+import frc.robot.drivetrain.commands.ZorroDriveCommand;
 
 public class RobotContainer {
 
@@ -37,7 +37,7 @@ public class RobotContainer {
       autonomousModes[i] = new DigitalInput(AutoConstants.kAutonomousModeSelectorPorts[i]);
     }
 
-    m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver));
+    m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
     m_swerve.configurePathPlanner();
 
     // m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
