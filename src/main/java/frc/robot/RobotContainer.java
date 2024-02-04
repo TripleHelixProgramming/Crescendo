@@ -23,8 +23,8 @@ import frc.robot.drivetrain.commands.ZorroDriveCommand;
 public class RobotContainer {
 
   private final Drivetrain m_swerve = new Drivetrain();
-  // private final Arm m_arm = new Arm();
-  // private final Intake m_intake = new Intake();
+  private final Arm m_arm = new Arm();
+  private final Intake m_intake = new Intake();
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   // private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
@@ -45,15 +45,19 @@ public class RobotContainer {
     m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
     m_swerve.configurePathPlanner();
 
-    // m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
+    m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
         new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
           .ignoringDisable(true));
+        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
+          .ignoringDisable(true));
 
     // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
+        .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
+          .ignoringDisable(true));
         .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
           .ignoringDisable(true));
     
@@ -95,7 +99,7 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    // m_arm.createLowerArmCommand().schedule();
+    m_arm.createLowerArmCommand().schedule();
   }
 
   public void periodic() {
