@@ -1,8 +1,20 @@
 <xml version="1.0">
   <dashboard>
-    <widget field="Alliance" type="String"
+    <widget field="rotateField" type="Boolean"
       class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-      <location x="171" y="260" />
+      <location x="31" y="252" />
+    </widget>
+    <widget field="fieldRelative" type="Boolean"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="25" y="275" />
+    </widget>
+    <widget field="isRed" type="Boolean"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="56" y="230" />
+    </widget>
+    <widget field="Auto" type="String"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="59" y="208" />
     </widget>
     <widget field="RearRightAbsoluteMagnetOffset" type="Number"
       class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
@@ -24,13 +36,9 @@
       class="edu.wpi.first.smartdashboard.gui.elements.Command">
       <location x="250" y="192" />
     </widget>
-    <widget field="Auto Selector" type="String"
-      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-      <location x="0" y="260" />
-    </widget>
     <widget field="GyroAngle" type="Number"
       class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-      <location x="0" y="240" />
+      <location x="232" y="240" />
     </widget>
     <widget field="RearRightRelativeDrivePosition" type="Number"
       class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
@@ -83,4 +91,5 @@
   </dashboard>
   <live-window>
   </live-window>
+  <hidden field="Field" />
 </xml>
