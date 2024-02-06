@@ -2,7 +2,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -39,6 +41,9 @@ public class RobotContainer {
     for (int i = 0; i < AutoConstants.kAutonomousModeSelectorPorts.length; i++) {
       autonomousModes[i] = new DigitalInput(AutoConstants.kAutonomousModeSelectorPorts[i]);
     }
+
+    NamedCommands.registerCommand("raiseArm", m_arm.createRaiseArmCommand());
+    NamedCommands.registerCommand("scorePiece", m_intake.createSetVoltageCommand(12));
 
     m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
     m_swerve.configurePathPlanner();
@@ -152,7 +157,7 @@ public class RobotContainer {
       case 7:
 
       default:
-        m_autonomous = null;
+        m_autonomous = new Autonomous("scaleSpin");
     }
   }
 

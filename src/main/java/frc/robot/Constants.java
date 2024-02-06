@@ -200,7 +200,7 @@ public final class Constants {
     // public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
     public static final PIDConstants kTranslationControllerGains = new PIDConstants(1.0, 0.0, 0.0);
-    public static final PIDConstants kRotationControllerGains = new PIDConstants(1.0, 0.0, 0.0);
+    public static final PIDConstants kRotationControllerGains = new PIDConstants(10.0, 0.0, 0.0);
 
     // Constraint for the motion profilied robot angle controller
     // public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
