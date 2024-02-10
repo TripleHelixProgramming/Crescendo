@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4101017713546753,
-      "y": 2.0002646446228027
+      "x": 1.4101016521453855,
+      "y": 7.340753555297852
     },
     "rotation": 0.0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "move-forward-2-meters"
+            "pathName": "B-driveFwd3m"
           }
         }
       ]
