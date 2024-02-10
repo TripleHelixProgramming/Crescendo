@@ -194,6 +194,7 @@ public final class Constants {
     public static final int kRightClimberMotorPort = 23;
 
     public static final int kClimberMotorCurrentLimit = 20;
+    public static final double kClimberMotorCurrentHardStop = 1.0;
 
     public static final double kClimberP = 1.0;
     public static final double kClimberI = 0.0;
@@ -204,6 +205,9 @@ public final class Constants {
 
     public static final double kClimberPositionConversionFactor = 1/(kClimberGearRatio * kClimberPitch); // meters per rotation
     public static final double kClimberVelocityConversionFactor = kClimberPositionConversionFactor / 60.0; // meters per second
+
+    public static final float kUpperLimit = 3;
+    public static final float kLowerLimit = -12;
   }
 
   public static final class AutoConstants {

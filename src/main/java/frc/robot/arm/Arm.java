@@ -1,5 +1,7 @@
 package frc.robot.arm;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -55,5 +57,21 @@ public class Arm extends SubsystemBase {
 
   public Command createRaiseArmCommand() {
     return this.startEnd(() -> this.pneumaticDeploy(), () -> {});
+  }
+
+  public BooleanSupplier isArmRaised() {
+    BooleanSupplier ArmRaised =
+        () ->
+            m_armMoverLeft.get().equals(Value.kForward)
+                & m_armMoverRight.get().equals(Value.kForward);
+    return ArmRaised;
+  }
+
+  public BooleanSupplier isArmLowered() {
+    BooleanSupplier ArmLowered =
+        () ->
+            m_armMoverLeft.get().equals(Value.kReverse)
+                & m_armMoverRight.get().equals(Value.kReverse);
+    return ArmLowered;
   }
 }

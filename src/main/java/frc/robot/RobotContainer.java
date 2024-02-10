@@ -18,12 +18,14 @@ import frc.robot.arm.Arm;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDrive;
 import frc.robot.intake.Intake;
+import frc.robot.climber.Climber;
 
 public class RobotContainer {
 
   private final Drivetrain m_swerve = new Drivetrain();
   private final Arm m_arm = new Arm();
   private final Intake m_intake = new Intake();
+  private final Climber m_climber = new Climber();
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
@@ -38,6 +40,7 @@ public class RobotContainer {
     m_swerve.configurePathPlanner();
 
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
+    m_climber.setDefaultCommand(m_climber.createClimberStopCommand());
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
@@ -49,9 +52,12 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
             .ignoringDisable(true));
 
-    // Command lowerArmCommand = m_arm.createLowerArmCommand();
-    // Command raiseArmCommmand = m_arm.createRaiseArmCommand();
     // Operator controller buttons
+
+    
+
+    new JoystickButton(m_operator, Button.kStart.value)
+
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
 
