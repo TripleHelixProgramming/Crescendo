@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Alliance;
 import frc.robot.Constants.AutoConstants.Auto;
@@ -31,7 +32,6 @@ public class RobotContainer {
 
   // spotless:off
   public RobotContainer() {
-
     m_selectedAuto = Auto.B_DRIVEFWD2M;
 
     m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
@@ -49,31 +49,44 @@ public class RobotContainer {
         .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
             .ignoringDisable(true));
 
-    Command lowerArmCommand = m_arm.createLowerArmCommand();
-    Command raiseArmCommmand = m_arm.createRaiseArmCommand();
+    // Command lowerArmCommand = m_arm.createLowerArmCommand();
+    // Command raiseArmCommmand = m_arm.createRaiseArmCommand();
     // Operator controller buttons
-    new JoystickButton(m_operator, Button.kLeftBumper.value).onTrue(lowerArmCommand);
-    new JoystickButton(m_operator, Button.kRightBumper.value).onTrue(raiseArmCommmand);
+    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
+    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
 
     // Intake Note from floor
-    new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue(m_intake.createSetVoltageCommand(10.0));
-        // .until(m_intake::hasGamePiece);
-        // .onlyIf(lowerArmCommand::isScheduled)));
+    new JoystickButton(m_operator, Button.kRightBumper.value)
+        .whileTrue(m_intake.createSetVoltageCommand(12.0)
+        .until(m_intake::hasGamePiece)
+        .andThen(m_intake.createSetPositionCommand(0.2))
+        .onlyIf(m_arm.isArmLowered()));
 
     // Shift Note further into Intake
-    new JoystickButton(m_operator, Button.kA.value)
-        .onTrue((m_intake.createResetEncoderCommand()
-        .andThen(m_intake.createSetPositionCommand(0.2))));
+    new JoystickButton(m_operator, Button.kX.value)
+        .whileTrue(m_intake.createSetPositionCommand(0.25));
 
     // Shoot Note into Amp
-    new JoystickButton(m_operator, Button.kY.value)
-        .whileTrue(m_intake.createSetVoltageCommand(10.0));
-        // .onlyIf(raiseArmCommmand::isScheduled)));
+    new JoystickButton(m_operator, Button.kLeftBumper.value)
+        .whileTrue(m_intake.createSetVoltageCommand(12.0)
+        .onlyIf(m_arm.isArmRaised()));
 
     // Reverses intake
+    // new JoystickButton(m_operator, Button.kB.value)
+    //     .whileTrue(m_intake.createSetVoltageCommand(-12.0));
+
+    // Moves note back in order to place in trap
     new JoystickButton(m_operator, Button.kB.value)
-        .whileTrue(m_intake.createSetVoltageCommand(-10.0));
+        .whileTrue(m_intake.createSetPositionCommand(-0.27));
+
+    // Gives note to teammates
+    new JoystickButton(m_operator, Button.kBack.value)
+        .onTrue(m_arm.createRaiseArmCommand()
+          .alongWith(new WaitCommand(0.8))
+        .andThen(m_intake.createSetVoltageCommand(-12)
+          .raceWith(new WaitCommand(0.8)))
+        .andThen(m_intake.createStopIntakeCommand()
+          .alongWith(m_arm.createLowerArmCommand())));
   }
   // spotless:on
 
