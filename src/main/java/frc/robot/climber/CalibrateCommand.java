@@ -27,14 +27,14 @@ public class CalibrateCommand extends Command {
   public void execute() {
     for (ClimberSide climberSide : m_climber.getClimberSides()) {
       if (climberSide.getHasFinishedCalibrating()) {
-        return;
+        
       } else {
         if (climberSide.getUpperHardStopDetected()) {
           climberSide.resetEncoder();
           climberSide.stop();
           climberSide.setHasFinishedCalibrating(true);
         } else {
-          climberSide.setVoltage(ClimberConstants.kCalibrationVoltage);
+          climberSide.driveTo(99999999.99);
         }
       }
     }

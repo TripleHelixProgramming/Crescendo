@@ -65,8 +65,8 @@ public class ClimberSide {
   //   m_climberPIDController.setReference(targetVelocity, ControlType.kVelocity);
   // }
 
-  public void setVoltage(double targetVoltage) {
-    m_climberMover.setVoltage(targetVoltage);
+  public void setVoltage(double voltage) {
+    m_climberMover.setVoltage(voltage);
   }
 
   public void driveTo(double targetPosition) {
@@ -74,6 +74,10 @@ public class ClimberSide {
     m_climberPIDController.setGoal(targetPosition);
     m_climberMover.setVoltage(m_climberPIDController.calculate(m_climberRelativeEncoder.getPosition()));
     // m_climberPIDController.setReference(positionSetpoint, ControlType.kPosition);
+  }
+
+  public void setPower(double power){
+    m_climberMover.set(power);
   }
 
   public void configureUpperLimit(boolean upperLImitEnabled) {

@@ -21,7 +21,7 @@ public class Climber extends SubsystemBase {
 
     m_differentialDrive =
         new DifferentialDrive(
-            m_leftClimberSide::setVoltage, m_rightClimberSide::setVoltage);
+            m_leftClimberSide::setPower, m_rightClimberSide::setPower);
   }
 
   public ClimberSide[] getClimberSides() {
@@ -36,7 +36,7 @@ public class Climber extends SubsystemBase {
         });
   }
 
-  public Command createSetPositionCommand(double targetPosition) {
+  public Command createDriveToCommand(double targetPosition) {
     return this.run(
         () -> {
           m_leftClimberSide.driveTo(targetPosition);
