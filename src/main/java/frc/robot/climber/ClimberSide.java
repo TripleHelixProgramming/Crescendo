@@ -115,4 +115,8 @@ public class ClimberSide {
   public double getHeight(){
     return m_climberRelativeEncoder.getPosition();
   }
+
+  public double getClimberCurrent(){
+    return m_climberMover.getOutputCurrent();
+  }
 }

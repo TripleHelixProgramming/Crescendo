@@ -61,6 +61,7 @@ public class Climber extends SubsystemBase {
       SmartDashboard.putNumber("Climber"+ climberside.climberName + " height", climberside.getHeight());
       SmartDashboard.putBoolean("Climber"+climberside.climberName + " atUpperLimit", climberside.getUpperSoftLimitSwtichDetected());
       SmartDashboard.putBoolean("Climber"+climberside.climberName + " atLowerLimit", climberside.getLowerSoftLimitSwtichDetected());
+      SmartDashboard.putNumber("Climber"+climberside.climberName + " Current", climberside.getClimberCurrent());
     }
   }
 }
