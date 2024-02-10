@@ -63,7 +63,8 @@ public class RobotContainer {
 
     // Calibrate upper limit of climber actuators
     new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
-    .andThen(m_climber.createSetPositionCommand(ClimberConstants.kHomePosition)));
+        .andThen(m_climber.createSetPositionCommand(ClimberConstants.kHomePosition)
+        .until(m_climber::bothSidesAtSetpoint)));
 
     // Deploy climber and begin climbing
     BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, 0.75, m_loop).debounce(0.1);
