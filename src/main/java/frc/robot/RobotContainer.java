@@ -40,7 +40,7 @@ public class RobotContainer {
     m_swerve.configurePathPlanner();
 
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
-    m_climber.setDefaultCommand(m_climber.createClimberStopCommand());
+    m_climber.setDefaultCommand(m_climber.createStopCommand());
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",

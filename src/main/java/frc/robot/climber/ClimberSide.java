@@ -6,18 +6,15 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 
-public class ClimberSide extends SubsystemBase {
+public class ClimberSide {
 
     private final CANSparkMax m_climberMover;
     private final RelativeEncoder m_climberRelativeEncoder;
     private final SparkPIDController m_climberPIDController;
+    private boolean hasFinishedCalibrating = false;
 
     DifferentialDrive m_arcadeDrive;
 
@@ -48,15 +45,15 @@ public class ClimberSide extends SubsystemBase {
         m_climberRelativeEncoder.setVelocityConversionFactor(ClimberConstants.kClimberVelocityConversionFactor);
     }
 
-    private void setVelocity(double targetVelocity) {
+    public void setVelocity(double targetVelocity) {
         m_climberPIDController.setReference(targetVelocity, ControlType.kVelocity);
     }
 
-    private void setVoltage(double targetVoltage) {
+    public void setVoltage(double targetVoltage) {
         m_climberPIDController.setReference(targetVoltage, ControlType.kVoltage);
     }
 
-    private void setPosition(double targetPosition) {
+    public void setPosition(double targetPosition) {
         m_climberPIDController.setReference(targetPosition, ControlType.kPosition);
     }
 
@@ -72,35 +69,15 @@ public class ClimberSide extends SubsystemBase {
         return m_climberMover.getOutputCurrent() > ClimberConstants.kClimberMotorCurrentHardStop;
     }
 
-    public void stopMotor() {
+    public void stop() {
         m_climberMover.setVoltage(0.0);
     }
 
-    public void setMotorVoltage(double targetVoltage) {
-        m_climberPIDController.setReference(targetVoltage, ControlType.kVoltage);
+    public boolean getHasFinishedCalibrating() {
+        return hasFinishedCalibrating;
     }
 
-    public Command createStopCommand() {
-        return this.runOnce(() -> this.setVoltage(0.0));
-    }
-
-    public Command createSetVelocityCommand(XboxController xboxController) {
-        return this.run(() -> this.setVelocity(xboxController.getRightY()));
-    }
-
-    public Command createSetVoltageCommand(XboxController xboxController) {
-        return this.run(() -> this.setVoltage(xboxController.getRightY()));
-    }
-
-    public Command createSetPositionCommand(double targetPosition) {
-        return this.runOnce(() -> this.setPosition(targetPosition));
-    }
-
-    public Command createResetEncodersCommand() {
-        return this.runOnce(() -> this.resetEncoder());
-    }
-
-    public Command createConfigureUpperLimitCommand(boolean upperLImitEnabled) {
-        return this.runOnce(() -> this.configureUpperLimit(upperLImitEnabled));
+    public void setHasFinishedCalibrating(boolean hasFinishedCalibrating) {
+        this.hasFinishedCalibrating = hasFinishedCalibrating;
     }
 }

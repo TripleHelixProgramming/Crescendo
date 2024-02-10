@@ -1,14 +1,5 @@
 package frc.robot.climber;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
@@ -35,6 +26,28 @@ public class Climber extends SubsystemBase {
             climberSide.configureUpperLimit(upperLImitEnabled);
           }
     }
+
+    public void stop() {
+        for (ClimberSide climberSide : climberSides) {
+            climberSide.stop();
+        }
+    }
+
+    public Command createStopCommand() {
+        return this.runOnce(() -> this.stop());
+    }
+
+    // public Command createSetVelocityCommand(XboxController xboxController) {
+    //     return this.run(() -> this.setVelocity(xboxController.getRightY()));
+    // }
+
+    // public Command createSetVoltageCommand(XboxController xboxController) {
+    //     return this.run(() -> this.setVoltage(xboxController.getRightY()));
+    // }
+
+    // public Command createSetPositionCommand(double targetPosition) {
+    //     return this.runOnce(() -> this.setPosition(targetPosition));
+    // }
 
     // private void arcadeDrive(XboxController xboxController) {
     //     m_arcadeDrive.arcadeDrive(-xboxController.getRightY(), -xboxController.getLeftX());

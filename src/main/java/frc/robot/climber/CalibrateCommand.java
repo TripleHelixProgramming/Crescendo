@@ -4,8 +4,6 @@ package frc.robot.climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-import com.revrobotics.CANSparkMax;
-
 public class CalibrateCommand extends Command {
 
   // The subsystem the command runs on
