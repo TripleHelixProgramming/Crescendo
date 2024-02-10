@@ -14,11 +14,11 @@ public class Climber extends SubsystemBase {
 
   private ClimberSide[] climberSides = {m_leftClimberSide, m_rightClimberSide};
 
-  DifferentialDrive m_arcadeDrive;
+  DifferentialDrive m_differentialDrive;
 
   public Climber() {
 
-    m_arcadeDrive =
+    m_differentialDrive =
         new DifferentialDrive(
             m_leftClimberSide.getMotorController(), m_rightClimberSide.getMotorController());
   }
@@ -27,32 +27,27 @@ public class Climber extends SubsystemBase {
     return climberSides;
   }
 
-  public void stop() {
-    for (ClimberSide climberSide : climberSides) {
-      climberSide.stop();
-    }
-  }
-
   public Command createStopCommand() {
-    return this.runOnce(() -> this.stop());
+    return this.runOnce(
+        () -> {
+          m_leftClimberSide.stop();
+          m_rightClimberSide.stop();
+        });
   }
 
   public Command createSetPositionCommand(double targetPosition) {
     return this.runOnce(
         () -> {
-          m_leftClimberSide.setPositionSetpoint(targetPosition);
-          m_rightClimberSide.setPositionSetpoint(targetPosition);
-          m_leftClimberSide.setPosition();
-          m_rightClimberSide.setPosition();
+          m_leftClimberSide.setPosition(targetPosition);
+          m_rightClimberSide.setPosition(targetPosition);
         });
   }
 
-  private void arcadeDrive(XboxController xboxController) {
-    m_arcadeDrive.arcadeDrive(-xboxController.getRightY(), -xboxController.getLeftX());
-  }
-
   public Command createArcadeDriveCommand(XboxController xboxController) {
-    return this.run(() -> this.arcadeDrive(xboxController));
+    return this.run(
+        () ->
+            this.m_differentialDrive.arcadeDrive(
+                -xboxController.getRightY(), -xboxController.getLeftX()));
   }
 
   public boolean bothSidesAtSetpoint() {

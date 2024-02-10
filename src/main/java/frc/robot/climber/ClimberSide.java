@@ -48,15 +48,16 @@ public class ClimberSide {
         ClimberConstants.kClimberVelocityConversionFactor);
   }
 
-  public void setVelocity(double targetVelocity) {
-    m_climberPIDController.setReference(targetVelocity, ControlType.kVelocity);
-  }
+  // public void setVelocity(double targetVelocity) {
+  //   m_climberPIDController.setReference(targetVelocity, ControlType.kVelocity);
+  // }
 
   public void setVoltage(double targetVoltage) {
     m_climberPIDController.setReference(targetVoltage, ControlType.kVoltage);
   }
 
-  public void setPosition() {
+  public void setPosition(double targetPosition) {
+    this.positionSetpoint = targetPosition;
     m_climberPIDController.setReference(positionSetpoint, ControlType.kPosition);
   }
 
@@ -82,18 +83,6 @@ public class ClimberSide {
 
   public void setHasFinishedCalibrating(boolean hasFinishedCalibrating) {
     this.hasFinishedCalibrating = hasFinishedCalibrating;
-  }
-
-  public void getEncoderValue() {
-    m_climberRelativeEncoder.getPosition();
-  }
-
-  public double getPositionSetpoint() {
-    return positionSetpoint;
-  }
-
-  public void setPositionSetpoint(double positionSetpoint) {
-    this.positionSetpoint = positionSetpoint;
   }
 
   public boolean atSetpoint() {

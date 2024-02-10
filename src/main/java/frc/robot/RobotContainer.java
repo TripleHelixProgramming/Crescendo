@@ -61,15 +61,18 @@ public class RobotContainer {
 
     // Operator controller buttons
 
+    // Calibrate upper limit of climber actuators
     new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
     .andThen(m_climber.createSetPositionCommand(ClimberConstants.kHomePosition)));
 
+    // Deploy climber and begin climbing
     BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, 0.75, m_loop).debounce(0.1);
     Trigger climbTrigger = climbThreshold.castTo(Trigger::new);
     climbTrigger.onTrue(m_climber.createSetPositionCommand(ClimberConstants.kDeployPosition)
         .until(m_climber::bothSidesAtSetpoint)
         .andThen(m_climber.createArcadeDriveCommand(m_operator)));
 
+    // Raise and lower arm
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
 
