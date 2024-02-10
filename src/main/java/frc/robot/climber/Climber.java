@@ -8,13 +8,12 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Axis;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
-import frc.robot.Constants.OIConstants;
 
-public class Climber {
+public class Climber extends SubsystemBase {
     private final CANSparkMax m_leftClimberMover;
     private final CANSparkMax m_rightClimberMover;
 
@@ -23,8 +22,6 @@ public class Climber {
 
     private final SparkPIDController m_leftClimberPIDController;
     private final SparkPIDController m_rightClimberPIDController;
-
-    private final XboxController m_XboxController;
 
     public Climber() {
         m_leftClimberMover = new CANSparkMax(ClimberConstants.kLeftClimberMotorPort, MotorType.kBrushless);
@@ -61,8 +58,6 @@ public class Climber {
 
         m_leftClimberRelativeEncoder.setVelocityConversionFactor(ClimberConstants.kClimberVelocityConversionFactor);
         m_rightClimberRelativeEncoder.setVelocityConversionFactor(ClimberConstants.kClimberVelocityConversionFactor);
-
-        m_XboxController = new XboxController(OIConstants.kOperatorControllerPort);
     }
 
     private void setVelocity(double targetVelocity) {
@@ -75,7 +70,11 @@ public class Climber {
         m_rightClimberPIDController.setReference(targetVoltage, ControlType.kVoltage);
     }
 
-    public Command createSetVelocityCommand(double targetVelocity) {
-        
+    public Command createSetVelocityCommand(XboxController xboxController) {
+        return this.run(() -> this.setVelocity(xboxController.getRightY()));
+    }
+
+    public Command createSetVoltageCommand(XboxController xboxController) {
+        return this.run(() -> this.setVoltage(xboxController.getRightY()));
     }
 }
