@@ -3,6 +3,7 @@
 package frc.robot.climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ClimberConstants;
 
 public class CalibrateCommand extends Command {
 
@@ -16,46 +17,39 @@ public class CalibrateCommand extends Command {
 
   @Override
   public void initialize() {
-    m_climber.configureUpperLimit(false);
+    for (ClimberSide climberSide : m_climber.getClimberSides()) {
+      climberSide.configureUpperLimit(false);
+      climberSide.setHasFinishedCalibrating(false);
+    }
   }
 
   @Override
   public void execute() {
-    // for (CANSparkMax motor : m_climber.getMotors()) {
-    //   if (m_climber.getUpperLimitDetected(motor) & !m_leftMotorFinished) {
-    //     motor.setVoltage(0.0);
-    //   } else {
-    //     motor.setVoltage(2.0);
-    //   }
-    // }
-
-    // if (motor.getUpperLimitDetected & !m_leftMotorFinished)
-    
-    // m_climber.getLeftMotor().getUpperLimitDetected() & 
-
-
-
-    // for each ClimberSide,
-          // if the ClimberSide has finished calibrating
-                // do nothing
-          // else
-                // if upperLimitDetected
-                    // resetEncoder
-                    // set voltage 0
-                    // set FinishedCalibrating true
-                // else
-                    // set voltage 2
-          
-
+    for (ClimberSide climberSide : m_climber.getClimberSides()) {
+      if (climberSide.getHasFinishedCalibrating()) {
+        return;
+      } else {
+        if (climberSide.getUpperLimitDetected()) {
+          climberSide.resetEncoder();
+          climberSide.stop();
+          climberSide.setHasFinishedCalibrating(true);
+        } else {
+          climberSide.setVoltage(ClimberConstants.kCalibrationVoltage);
+        }
+      }
+    }
   }
 
   @Override
   public boolean isFinished() {
-    // return (leftclimberside has finished calibrating) & (rightclimberside has finished calibrating)
+    return m_climber.getClimberSides()[0].getHasFinishedCalibrating()
+    && m_climber.getClimberSides()[1].getHasFinishedCalibrating();
   }
 
   @Override
   public void end(boolean interrupeted) {
-    m_climber.configureUpperLimit(true);
+    for (ClimberSide climberSide : m_climber.getClimberSides()) {
+      climberSide.configureUpperLimit(true);
+    }
   }
 }

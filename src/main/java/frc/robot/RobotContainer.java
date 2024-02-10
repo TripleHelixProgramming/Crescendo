@@ -5,13 +5,16 @@ package frc.robot;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Alliance;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.AutoConstants.Auto;
 import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
@@ -19,6 +22,7 @@ import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDrive;
 import frc.robot.intake.Intake;
 import frc.robot.climber.Climber;
+import frc.robot.climber.CalibrateCommand;
 
 public class RobotContainer {
 
@@ -54,9 +58,10 @@ public class RobotContainer {
 
     // Operator controller buttons
 
-    
+    new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
+    .andThen(m_climber.createSetPositionCommand(ClimberConstants.kHomePosition)));
 
-    new JoystickButton(m_operator, Button.kStart.value)
+
 
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());

@@ -6,7 +6,6 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc.robot.Constants.ClimberConstants;
 
 public class ClimberSide {
@@ -15,8 +14,6 @@ public class ClimberSide {
     private final RelativeEncoder m_climberRelativeEncoder;
     private final SparkPIDController m_climberPIDController;
     private boolean hasFinishedCalibrating = false;
-
-    DifferentialDrive m_arcadeDrive;
 
     public ClimberSide(int climberMotorChannel) {
         m_climberMover = new CANSparkMax(climberMotorChannel, MotorType.kBrushless);

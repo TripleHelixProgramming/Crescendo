@@ -208,6 +208,10 @@ public final class Constants {
 
     public static final float kUpperLimit = 3;
     public static final float kLowerLimit = -12;
+
+    public static final double kCalibrationVoltage = 2.0;
+
+    public static final double kHomePosition = 0.0508;
   }
 
   public static final class AutoConstants {
