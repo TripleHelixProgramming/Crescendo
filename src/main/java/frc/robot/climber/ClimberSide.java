@@ -112,10 +112,6 @@ public class ClimberSide {
     return m_climberPIDController.atGoal();
   }
 
-  public CANSparkMax getMotorController() {
-    return m_climberMover;
-  }
-
   public double getHeight(){
     return m_climberRelativeEncoder.getPosition();
   }

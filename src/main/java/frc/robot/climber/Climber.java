@@ -21,7 +21,7 @@ public class Climber extends SubsystemBase {
 
     m_differentialDrive =
         new DifferentialDrive(
-            m_leftClimberSide.getMotorController(), m_rightClimberSide.getMotorController());
+            m_leftClimberSide::setVoltage, m_rightClimberSide::setVoltage);
   }
 
   public ClimberSide[] getClimberSides() {
