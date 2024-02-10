@@ -53,7 +53,7 @@ public class ClimberSide {
   // }
 
   public void setVoltage(double targetVoltage) {
-    m_climberPIDController.setReference(targetVoltage, ControlType.kVoltage);
+    m_climberMover.setVoltage(targetVoltage);
   }
 
   public void setPosition(double targetPosition) {
