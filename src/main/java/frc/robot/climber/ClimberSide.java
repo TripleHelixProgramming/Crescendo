@@ -3,6 +3,7 @@ package frc.robot.climber;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
@@ -11,6 +12,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.ClimberConstants;
 
 public class ClimberSide {
+
+  public final String climberName;
 
   private final CANSparkMax m_climberMover;
   private final RelativeEncoder m_climberRelativeEncoder;
@@ -22,7 +25,10 @@ public class ClimberSide {
 
   private boolean hasFinishedCalibrating = false;
 
-  public ClimberSide(int climberMotorChannel) {
+  public ClimberSide(String climberName, int climberMotorChannel) {
+
+    this.climberName = climberName;
+
     m_climberMover = new CANSparkMax(climberMotorChannel, MotorType.kBrushless);
 
     m_climberMover.restoreFactoryDefaults();
@@ -78,8 +84,16 @@ public class ClimberSide {
     m_climberRelativeEncoder.setPosition(0.0);
   }
 
-  public boolean getUpperLimitDetected() {
+  public boolean getUpperHardStopDetected() {
     return m_climberMover.getOutputCurrent() > ClimberConstants.kMotorCurrentHardStop;
+  }
+
+  public boolean getUpperSoftLimitSwtichDetected(){
+    return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitFwd);
+  }
+
+  public boolean getLowerSoftLimitSwtichDetected(){
+    return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitFwd);  
   }
 
   public void stop() {
@@ -100,5 +114,9 @@ public class ClimberSide {
 
   public CANSparkMax getMotorController() {
     return m_climberMover;
+  }
+
+  public double getHeight(){
+    return m_climberRelativeEncoder.getPosition();
   }
 }

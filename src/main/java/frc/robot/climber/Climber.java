@@ -2,15 +2,16 @@ package frc.robot.climber;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
   private final ClimberSide m_leftClimberSide =
-      new ClimberSide(ClimberConstants.kLeftMotorPort);
+      new ClimberSide("left",ClimberConstants.kLeftMotorPort);
   private final ClimberSide m_rightClimberSide =
-      new ClimberSide(ClimberConstants.kRightMotorPort);
+      new ClimberSide("right",ClimberConstants.kRightMotorPort);
 
   private ClimberSide[] climberSides = {m_leftClimberSide, m_rightClimberSide};
 
@@ -52,5 +53,14 @@ public class Climber extends SubsystemBase {
 
   public boolean bothSidesAtSetpoint() {
     return m_leftClimberSide.atGoal() && m_rightClimberSide.atGoal();
+  }
+
+  @Override
+  public void periodic(){
+    for(ClimberSide climberside : climberSides){
+      SmartDashboard.putNumber("Climber"+ climberside.climberName + " height", climberside.getHeight());
+      SmartDashboard.putBoolean("Climber"+climberside.climberName + " atUpperLimit", climberside.getUpperSoftLimitSwtichDetected());
+      SmartDashboard.putBoolean("Climber"+climberside.climberName + " atLowerLimit", climberside.getLowerSoftLimitSwtichDetected());
+    }
   }
 }

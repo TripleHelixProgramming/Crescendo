@@ -71,6 +71,10 @@ public class RobotContainer {
     climbTrigger.onTrue(m_climber.createSetPositionCommand(ClimberConstants.kDeployPosition)
         .until(m_climber::bothSidesAtSetpoint)
         .andThen(m_climber.createArcadeDriveCommand(m_operator)));
+    
+    //Run climber drive while dpad down
+    new JoystickButton(m_operator,Button.kB.value)
+    .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
 
     // Raise and lower arm
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
@@ -97,8 +101,8 @@ public class RobotContainer {
     //     .whileTrue(m_intake.createSetVoltageCommand(-12.0));
 
     // Moves note back in order to place in trap
-    new JoystickButton(m_operator, Button.kB.value)
-        .whileTrue(m_intake.createSetPositionCommand(-0.27));
+    // new JoystickButton(m_operator, Button.kB.value)
+    //     .whileTrue(m_intake.createSetPositionCommand(-0.27));
 
     // Gives note to teammates
     new JoystickButton(m_operator, Button.kBack.value)

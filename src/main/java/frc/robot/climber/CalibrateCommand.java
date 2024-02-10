@@ -29,7 +29,7 @@ public class CalibrateCommand extends Command {
       if (climberSide.getHasFinishedCalibrating()) {
         return;
       } else {
-        if (climberSide.getUpperLimitDetected()) {
+        if (climberSide.getUpperHardStopDetected()) {
           climberSide.resetEncoder();
           climberSide.stop();
           climberSide.setHasFinishedCalibrating(true);
