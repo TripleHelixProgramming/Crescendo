@@ -99,6 +99,7 @@ public class SwerveModule {
     m_turningAbsEncoder = new CANcoder(turningAbsoluteEncoderChannel);
     m_turningAbsEncoderConfig = new CANcoderConfiguration();
     m_turningAbsEncoder.getConfigurator().refresh(m_turningAbsEncoderConfig);
+    m_turningAbsEncoder.getAbsolutePosition().setUpdateFrequency(50, 0.5);
 
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningRelativeEncoder = m_turningMotor.getEncoder();

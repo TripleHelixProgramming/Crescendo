@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
@@ -54,13 +55,9 @@ public class RobotContainer {
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
           .ignoringDisable(true));
-    
-    Command lowerArmCommand = m_arm.createLowerArmCommand();
-    Command raiseArmCommmand = m_arm.createRaiseArmCommand();
-    
     // Operator controller buttons
-    new JoystickButton(m_operator, Button.kA.value).onTrue(lowerArmCommand);
-    new JoystickButton(m_operator, Button.kY.value).onTrue(raiseArmCommmand);
+    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
+    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
@@ -71,7 +68,7 @@ public class RobotContainer {
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue(m_intake.createSetPositionCommand(0.05));
+        .whileTrue(m_intake.createSetPositionCommand(0.25));
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kLeftBumper.value)
@@ -79,8 +76,21 @@ public class RobotContainer {
         .onlyIf(m_arm.isArmRaised()));
 
     // Reverses intake
+    // new JoystickButton(m_operator, Button.kB.value)
+    //     .whileTrue(m_intake.createSetVoltageCommand(-12.0));
+
+    // Moves note back in order to place in trap
     new JoystickButton(m_operator, Button.kB.value)
-        .whileTrue(m_intake.createSetVoltageCommand(-12.0));
+        .whileTrue(m_intake.createSetPositionCommand(-0.27));
+
+    // Gives note to teammates
+    new JoystickButton(m_operator, Button.kBack.value)
+        .onTrue(m_arm.createRaiseArmCommand()
+          .alongWith(new WaitCommand(0.8))
+        .andThen(m_intake.createSetVoltageCommand(-12)
+          .raceWith(new WaitCommand(0.8)))
+        .andThen(m_intake.createStopIntakeCommand()
+          .alongWith(m_arm.createLowerArmCommand())));
   }
   // spotless:on
 
