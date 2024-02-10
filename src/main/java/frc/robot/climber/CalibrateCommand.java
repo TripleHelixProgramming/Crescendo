@@ -9,11 +9,8 @@ import com.revrobotics.CANSparkMax;
 public class CalibrateCommand extends Command {
 
   // The subsystem the command runs on
-  public final Climber m_climber;
-
-  private boolean m_leftMotorFinished = false;
-  private boolean m_rightMotorFinished = false;
-
+  private final Climber m_climber;
+  
   public CalibrateCommand(Climber subsystem) {
     m_climber = subsystem;
     addRequirements(m_climber);
@@ -33,12 +30,34 @@ public class CalibrateCommand extends Command {
     //     motor.setVoltage(2.0);
     //   }
     // }
-    if (m_climber.getUpperLimitDetected(m_climber.getMotors()))
+
+    // if (motor.getUpperLimitDetected & !m_leftMotorFinished)
+    
+    // m_climber.getLeftMotor().getUpperLimitDetected() & 
+
+
+
+    // for each ClimberSide,
+          // if the ClimberSide has finished calibrating
+                // do nothing
+          // else
+                // if upperLimitDetected
+                    // resetEncoder
+                    // set voltage 0
+                    // set FinishedCalibrating true
+                // else
+                    // set voltage 2
+          
+
+  }
+
+  @Override
+  public boolean isFinished() {
+    // return (leftclimberside has finished calibrating) & (rightclimberside has finished calibrating)
   }
 
   @Override
   public void end(boolean interrupeted) {
-    m_climber.resetEncoders();
     m_climber.configureUpperLimit(true);
   }
 }
