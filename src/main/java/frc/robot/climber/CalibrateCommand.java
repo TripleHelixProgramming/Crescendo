@@ -9,7 +9,7 @@ public class CalibrateCommand extends Command {
 
   // The subsystem the command runs on
   private final Climber m_climber;
-  
+
   public CalibrateCommand(Climber subsystem) {
     m_climber = subsystem;
     addRequirements(m_climber);
@@ -43,7 +43,7 @@ public class CalibrateCommand extends Command {
   @Override
   public boolean isFinished() {
     return m_climber.getClimberSides()[0].getHasFinishedCalibrating()
-    && m_climber.getClimberSides()[1].getHasFinishedCalibrating();
+        && m_climber.getClimberSides()[1].getHasFinishedCalibrating();
   }
 
   @Override

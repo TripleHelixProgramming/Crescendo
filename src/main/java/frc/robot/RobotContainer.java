@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,17 +15,16 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
 import frc.robot.Constants.Alliance;
-import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.AutoConstants.Auto;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
+import frc.robot.climber.CalibrateCommand;
+import frc.robot.climber.Climber;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDrive;
 import frc.robot.intake.Intake;
-import frc.robot.climber.Climber;
-import frc.robot.climber.CalibrateCommand;
 
 public class RobotContainer {
 
@@ -67,7 +67,8 @@ public class RobotContainer {
     BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, 0.75, m_loop).debounce(0.1);
     Trigger climbTrigger = climbThreshold.castTo(Trigger::new);
     climbTrigger.onTrue(m_climber.createSetPositionCommand(ClimberConstants.kDeployPosition)
-                .andThen(m_climber.createArcadeDriveCommand(m_operator)));
+        .until(m_climber::bothSidesAtSetpoint)
+        .andThen(m_climber.createArcadeDriveCommand(m_operator)));
 
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());

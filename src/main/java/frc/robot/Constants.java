@@ -203,8 +203,10 @@ public final class Constants {
     public static final double kClimberGearRatio = 5.0; // gear ratio of climber motor
     public static final double kClimberPitch = 10.0 * 39.37; // pitch is 10 * 39.37 turns per meter
 
-    public static final double kClimberPositionConversionFactor = 1/(kClimberGearRatio * kClimberPitch); // meters per rotation
-    public static final double kClimberVelocityConversionFactor = kClimberPositionConversionFactor / 60.0; // meters per second
+    public static final double kClimberPositionConversionFactor =
+        1 / (kClimberGearRatio * kClimberPitch); // meters per rotation
+    public static final double kClimberVelocityConversionFactor =
+        kClimberPositionConversionFactor / 60.0; // meters per second
 
     public static final float kUpperLimit = 3;
     public static final float kLowerLimit = -12;
@@ -213,6 +215,8 @@ public final class Constants {
 
     public static final double kHomePosition = 0.0508;
     public static final double kDeployPosition = 0.0;
+
+    public static final double kAllowableError = 0.1;
   }
 
   public static final class AutoConstants {
