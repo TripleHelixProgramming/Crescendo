@@ -57,11 +57,14 @@ public class Drivetrain extends SubsystemBase {
   private SwerveModule[] modules = {m_frontLeft, m_frontRight, m_rearLeft, m_rearRight};
 
   private final AHRS m_gyro = new AHRS();
+  Rotation2d angle = new Rotation2d(0);
+  double lastAngle;
 
   private final SwerveDriveOdometry m_odometry =
       new SwerveDriveOdometry(
           DriveConstants.kDriveKinematics,
-          m_gyro.getRotation2d(),
+          // m_gyro.getRotation2d()
+          GetGyroHeading(),
           new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -112,6 +115,7 @@ public class Drivetrain extends SubsystemBase {
 
     SmartDashboard.putBoolean("isRed", getRedAlliance());
     SmartDashboard.putNumber("GyroAngle", m_gyro.getRotation2d().getDegrees());
+    GetGyroHeading();
   }
 
   /**
@@ -131,7 +135,8 @@ public class Drivetrain extends SubsystemBase {
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
     m_odometry.update(
-        m_gyro.getRotation2d(),
+        // m_gyro.getRotation2d()
+        GetGyroHeading(),
         new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -154,6 +159,17 @@ public class Drivetrain extends SubsystemBase {
     return m_odometry.getPoseMeters().getRotation();
   }
 
+  public Rotation2d GetGyroHeading() {
+    double newAngle = -m_gyro.getYaw();
+    double delta = (((newAngle - lastAngle + 180) % 360 + 360) % 360) - 180;
+    lastAngle = newAngle;
+    angle = angle.plus(Rotation2d.fromDegrees(delta * 1.02466666667));
+    SmartDashboard.putNumber("RawAngle2.0", newAngle);
+    SmartDashboard.putNumber("FusedAngle2.0", -m_gyro.getFusedHeading());
+    SmartDashboard.putNumber("Angle2.0", angle.getDegrees());
+    return angle;
+  }
+
   /**
    * @return The robot pose
    */
@@ -165,7 +181,8 @@ public class Drivetrain extends SubsystemBase {
    * @param pose The robot pose
    */
   public void setPose(Pose2d pose) {
-    m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
+    m_odometry.resetPosition( // m_gyro.getRotation2d()
+        GetGyroHeading(), getSwerveModulePositions(), pose);
   }
 
   public void resetHeading() {
@@ -174,9 +191,10 @@ public class Drivetrain extends SubsystemBase {
             ? new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI))
             : new Pose2d(getPose().getTranslation(), new Rotation2d());
 
-    m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
+    m_odometry.resetPosition( // m_gyro.getRotation2d()
+        GetGyroHeading(), getSwerveModulePositions(), pose);
   }
-
+  
   /**
    * @return Array of swerve module positions
    */

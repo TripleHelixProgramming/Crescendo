@@ -2,6 +2,34 @@
   <dashboard>
     <widget field="rotateField" type="Boolean"
       class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="236" y="457" />
+    </widget>
+    <widget field="hasGamePiece" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="418" y="225" />
+    </widget>
+    <widget field="OutputCurrent" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="419" y="248" />
+    </widget>
+    <widget field="RearRightOutputCurrent" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="302" y="408" />
+    </widget>
+    <widget field="RearLeftOutputCurrent" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="87" y="410" />
+    </widget>
+    <widget field="FrontRightOutputCurrent" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="301" y="386" />
+    </widget>
+    <widget field="FrontLeftOutputCurrent" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="85" y="388" />
+    </widget>
+    <widget field="rotateField" type="Boolean"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
       <location x="31" y="252" />
     </widget>
     <widget field="fieldRelative" type="Boolean"

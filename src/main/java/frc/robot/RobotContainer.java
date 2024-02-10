@@ -2,6 +2,7 @@
 
 package frc.robot;
 
+// spotless:off
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
@@ -139,7 +140,7 @@ public class RobotContainer {
         m_autonomous =
             m_swerve.getRedAlliance()
                 ? new Autonomous("R-driveFwd2m")
-                : new Autonomous("B-driveFwd2m");
+                : new Autonomous("B-driveFwd3m");
         break;
 
       case 1:
