@@ -196,7 +196,7 @@ public final class Constants {
     public static final int kRightMotorPort = 23;
 
     public static final int kMotorCurrentLimit = 40;
-    public static final double kMotorCurrentHardStop = 20.0; 
+    public static final double kMotorCurrentHardStop = 10.0; 
     
     public static final double kP = 1.0;
     public static final double kI = 0.0;

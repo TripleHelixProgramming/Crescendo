@@ -8,8 +8,10 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.RobotConstants;
 
 public class ClimberSide {
 
@@ -22,6 +24,7 @@ public class ClimberSide {
     ClimberConstants.kP, ClimberConstants.kI,ClimberConstants.kD,ClimberConstants.climberConstraints
     );
   
+  private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, RobotConstants.kPeriod);
 
   private boolean hasFinishedCalibrating = false;
 
@@ -89,7 +92,7 @@ public class ClimberSide {
   }
 
   public boolean getUpperHardStopDetected() {
-    return m_climberMover.getOutputCurrent() > ClimberConstants.kMotorCurrentHardStop;
+    return filter.calculate(m_climberRelativeEncoder.getPosition()) > ClimberConstants.kMotorCurrentHardStop;
   }
 
   public boolean getUpperSoftLimitSwtichDetected(){
@@ -122,5 +125,9 @@ public class ClimberSide {
 
   public double getClimberCurrent(){
     return m_climberMover.getOutputCurrent();
+  }
+
+  public void periodic() {
+    filter.calculate(m_climberRelativeEncoder.getPosition());
   }
 }

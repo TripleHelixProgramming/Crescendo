@@ -58,6 +58,8 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic(){
     for(ClimberSide climberside : climberSides){
+      climberside.periodic();
+      
       SmartDashboard.putNumber("Climber"+ climberside.climberName + " height", climberside.getHeight());
       SmartDashboard.putBoolean("Climber"+climberside.climberName + " atUpperLimit", climberside.getUpperSoftLimitSwtichDetected());
       SmartDashboard.putBoolean("Climber"+climberside.climberName + " atLowerLimit", climberside.getLowerSoftLimitSwtichDetected());
