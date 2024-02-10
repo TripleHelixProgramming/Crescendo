@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "move-forward-2-meters"
+            "pathName": "B-driveFwd3m"
           }
         }
       ]

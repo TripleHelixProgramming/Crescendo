@@ -154,7 +154,7 @@ public class RobotContainer {
       case 7:
 
       default:
-        m_autonomous = null;
+        m_autonomous = new Autonomous("B-driveFwd3m");
     }
   }
 
