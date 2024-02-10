@@ -111,7 +111,7 @@ public final class Constants {
     // public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254,
     // 0.137);
 
-    public static final double kWheelDiameterMeters = 0.102; // 3.7 in; 2023 Competion Robot
+    public static final double kWheelDiameterMeters = 0.10; // little less that 4 in; 2024 Competion Robot and test bot
 
     // By default, the drive encoder in position mode measures rotations at the drive motor
     // Convert to meters at the wheel
