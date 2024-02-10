@@ -8,9 +8,9 @@ import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
   private final ClimberSide m_leftClimberSide =
-      new ClimberSide(ClimberConstants.kLeftClimberMotorPort);
+      new ClimberSide(ClimberConstants.kLeftMotorPort);
   private final ClimberSide m_rightClimberSide =
-      new ClimberSide(ClimberConstants.kRightClimberMotorPort);
+      new ClimberSide(ClimberConstants.kRightMotorPort);
 
   private ClimberSide[] climberSides = {m_leftClimberSide, m_rightClimberSide};
 
@@ -36,10 +36,10 @@ public class Climber extends SubsystemBase {
   }
 
   public Command createSetPositionCommand(double targetPosition) {
-    return this.runOnce(
+    return this.run(
         () -> {
-          m_leftClimberSide.setPosition(targetPosition);
-          m_rightClimberSide.setPosition(targetPosition);
+          m_leftClimberSide.driveTo(targetPosition);
+          m_rightClimberSide.driveTo(targetPosition);
         });
   }
 
@@ -51,6 +51,6 @@ public class Climber extends SubsystemBase {
   }
 
   public boolean bothSidesAtSetpoint() {
-    return m_leftClimberSide.atSetpoint() && m_rightClimberSide.atSetpoint();
+    return m_leftClimberSide.atGoal() && m_rightClimberSide.atGoal();
   }
 }

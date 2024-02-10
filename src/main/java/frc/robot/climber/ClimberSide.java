@@ -5,16 +5,21 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
+
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.ClimberConstants;
 
 public class ClimberSide {
 
   private final CANSparkMax m_climberMover;
   private final RelativeEncoder m_climberRelativeEncoder;
-  private final SparkPIDController m_climberPIDController;
+  //private final SparkPIDController m_climberPIDController;
+  private final ProfiledPIDController m_climberPIDController = new ProfiledPIDController(
+    ClimberConstants.kP, ClimberConstants.kI,ClimberConstants.kD,ClimberConstants.climberConstraints
+    );
+  
 
-  private double positionSetpoint;
   private boolean hasFinishedCalibrating = false;
 
   public ClimberSide(int climberMotorChannel) {
@@ -31,21 +36,23 @@ public class ClimberSide {
         CANSparkMax.SoftLimitDirection.kReverse, ClimberConstants.kLowerLimit);
 
     m_climberMover.setIdleMode(IdleMode.kBrake);
-    m_climberMover.setSmartCurrentLimit(ClimberConstants.kClimberMotorCurrentLimit);
+    m_climberMover.setSmartCurrentLimit(ClimberConstants.kMotorCurrentLimit);
     m_climberMover.setInverted(false);
 
-    m_climberPIDController = m_climberMover.getPIDController();
+    m_climberPIDController.setTolerance(ClimberConstants.kAllowableError);
 
-    m_climberPIDController.setP(ClimberConstants.kClimberP);
-    m_climberPIDController.setI(ClimberConstants.kClimberI);
-    m_climberPIDController.setD(ClimberConstants.kClimberD);
+    // m_climberPIDController = m_climberMover.getPIDController();
+
+    // m_climberPIDController.setP(ClimberConstants.kP);
+    // m_climberPIDController.setI(ClimberConstants.kI);
+    // m_climberPIDController.setD(ClimberConstants.kD);
 
     m_climberRelativeEncoder = m_climberMover.getEncoder();
 
     m_climberRelativeEncoder.setPositionConversionFactor(
-        ClimberConstants.kClimberPositionConversionFactor);
+        ClimberConstants.kPositionConversionFactor);
     m_climberRelativeEncoder.setVelocityConversionFactor(
-        ClimberConstants.kClimberVelocityConversionFactor);
+        ClimberConstants.kVelocityConversionFactor);
   }
 
   // public void setVelocity(double targetVelocity) {
@@ -56,9 +63,11 @@ public class ClimberSide {
     m_climberMover.setVoltage(targetVoltage);
   }
 
-  public void setPosition(double targetPosition) {
-    this.positionSetpoint = targetPosition;
-    m_climberPIDController.setReference(positionSetpoint, ControlType.kPosition);
+  public void driveTo(double targetPosition) {
+    
+    m_climberPIDController.setGoal(targetPosition);
+    m_climberMover.setVoltage(m_climberPIDController.calculate(m_climberRelativeEncoder.getPosition()));
+    // m_climberPIDController.setReference(positionSetpoint, ControlType.kPosition);
   }
 
   public void configureUpperLimit(boolean upperLImitEnabled) {
@@ -70,7 +79,7 @@ public class ClimberSide {
   }
 
   public boolean getUpperLimitDetected() {
-    return m_climberMover.getOutputCurrent() > ClimberConstants.kClimberMotorCurrentHardStop;
+    return m_climberMover.getOutputCurrent() > ClimberConstants.kMotorCurrentHardStop;
   }
 
   public void stop() {
@@ -85,9 +94,8 @@ public class ClimberSide {
     this.hasFinishedCalibrating = hasFinishedCalibrating;
   }
 
-  public boolean atSetpoint() {
-    return Math.abs(positionSetpoint - m_climberRelativeEncoder.getPosition())
-        < ClimberConstants.kAllowableError;
+  public boolean atGoal() {
+    return m_climberPIDController.atGoal();
   }
 
   public CANSparkMax getMotorController() {

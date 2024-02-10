@@ -2,6 +2,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.PIDConstants;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -190,30 +192,37 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final int kLeftClimberMotorPort = 24;
-    public static final int kRightClimberMotorPort = 23;
+    public static final int kLeftMotorPort = 24;
+    public static final int kRightMotorPort = 23;
 
-    public static final int kClimberMotorCurrentLimit = 20;
-    public static final double kClimberMotorCurrentHardStop = 1.0;
+    public static final int kMotorCurrentLimit = 20;
+    public static final double kMotorCurrentHardStop = 1.0;
+    
+    
+    public static final double kP = 1.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
 
-    public static final double kClimberP = 1.0;
-    public static final double kClimberI = 0.0;
-    public static final double kClimberD = 0.0;
+    public static final double kMaxVelocity = 1.0;
+    public static final double kMaxAcceleration = 0.2;
+    public static final TrapezoidProfile.Constraints climberConstraints =
+      new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
-    public static final double kClimberGearRatio = 5.0; // gear ratio of climber motor
-    public static final double kClimberPitch = 10.0 * 39.37; // pitch is 10 * 39.37 turns per meter
 
-    public static final double kClimberPositionConversionFactor =
-        1 / (kClimberGearRatio * kClimberPitch); // meters per rotation
-    public static final double kClimberVelocityConversionFactor =
-        kClimberPositionConversionFactor / 60.0; // meters per second
+    public static final double kGearRatio = 5.0; // gear ratio of climber motor
+    public static final double kPitch = 10.0; // turns per inch
+
+    public static final double kPositionConversionFactor =
+        1 / (kGearRatio * kPitch); // inches per rotation
+    public static final double kVelocityConversionFactor =
+        kPositionConversionFactor / 60.0; // inches per second
 
     public static final float kUpperLimit = 3;
     public static final float kLowerLimit = -12;
 
     public static final double kCalibrationVoltage = 2.0;
 
-    public static final double kHomePosition = 0.0508;
+    public static final double kHomePosition = -3.0;
     public static final double kDeployPosition = 0.0;
 
     public static final double kAllowableError = 0.1;
