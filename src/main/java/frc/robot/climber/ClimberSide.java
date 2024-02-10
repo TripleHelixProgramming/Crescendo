@@ -97,7 +97,7 @@ public class ClimberSide {
   }
 
   public boolean getLowerSoftLimitSwtichDetected(){
-    return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitFwd);  
+    return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitRev);  
   }
 
   public void stop() {

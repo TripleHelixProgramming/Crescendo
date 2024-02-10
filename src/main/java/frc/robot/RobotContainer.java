@@ -62,9 +62,9 @@ public class RobotContainer {
     // Operator controller buttons
 
     // Calibrate upper limit of climber actuators
-    new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
-        .andThen(m_climber.createDriveToCommand(ClimberConstants.kHomePosition)
-        .until(m_climber::bothSidesAtSetpoint)));
+    new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber));
+        // .andThen(m_climber.createDriveToCommand(ClimberConstants.kHomePosition)
+        // .until(m_climber::bothSidesAtSetpoint)));
 
     // Deploy climber and begin climbing
     // BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, 0.75, m_loop).debounce(0.1);
@@ -74,8 +74,11 @@ public class RobotContainer {
     //     .andThen(m_climber.createArcadeDriveCommand(m_operator)));
     
     //Run climber drive while dpad down
+    // new JoystickButton(m_operator,Button.kB.value)
+    // .whileTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));//m_climber.createArcadeDriveCommand(m_operator));
+    
     new JoystickButton(m_operator,Button.kB.value)
-    .whileTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));//m_climber.createArcadeDriveCommand(m_operator));
+    .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
 
     // Raise and lower arm
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());

@@ -25,25 +25,26 @@ public class CalibrateCommand extends Command {
 
   @Override
   public void execute() {
-    for (ClimberSide climberSide : m_climber.getClimberSides()) {
-      if (climberSide.getHasFinishedCalibrating()) {
-        
+    //for (ClimberSide climberSide : m_climber.getClimberSides()) {
+    ClimberSide m_climberside = m_climber.getClimberSides()[0];
+      if (m_climberside.getHasFinishedCalibrating()) {
+
       } else {
-        if (climberSide.getUpperHardStopDetected()) {
-          climberSide.resetEncoder();
-          climberSide.stop();
-          climberSide.setHasFinishedCalibrating(true);
+        if (m_climberside.getUpperHardStopDetected()) {
+          m_climberside.resetEncoder();
+          m_climberside.stop();
+          m_climberside.setHasFinishedCalibrating(true);
         } else {
-          climberSide.driveTo(99999999.99);
+          m_climberside.driveTo(99999999.99);
         }
       }
     }
-  }
+  //}
 
   @Override
   public boolean isFinished() {
-    return m_climber.getClimberSides()[0].getHasFinishedCalibrating()
-        && m_climber.getClimberSides()[1].getHasFinishedCalibrating();
+    return (m_climber.getClimberSides()[0].getHasFinishedCalibrating()
+        && m_climber.getClimberSides()[1].getHasFinishedCalibrating());
   }
 
   @Override
