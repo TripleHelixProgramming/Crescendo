@@ -77,4 +77,8 @@ public class ClimberSide {
     public void setHasFinishedCalibrating(boolean hasFinishedCalibrating) {
         this.hasFinishedCalibrating = hasFinishedCalibrating;
     }
+
+    public void getEncoderValue() {
+        m_climberRelativeEncoder.getPosition();
+    }
 }

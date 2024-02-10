@@ -212,6 +212,7 @@ public final class Constants {
     public static final double kCalibrationVoltage = 2.0;
 
     public static final double kHomePosition = 0.0508;
+    public static final double kDeployPosition = 0.0;
   }
 
   public static final class AutoConstants {

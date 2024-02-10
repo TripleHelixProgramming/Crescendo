@@ -7,12 +7,14 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import frc.robot.Constants.Alliance;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.AutoConstants.Auto;
@@ -31,6 +33,7 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Climber m_climber = new Climber();
 
+  private final EventLoop m_loop = new EventLoop();
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
@@ -61,7 +64,10 @@ public class RobotContainer {
     new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
     .andThen(m_climber.createSetPositionCommand(ClimberConstants.kHomePosition)));
 
-
+    BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, 0.75, m_loop).debounce(0.1);
+    Trigger climbTrigger = climbThreshold.castTo(Trigger::new);
+    climbTrigger.onTrue(m_climber.createSetPositionCommand(ClimberConstants.kDeployPosition)
+                .andThen(m_climber.createArcadeDriveCommand(m_operator)));
 
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
@@ -131,5 +137,6 @@ public class RobotContainer {
 
   public void periodic() {
     SmartDashboard.putString("Alliance", getAlliance().toString());
+    m_loop.poll();
   }
 }
