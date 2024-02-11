@@ -13,7 +13,7 @@ public class Climber extends SubsystemBase {
   private final ClimberSide m_rightClimberSide =
       new ClimberSide("Right", ClimberConstants.kRightMotorPort);
 
-  private ClimberSide[] climberSides = {m_leftClimberSide, m_rightClimberSide};
+  private ClimberSide[] actuators = {m_leftClimberSide, m_rightClimberSide};
 
   DifferentialDrive m_differentialDrive;
 
@@ -26,22 +26,20 @@ public class Climber extends SubsystemBase {
    * @return Vector of climber actuators
    */
   public ClimberSide[] getClimberSides() {
-    return climberSides;
+    return actuators;
   }
 
   public Command createStopCommand() {
     return this.runOnce(
         () -> {
-          m_leftClimberSide.stop();
-          m_rightClimberSide.stop();
+          for (ClimberSide actuator : actuators) actuator.stop();
         });
   }
 
   public Command createDriveToCommand(double targetPosition) {
     return this.run(
         () -> {
-          m_leftClimberSide.driveRapidlyTo(targetPosition);
-          m_rightClimberSide.driveRapidlyTo(targetPosition);
+          for (ClimberSide actuator : actuators) actuator.driveRapidlyTo(targetPosition);
         });
   }
 
@@ -57,29 +55,22 @@ public class Climber extends SubsystemBase {
    *     position controller
    */
   public boolean bothSidesAtSetpoint() {
-    return m_leftClimberSide.atGoal() && m_rightClimberSide.atGoal();
-  }
-
-  /**
-   * @return True when both climber actuators are in the calibration-complete state
-   */
-  public boolean bothSidesCalibrated() {
-    return m_leftClimberSide.getHasFinishedCalibrating()
-        && m_rightClimberSide.getHasFinishedCalibrating();
+    for (ClimberSide actuator : actuators) if (!actuator.atGoal()) return false;
+    return true;
   }
 
   // spotless:off
   @Override
   public void periodic() {
-    for (ClimberSide climberside : climberSides) {
-      SmartDashboard.putNumber("Climber" + climberside.getName() + 
-        "Height", climberside.getHeight());
-      SmartDashboard.putBoolean("Climber" + climberside.getName() + 
-        "UpperSoftLimitState", climberside.getUpperSoftLimitSwtichState());
-      SmartDashboard.putBoolean("Climber" + climberside.getName() + 
-        "LowerSoftLimitState", climberside.getLowerSoftLimitSwtichState());
-      SmartDashboard.putNumber("Climber" + climberside.getName() + 
-        "Current", climberside.getCurrent());
+    for (ClimberSide actuator : actuators) {
+      SmartDashboard.putNumber("Climber" + actuator.getName() + 
+        "Height", actuator.getHeight());
+      SmartDashboard.putBoolean("Climber" + actuator.getName() + 
+        "UpperSoftLimitState", actuator.getUpperSoftLimitSwtichState());
+      SmartDashboard.putBoolean("Climber" + actuator.getName() + 
+        "LowerSoftLimitState", actuator.getLowerSoftLimitSwtichState());
+      SmartDashboard.putNumber("Climber" + actuator.getName() + 
+        "Current", actuator.getCurrent());
     }
   }
   // spotless:on

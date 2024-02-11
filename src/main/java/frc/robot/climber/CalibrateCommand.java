@@ -2,11 +2,12 @@
 
 package frc.robot.climber;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ClimberConstants.CalibrationState;
 
 public class CalibrateCommand extends Command {
 
-  // The subsystem the command runs on
   private final Climber m_climber;
 
   public CalibrateCommand(Climber subsystem) {
@@ -16,38 +17,46 @@ public class CalibrateCommand extends Command {
 
   @Override
   public void initialize() {
-    for (ClimberSide climberSide : m_climber.getClimberSides()) {
-      climberSide.configureUpperLimit(false);
-      climberSide.setHasFinishedCalibrating(false);
+    for (ClimberSide actuator : m_climber.getClimberSides()) {
+      actuator.configureUpperLimit(false);
+      actuator.setCalibrationState(CalibrationState.UNCALIBRATED);
     }
   }
 
   @Override
   public void execute() {
-    for (ClimberSide climberSide : m_climber.getClimberSides()) {
-      if (climberSide.getHasFinishedCalibrating()) {
-
-      } else {
-        if (climberSide.getCurrentSenseState()) {
-          climberSide.resetEncoder();
-          climberSide.stop();
-          climberSide.setHasFinishedCalibrating(true);
-        } else {
-          climberSide.driveSlowlyTo(100);
-        }
+    for (ClimberSide actuator : m_climber.getClimberSides()) {
+      if (actuator.getCalibrationState() != CalibrationState.CALIBRATED) {
+        calibrate(actuator);
       }
+      SmartDashboard.putString(
+          "Climber" + actuator.getName() + "CalibrationState",
+          actuator.getCalibrationState().name());
+    }
+  }
+
+  private void calibrate(ClimberSide actuator) {
+    if (actuator.getCurrentSenseState()) {
+      actuator.resetEncoder();
+      actuator.stop();
+      actuator.setCalibrationState(CalibrationState.CALIBRATED);
+    } else {
+      actuator.driveSlowlyTo(100);
+      actuator.setCalibrationState(CalibrationState.HOMING);
     }
   }
 
   @Override
   public boolean isFinished() {
-    return m_climber.bothSidesCalibrated();
+    for (ClimberSide actuator : m_climber.getClimberSides())
+      if (actuator.getCalibrationState() != CalibrationState.CALIBRATED) return false;
+    return true;
   }
 
   @Override
   public void end(boolean interrupted) {
-    for (ClimberSide climberSide : m_climber.getClimberSides()) {
-      climberSide.configureUpperLimit(true);
+    for (ClimberSide actuator : m_climber.getClimberSides()) {
+      actuator.configureUpperLimit(true);
     }
   }
 }

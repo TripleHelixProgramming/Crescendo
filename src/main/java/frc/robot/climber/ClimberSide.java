@@ -10,6 +10,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.ClimberConstants.CalibrationState;
 import frc.robot.Constants.RobotConstants;
 
 public class ClimberSide {
@@ -29,7 +30,7 @@ public class ClimberSide {
   private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, RobotConstants.kPeriod);
   private Debouncer debouncer = new Debouncer(0.1, DebounceType.kRising);
 
-  private boolean hasFinishedCalibrating = false;
+  private CalibrationState calibrationState = CalibrationState.UNCALIBRATED;
 
   public ClimberSide(String climberName, int climberMotorChannel) {
 
@@ -51,7 +52,7 @@ public class ClimberSide {
     m_climberMover.setSmartCurrentLimit(ClimberConstants.kMotorCurrentLimit);
     m_climberMover.setInverted(false);
 
-    m_climberPIDController.setTolerance(ClimberConstants.kAllowableError);
+    m_climberPIDController.setTolerance(ClimberConstants.kAllowablePositionError);
 
     m_climberRelativeEncoder = m_climberMover.getEncoder();
 
@@ -71,7 +72,7 @@ public class ClimberSide {
     driveTo(targetPosition);
   }
 
-  public void driveTo(double targetPosition) {
+  private void driveTo(double targetPosition) {
     m_climberPIDController.setGoal(targetPosition);
     m_climberMover.setVoltage(
         m_climberPIDController.calculate(m_climberRelativeEncoder.getPosition()));
@@ -79,6 +80,10 @@ public class ClimberSide {
 
   public void setPower(double power) {
     m_climberMover.set(power);
+  }
+
+  public void stop() {
+    m_climberMover.setVoltage(0.0);
   }
 
   /**
@@ -106,22 +111,18 @@ public class ClimberSide {
     return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitRev);
   }
 
-  public void stop() {
-    m_climberMover.setVoltage(0.0);
+  /**
+   * @return State of the actuator calibration
+   */
+  public CalibrationState getCalibrationState() {
+    return calibrationState;
   }
 
   /**
-   * @return Whether the calibration is complete
+   * @param calibrationState State of the actuator calibration
    */
-  public boolean getHasFinishedCalibrating() {
-    return hasFinishedCalibrating;
-  }
-
-  /**
-   * @param hasFinishedCalibrating Whether the calibration is complete
-   */
-  public void setHasFinishedCalibrating(boolean hasFinishedCalibrating) {
-    this.hasFinishedCalibrating = hasFinishedCalibrating;
+  public void setCalibrationState(CalibrationState calibrationState) {
+    this.calibrationState = calibrationState;
   }
 
   /**
