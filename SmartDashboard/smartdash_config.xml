@@ -1,113 +1,148 @@
 <xml version="1.0">
-<dashboard>
-	<widget field="Climberright Current" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="576" y="162"/>
-	</widget>
-	<widget field="Climberleft Current" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="366" y="165"/>
-	</widget>
-	<widget field="Alliance" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="158" y="126"/>
-	</widget>
-	<widget field="Climberright atLowerLimit" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="569" y="138"/>
-	</widget>
-	<widget field="Climberright atUpperLimit" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="566" y="114"/>
-	</widget>
-	<widget field="Climberright height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="559" y="86"/>
-	</widget>
-	<widget field="Climberleft atLowerLimit" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="361" y="141"/>
-		<height>20</height>
-	</widget>
-	<widget field="Climberleft atUpperLimit" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="356" y="116"/>
-	</widget>
-	<widget field="Climberleft height" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="362" y="91"/>
-	</widget>
-	<widget field="Align Encoders" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="0" y="525"/>
-	</widget>
-	<widget field="FrontLeftAbsoluteTurningPosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="504"/>
-	</widget>
-	<widget field="RearLeftRelativeTurningPosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="483"/>
-	</widget>
-	<widget field="RearRightAbsoluteMagnetOffset" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="462"/>
-	</widget>
-	<widget field="FrontLeftOutputCurrent" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="441"/>
-	</widget>
-	<widget field="hasGamePiece" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="420"/>
-	</widget>
-	<widget field="FrontRightAbsoluteTurningPosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="399"/>
-	</widget>
-	<widget field="RearLeftRelativeDrivePosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="378"/>
-	</widget>
-	<widget field="FrontLeftRelativeTurningPosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="357"/>
-	</widget>
-	<widget field="RearLeftOutputCurrent" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="336"/>
-	</widget>
-	<widget field="GyroAngle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="315"/>
-	</widget>
-	<widget field="FrontRightRelativeTurningPosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="294"/>
-	</widget>
-	<widget field="isRed" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="273"/>
-	</widget>
-	<widget field="FrontLeftAbsoluteMagnetOffset" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="252"/>
-	</widget>
-	<widget field="RearRightRelativeDrivePosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="231"/>
-	</widget>
-	<widget field="FrontRightRelativeDrivePosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="210"/>
-	</widget>
-	<widget field="RearRightAbsoluteTurningPosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="189"/>
-	</widget>
-	<widget field="RearRightOutputCurrent" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="168"/>
-	</widget>
-	<widget field="FrontRightOutputCurrent" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="147"/>
-	</widget>
-	<widget field="Auto" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="126"/>
-	</widget>
-	<widget field="RearLeftAbsoluteTurningPosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="105"/>
-	</widget>
-	<widget field="FrontRightAbsoluteMagnetOffset" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="84"/>
-	</widget>
-	<widget field="RearRightRelativeTurningPosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="63"/>
-	</widget>
-	<widget field="FrontLeftRelativeDrivePosition" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="42"/>
-	</widget>
-	<widget field="RearLeftAbsoluteMagnetOffset" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="21"/>
-	</widget>
-	<widget field="OutputCurrent" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="0" y="0"/>
-	</widget>
-</dashboard>
-<live-window>
-</live-window>
-	<hidden field="Field"/>
+  <dashboard>
+    <widget field="Climberright Current" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="576" y="162" />
+    </widget>
+    <widget field="Climberleft Current" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="366" y="165" />
+    </widget>
+    <widget field="Alliance" type="String"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="158" y="126" />
+    </widget>
+    <widget field="Climberright atLowerLimit" type="Boolean"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="569" y="138" />
+    </widget>
+    <widget field="Climberright atUpperLimit" type="Boolean"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="566" y="114" />
+    </widget>
+    <widget field="Climberright height" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="559" y="86" />
+    </widget>
+    <widget field="Climberleft atLowerLimit" type="Boolean"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="361" y="141" />
+      <height>20</height>
+    </widget>
+    <widget field="Climberleft atUpperLimit" type="Boolean"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="356" y="116" />
+    </widget>
+    <widget field="Climberleft height" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="362" y="91" />
+    </widget>
+    <widget field="Align Encoders" type="Command"
+      class="edu.wpi.first.smartdashboard.gui.elements.Command">
+      <location x="0" y="525" />
+    </widget>
+    <widget field="FrontLeftAbsoluteTurningPosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="504" />
+    </widget>
+    <widget field="RearLeftRelativeTurningPosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="483" />
+    </widget>
+    <widget field="RearRightAbsoluteMagnetOffset" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="462" />
+    </widget>
+    <widget field="FrontLeftOutputCurrent" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="441" />
+    </widget>
+    <widget field="hasGamePiece" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="420" />
+    </widget>
+    <widget field="FrontRightAbsoluteTurningPosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="399" />
+    </widget>
+    <widget field="RearLeftRelativeDrivePosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="378" />
+    </widget>
+    <widget field="FrontLeftRelativeTurningPosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="357" />
+    </widget>
+    <widget field="RearLeftOutputCurrent" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="336" />
+    </widget>
+    <widget field="GyroAngle" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="315" />
+    </widget>
+    <widget field="FrontRightRelativeTurningPosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="294" />
+    </widget>
+    <widget field="isRed" type="Boolean"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="273" />
+    </widget>
+    <widget field="FrontLeftAbsoluteMagnetOffset" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="252" />
+    </widget>
+    <widget field="RearRightRelativeDrivePosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="231" />
+    </widget>
+    <widget field="FrontRightRelativeDrivePosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="210" />
+    </widget>
+    <widget field="RearRightAbsoluteTurningPosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="189" />
+    </widget>
+    <widget field="RearRightOutputCurrent" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="168" />
+    </widget>
+    <widget field="FrontRightOutputCurrent" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="147" />
+    </widget>
+    <widget field="Auto" type="String"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="126" />
+    </widget>
+    <widget field="RearLeftAbsoluteTurningPosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="105" />
+    </widget>
+    <widget field="FrontRightAbsoluteMagnetOffset" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="84" />
+    </widget>
+    <widget field="RearRightRelativeTurningPosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="63" />
+    </widget>
+    <widget field="FrontLeftRelativeDrivePosition" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="42" />
+    </widget>
+    <widget field="RearLeftAbsoluteMagnetOffset" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="21" />
+    </widget>
+    <widget field="OutputCurrent" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="0" y="0" />
+    </widget>
+  </dashboard>
+  <live-window>
+  </live-window>
+  <hidden field="Field" />
 </xml>

@@ -3,7 +3,6 @@
 package frc.robot.climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ClimberConstants;
 
 public class CalibrateCommand extends Command {
 
@@ -25,21 +24,21 @@ public class CalibrateCommand extends Command {
 
   @Override
   public void execute() {
-    //for (ClimberSide climberSide : m_climber.getClimberSides()) {
+    // for (ClimberSide climberSide : m_climber.getClimberSides()) {
     ClimberSide m_climberside = m_climber.getClimberSides()[0];
-      if (m_climberside.getHasFinishedCalibrating()) {
+    if (m_climberside.getHasFinishedCalibrating()) {
 
+    } else {
+      if (m_climberside.getUpperHardStopDetected()) {
+        m_climberside.resetEncoder();
+        m_climberside.stop();
+        m_climberside.setHasFinishedCalibrating(true);
       } else {
-        if (m_climberside.getUpperHardStopDetected()) {
-          m_climberside.resetEncoder();
-          m_climberside.stop();
-          m_climberside.setHasFinishedCalibrating(true);
-        } else {
-          m_climberside.driveTo(99999999.99);
-        }
+        m_climberside.driveTo(100);
       }
     }
-  //}
+    // }
+  }
 
   @Override
   public boolean isFinished() {

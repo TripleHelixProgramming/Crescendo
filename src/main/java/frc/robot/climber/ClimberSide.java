@@ -1,15 +1,12 @@
 package frc.robot.climber;
 
-import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.RobotConstants;
 
@@ -19,11 +16,14 @@ public class ClimberSide {
 
   private final CANSparkMax m_climberMover;
   private final RelativeEncoder m_climberRelativeEncoder;
-  //private final SparkPIDController m_climberPIDController;
-  private final ProfiledPIDController m_climberPIDController = new ProfiledPIDController(
-    ClimberConstants.kP, ClimberConstants.kI,ClimberConstants.kD,ClimberConstants.climberConstraints
-    );
-  
+  // private final SparkPIDController m_climberPIDController;
+  private final ProfiledPIDController m_climberPIDController =
+      new ProfiledPIDController(
+          ClimberConstants.kP,
+          ClimberConstants.kI,
+          ClimberConstants.kD,
+          ClimberConstants.climberConstraints);
+
   private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, RobotConstants.kPeriod);
 
   private boolean hasFinishedCalibrating = false;
@@ -73,13 +73,14 @@ public class ClimberSide {
   }
 
   public void driveTo(double targetPosition) {
-    
+
     m_climberPIDController.setGoal(targetPosition);
-    m_climberMover.setVoltage(m_climberPIDController.calculate(m_climberRelativeEncoder.getPosition()));
+    m_climberMover.setVoltage(
+        m_climberPIDController.calculate(m_climberRelativeEncoder.getPosition()));
     // m_climberPIDController.setReference(positionSetpoint, ControlType.kPosition);
   }
 
-  public void setPower(double power){
+  public void setPower(double power) {
     m_climberMover.set(power);
   }
 
@@ -92,15 +93,16 @@ public class ClimberSide {
   }
 
   public boolean getUpperHardStopDetected() {
-    return filter.calculate(m_climberRelativeEncoder.getPosition()) > ClimberConstants.kMotorCurrentHardStop;
+    return filter.calculate(m_climberRelativeEncoder.getPosition())
+        > ClimberConstants.kMotorCurrentHardStop;
   }
 
-  public boolean getUpperSoftLimitSwtichDetected(){
+  public boolean getUpperSoftLimitSwtichDetected() {
     return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitFwd);
   }
 
-  public boolean getLowerSoftLimitSwtichDetected(){
-    return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitRev);  
+  public boolean getLowerSoftLimitSwtichDetected() {
+    return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitRev);
   }
 
   public void stop() {
@@ -119,15 +121,11 @@ public class ClimberSide {
     return m_climberPIDController.atGoal();
   }
 
-  public double getHeight(){
+  public double getHeight() {
     return m_climberRelativeEncoder.getPosition();
   }
 
-  public double getClimberCurrent(){
+  public double getClimberCurrent() {
     return m_climberMover.getOutputCurrent();
-  }
-
-  public void periodic() {
-    filter.calculate(m_climberRelativeEncoder.getPosition());
   }
 }

@@ -2,8 +2,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.util.PIDConstants;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -196,8 +194,8 @@ public final class Constants {
     public static final int kRightMotorPort = 23;
 
     public static final int kMotorCurrentLimit = 40;
-    public static final double kMotorCurrentHardStop = 10.0; 
-    
+    public static final double kMotorCurrentHardStop = 10.0;
+
     public static final double kP = 1.0;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
@@ -210,14 +208,13 @@ public final class Constants {
     public static final double kVelocityConversionFactor =
         kPositionConversionFactor / 60.0; // inches per second
 
-
     public static final double kMaxVelocity = (0.8 * 5880.0) * kPositionConversionFactor;
     public static final double kMaxAcceleration = 20;
     public static final TrapezoidProfile.Constraints climberConstraints =
-      new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
+        new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
-    public static final float kUpperLimit = -2f;//3;
-    public static final float kLowerLimit = -6.0f;//-12;
+    public static final float kUpperLimit = -2f; // 3;
+    public static final float kLowerLimit = -6.0f; // -12;
 
     public static final double kCalibrationVoltage = 1.0;
 

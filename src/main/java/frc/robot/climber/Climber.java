@@ -9,9 +9,9 @@ import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
   private final ClimberSide m_leftClimberSide =
-      new ClimberSide("left",ClimberConstants.kLeftMotorPort);
+      new ClimberSide("left", ClimberConstants.kLeftMotorPort);
   private final ClimberSide m_rightClimberSide =
-      new ClimberSide("right",ClimberConstants.kRightMotorPort);
+      new ClimberSide("right", ClimberConstants.kRightMotorPort);
 
   private ClimberSide[] climberSides = {m_leftClimberSide, m_rightClimberSide};
 
@@ -20,8 +20,7 @@ public class Climber extends SubsystemBase {
   public Climber() {
 
     m_differentialDrive =
-        new DifferentialDrive(
-            m_leftClimberSide::setPower, m_rightClimberSide::setPower);
+        new DifferentialDrive(m_leftClimberSide::setPower, m_rightClimberSide::setPower);
   }
 
   public ClimberSide[] getClimberSides() {
@@ -56,14 +55,18 @@ public class Climber extends SubsystemBase {
   }
 
   @Override
-  public void periodic(){
-    for(ClimberSide climberside : climberSides){
-      climberside.periodic();
-      
-      SmartDashboard.putNumber("Climber"+ climberside.climberName + " height", climberside.getHeight());
-      SmartDashboard.putBoolean("Climber"+climberside.climberName + " atUpperLimit", climberside.getUpperSoftLimitSwtichDetected());
-      SmartDashboard.putBoolean("Climber"+climberside.climberName + " atLowerLimit", climberside.getLowerSoftLimitSwtichDetected());
-      SmartDashboard.putNumber("Climber"+climberside.climberName + " Current", climberside.getClimberCurrent());
+  public void periodic() {
+    for (ClimberSide climberside : climberSides) {
+      SmartDashboard.putNumber(
+          "Climber" + climberside.climberName + " height", climberside.getHeight());
+      SmartDashboard.putBoolean(
+          "Climber" + climberside.climberName + " atUpperLimit",
+          climberside.getUpperSoftLimitSwtichDetected());
+      SmartDashboard.putBoolean(
+          "Climber" + climberside.climberName + " atLowerLimit",
+          climberside.getLowerSoftLimitSwtichDetected());
+      SmartDashboard.putNumber(
+          "Climber" + climberside.climberName + " Current", climberside.getClimberCurrent());
     }
   }
 }
