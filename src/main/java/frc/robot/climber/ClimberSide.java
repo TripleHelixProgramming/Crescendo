@@ -137,4 +137,8 @@ public class ClimberSide {
   public double getClimberCurrent() {
     return m_climberMover.getOutputCurrent();
   }
+
+  public String getName() {
+    return climberName;
+  }
 }

@@ -9,9 +9,9 @@ import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
   private final ClimberSide m_leftClimberSide =
-      new ClimberSide("left", ClimberConstants.kLeftMotorPort);
+      new ClimberSide("Left", ClimberConstants.kLeftMotorPort);
   private final ClimberSide m_rightClimberSide =
-      new ClimberSide("right", ClimberConstants.kRightMotorPort);
+      new ClimberSide("Right", ClimberConstants.kRightMotorPort);
 
   private ClimberSide[] climberSides = {m_leftClimberSide, m_rightClimberSide};
 
@@ -63,14 +63,14 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     for (ClimberSide climberside : climberSides) {
-      SmartDashboard.putNumber("Climber" + climberside.climberName + 
-        " height", climberside.getHeight());
-      SmartDashboard.putBoolean("Climber" + climberside.climberName + 
-        " atUpperLimit", climberside.getUpperSoftLimitSwtichDetected());
-      SmartDashboard.putBoolean("Climber" + climberside.climberName + 
-        " atLowerLimit", climberside.getLowerSoftLimitSwtichDetected());
-      SmartDashboard.putNumber("Climber" + climberside.climberName + 
-        " Current", climberside.getClimberCurrent());
+      SmartDashboard.putNumber("Climber" + climberside.getName() + 
+        "Height", climberside.getHeight());
+      SmartDashboard.putBoolean("Climber" + climberside.getName() + 
+        "UpperSoftLimitState", climberside.getUpperSoftLimitSwtichDetected());
+      SmartDashboard.putBoolean("Climber" + climberside.getName() + 
+        "LowerSoftLimitState", climberside.getLowerSoftLimitSwtichDetected());
+      SmartDashboard.putNumber("Climber" + climberside.getName() + 
+        "Current", climberside.getClimberCurrent());
     }
   }
   // spotless:on
