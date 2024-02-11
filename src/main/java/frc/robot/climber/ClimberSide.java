@@ -6,6 +6,8 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.RobotConstants;
@@ -25,6 +27,7 @@ public class ClimberSide {
           ClimberConstants.rapidConstraints);
 
   private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, RobotConstants.kPeriod);
+  private Debouncer debouncer = new Debouncer(0.1, DebounceType.kRising);
 
   private boolean hasFinishedCalibrating = false;
 
@@ -89,16 +92,17 @@ public class ClimberSide {
     m_climberRelativeEncoder.setPosition(0.0);
   }
 
-  public boolean getUpperHardStopDetected() {
-    return filter.calculate(m_climberRelativeEncoder.getPosition())
-        > ClimberConstants.kMotorCurrentHardStop;
+  public boolean getCurrentSenseState() {
+    return debouncer.calculate(
+        filter.calculate(m_climberMover.getOutputCurrent())
+            > ClimberConstants.kMotorCurrentHardStop);
   }
 
-  public boolean getUpperSoftLimitSwtichDetected() {
+  public boolean getUpperSoftLimitSwtichState() {
     return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitFwd);
   }
 
-  public boolean getLowerSoftLimitSwtichDetected() {
+  public boolean getLowerSoftLimitSwtichState() {
     return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitRev);
   }
 

@@ -28,7 +28,7 @@ public class CalibrateCommand extends Command {
       if (climberSide.getHasFinishedCalibrating()) {
 
       } else {
-        if (climberSide.getUpperHardStopDetected()) {
+        if (climberSide.getCurrentSenseState()) {
           climberSide.resetEncoder();
           climberSide.stop();
           climberSide.setHasFinishedCalibrating(true);
