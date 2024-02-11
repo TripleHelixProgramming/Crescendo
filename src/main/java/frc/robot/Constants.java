@@ -221,8 +221,6 @@ public final class Constants {
     public static final float kUpperLimit = -2f; // 3;
     public static final float kLowerLimit = -6.0f; // -12;
 
-    public static final double kCalibrationVoltage = 1.0;
-
     public static final double kHomePosition = -3.0;
     public static final double kDeployPosition = 0.0;
 
