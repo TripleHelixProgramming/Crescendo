@@ -27,10 +27,10 @@ public class ClimberSide {
           ClimberConstants.kD,
           ClimberConstants.rapidConstraints);
 
-  private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, RobotConstants.kPeriod);
-  private Debouncer debouncer = new Debouncer(0.1, DebounceType.kRising);
+  private LinearFilter m_filter = LinearFilter.singlePoleIIR(0.1, RobotConstants.kPeriod);
+  private Debouncer m_debouncer = new Debouncer(0.1, DebounceType.kRising);
 
-  private CalibrationState calibrationState = CalibrationState.UNCALIBRATED;
+  private CalibrationState m_calibrationState = CalibrationState.UNCALIBRATED;
 
   public ClimberSide(String climberName, int climberMotorChannel) {
 
@@ -98,8 +98,8 @@ public class ClimberSide {
   }
 
   public boolean getCurrentSenseState() {
-    return debouncer.calculate(
-        filter.calculate(m_climberMover.getOutputCurrent())
+    return m_debouncer.calculate(
+        m_filter.calculate(m_climberMover.getOutputCurrent())
             > ClimberConstants.kMotorCurrentHardStop);
   }
 
@@ -115,14 +115,14 @@ public class ClimberSide {
    * @return State of the actuator calibration
    */
   public CalibrationState getCalibrationState() {
-    return calibrationState;
+    return m_calibrationState;
   }
 
   /**
    * @param calibrationState State of the actuator calibration
    */
   public void setCalibrationState(CalibrationState calibrationState) {
-    this.calibrationState = calibrationState;
+    this.m_calibrationState = calibrationState;
   }
 
   /**

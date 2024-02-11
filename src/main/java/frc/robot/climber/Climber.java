@@ -13,7 +13,7 @@ public class Climber extends SubsystemBase {
   private final ClimberSide m_rightClimberSide =
       new ClimberSide("Right", ClimberConstants.kRightMotorPort);
 
-  private ClimberSide[] actuators = {m_leftClimberSide, m_rightClimberSide};
+  private ClimberSide[] m_actuators = {m_leftClimberSide, m_rightClimberSide};
 
   DifferentialDrive m_differentialDrive;
 
@@ -26,20 +26,20 @@ public class Climber extends SubsystemBase {
    * @return Vector of climber actuators
    */
   public ClimberSide[] getClimberSides() {
-    return actuators;
+    return m_actuators;
   }
 
   public Command createStopCommand() {
     return this.runOnce(
         () -> {
-          for (ClimberSide actuator : actuators) actuator.stop();
+          for (ClimberSide actuator : m_actuators) actuator.stop();
         });
   }
 
   public Command createDriveToCommand(double targetPosition) {
     return this.run(
         () -> {
-          for (ClimberSide actuator : actuators) actuator.driveRapidlyTo(targetPosition);
+          for (ClimberSide actuator : m_actuators) actuator.driveRapidlyTo(targetPosition);
         });
   }
 
@@ -55,14 +55,14 @@ public class Climber extends SubsystemBase {
    *     position controller
    */
   public boolean bothSidesAtSetpoint() {
-    for (ClimberSide actuator : actuators) if (!actuator.atGoal()) return false;
+    for (ClimberSide actuator : m_actuators) if (!actuator.atGoal()) return false;
     return true;
   }
 
   // spotless:off
   @Override
   public void periodic() {
-    for (ClimberSide actuator : actuators) {
+    for (ClimberSide actuator : m_actuators) {
       SmartDashboard.putNumber("Climber" + actuator.getName() + 
         "Height", actuator.getHeight());
       SmartDashboard.putBoolean("Climber" + actuator.getName() + 

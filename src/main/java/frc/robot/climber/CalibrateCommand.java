@@ -9,15 +9,17 @@ import frc.robot.Constants.ClimberConstants.CalibrationState;
 public class CalibrateCommand extends Command {
 
   private final Climber m_climber;
+  private final ClimberSide[] m_actuators;
 
   public CalibrateCommand(Climber subsystem) {
     m_climber = subsystem;
     addRequirements(m_climber);
+    m_actuators = m_climber.getClimberSides();
   }
 
   @Override
   public void initialize() {
-    for (ClimberSide actuator : m_climber.getClimberSides()) {
+    for (ClimberSide actuator : m_actuators) {
       actuator.configureUpperLimit(false);
       actuator.setCalibrationState(CalibrationState.UNCALIBRATED);
     }
@@ -25,7 +27,7 @@ public class CalibrateCommand extends Command {
 
   @Override
   public void execute() {
-    for (ClimberSide actuator : m_climber.getClimberSides()) {
+    for (ClimberSide actuator : m_actuators) {
       if (actuator.getCalibrationState() != CalibrationState.CALIBRATED) {
         calibrate(actuator);
       }
@@ -48,15 +50,13 @@ public class CalibrateCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    for (ClimberSide actuator : m_climber.getClimberSides())
+    for (ClimberSide actuator : m_actuators)
       if (actuator.getCalibrationState() != CalibrationState.CALIBRATED) return false;
     return true;
   }
 
   @Override
   public void end(boolean interrupted) {
-    for (ClimberSide actuator : m_climber.getClimberSides()) {
-      actuator.configureUpperLimit(true);
-    }
+    for (ClimberSide actuator : m_actuators) actuator.configureUpperLimit(true);
   }
 }
