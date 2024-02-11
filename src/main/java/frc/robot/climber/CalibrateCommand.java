@@ -24,20 +24,19 @@ public class CalibrateCommand extends Command {
 
   @Override
   public void execute() {
-    // for (ClimberSide climberSide : m_climber.getClimberSides()) {
-    ClimberSide m_climberside = m_climber.getClimberSides()[0];
-    if (m_climberside.getHasFinishedCalibrating()) {
+    for (ClimberSide climberSide : m_climber.getClimberSides()) {
+      if (climberSide.getHasFinishedCalibrating()) {
 
-    } else {
-      if (m_climberside.getUpperHardStopDetected()) {
-        m_climberside.resetEncoder();
-        m_climberside.stop();
-        m_climberside.setHasFinishedCalibrating(true);
       } else {
-        m_climberside.driveTo(100);
+        if (climberSide.getUpperHardStopDetected()) {
+          climberSide.resetEncoder();
+          climberSide.stop();
+          climberSide.setHasFinishedCalibrating(true);
+        } else {
+          climberSide.driveSlowlyTo(100);
+        }
       }
     }
-    // }
   }
 
   @Override

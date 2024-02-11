@@ -208,10 +208,15 @@ public final class Constants {
     public static final double kVelocityConversionFactor =
         kPositionConversionFactor / 60.0; // inches per second
 
-    public static final double kMaxVelocity = (0.8 * 5880.0) * kPositionConversionFactor;
-    public static final double kMaxAcceleration = 20;
-    public static final TrapezoidProfile.Constraints climberConstraints =
-        new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
+    public static final double kRapidMaxVelocity = (0.8 * 5880.0) * kVelocityConversionFactor;
+    public static final double kRapidMaxAcceleration = kRapidMaxVelocity / 0.25;
+    public static final TrapezoidProfile.Constraints rapidConstraints =
+        new TrapezoidProfile.Constraints(kRapidMaxVelocity, kRapidMaxAcceleration);
+
+    public static final double kSlowMaxVelocity = (0.2 * 5880.0) * kVelocityConversionFactor;
+    public static final double kSlowMaxAcceleration = kSlowMaxVelocity / 0.25;
+    public static final TrapezoidProfile.Constraints slowConstraints =
+        new TrapezoidProfile.Constraints(kSlowMaxVelocity, kSlowMaxAcceleration);
 
     public static final float kUpperLimit = -2f; // 3;
     public static final float kLowerLimit = -6.0f; // -12;

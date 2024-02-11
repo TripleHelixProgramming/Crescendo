@@ -22,7 +22,7 @@ public class ClimberSide {
           ClimberConstants.kP,
           ClimberConstants.kI,
           ClimberConstants.kD,
-          ClimberConstants.climberConstraints);
+          ClimberConstants.rapidConstraints);
 
   private LinearFilter filter = LinearFilter.singlePoleIIR(0.1, RobotConstants.kPeriod);
 
@@ -72,12 +72,21 @@ public class ClimberSide {
     m_climberMover.setVoltage(voltage);
   }
 
-  public void driveTo(double targetPosition) {
-
+  public void driveRapidlyTo(double targetPosition) {
+    m_climberPIDController.setConstraints(ClimberConstants.rapidConstraints);
     m_climberPIDController.setGoal(targetPosition);
+    drive();
+  }
+
+  public void driveSlowlyTo(double targetPosition) {
+    m_climberPIDController.setConstraints(ClimberConstants.slowConstraints);
+    m_climberPIDController.setGoal(targetPosition);
+    drive();
+  }
+
+  public void drive() {
     m_climberMover.setVoltage(
         m_climberPIDController.calculate(m_climberRelativeEncoder.getPosition()));
-    // m_climberPIDController.setReference(positionSetpoint, ControlType.kPosition);
   }
 
   public void setPower(double power) {

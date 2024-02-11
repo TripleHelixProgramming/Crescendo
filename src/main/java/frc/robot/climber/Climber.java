@@ -38,8 +38,8 @@ public class Climber extends SubsystemBase {
   public Command createDriveToCommand(double targetPosition) {
     return this.run(
         () -> {
-          m_leftClimberSide.driveTo(targetPosition);
-          m_rightClimberSide.driveTo(targetPosition);
+          m_leftClimberSide.driveRapidlyTo(targetPosition);
+          m_rightClimberSide.driveRapidlyTo(targetPosition);
         });
   }
 
@@ -55,7 +55,8 @@ public class Climber extends SubsystemBase {
   }
 
   public boolean bothSidesCalibrated() {
-    return m_leftClimberSide.getHasFinishedCalibrating() && m_rightClimberSide.getHasFinishedCalibrating();
+    return m_leftClimberSide.getHasFinishedCalibrating()
+        && m_rightClimberSide.getHasFinishedCalibrating();
   }
 
   // spotless:off
