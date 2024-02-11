@@ -54,19 +54,23 @@ public class Climber extends SubsystemBase {
     return m_leftClimberSide.atGoal() && m_rightClimberSide.atGoal();
   }
 
+  public boolean bothSidesCalibrated() {
+    return m_leftClimberSide.getHasFinishedCalibrating() && m_rightClimberSide.getHasFinishedCalibrating();
+  }
+
+  // spotless:off
   @Override
   public void periodic() {
     for (ClimberSide climberside : climberSides) {
-      SmartDashboard.putNumber(
-          "Climber" + climberside.climberName + " height", climberside.getHeight());
-      SmartDashboard.putBoolean(
-          "Climber" + climberside.climberName + " atUpperLimit",
-          climberside.getUpperSoftLimitSwtichDetected());
-      SmartDashboard.putBoolean(
-          "Climber" + climberside.climberName + " atLowerLimit",
-          climberside.getLowerSoftLimitSwtichDetected());
-      SmartDashboard.putNumber(
-          "Climber" + climberside.climberName + " Current", climberside.getClimberCurrent());
+      SmartDashboard.putNumber("Climber" + climberside.climberName + 
+        " height", climberside.getHeight());
+      SmartDashboard.putBoolean("Climber" + climberside.climberName + 
+        " atUpperLimit", climberside.getUpperSoftLimitSwtichDetected());
+      SmartDashboard.putBoolean("Climber" + climberside.climberName + 
+        " atLowerLimit", climberside.getLowerSoftLimitSwtichDetected());
+      SmartDashboard.putNumber("Climber" + climberside.climberName + 
+        " Current", climberside.getClimberCurrent());
     }
   }
+  // spotless:on
 }

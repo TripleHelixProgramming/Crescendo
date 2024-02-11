@@ -42,12 +42,11 @@ public class CalibrateCommand extends Command {
 
   @Override
   public boolean isFinished() {
-    return (m_climber.getClimberSides()[0].getHasFinishedCalibrating()
-        && m_climber.getClimberSides()[1].getHasFinishedCalibrating());
+    return m_climber.bothSidesCalibrated();
   }
 
   @Override
-  public void end(boolean interrupeted) {
+  public void end(boolean interrupted) {
     for (ClimberSide climberSide : m_climber.getClimberSides()) {
       climberSide.configureUpperLimit(true);
     }
