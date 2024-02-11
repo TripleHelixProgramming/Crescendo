@@ -18,11 +18,13 @@ public class Climber extends SubsystemBase {
   DifferentialDrive m_differentialDrive;
 
   public Climber() {
-
     m_differentialDrive =
         new DifferentialDrive(m_leftClimberSide::setPower, m_rightClimberSide::setPower);
   }
 
+  /**
+   * @return Vector of climber actuators
+   */
   public ClimberSide[] getClimberSides() {
     return climberSides;
   }
@@ -50,10 +52,17 @@ public class Climber extends SubsystemBase {
                 -xboxController.getRightY(), -xboxController.getLeftX()));
   }
 
+  /**
+   * @return True when both climber actuators are within allowable error of setpoint of closed-loop
+   *     position controller
+   */
   public boolean bothSidesAtSetpoint() {
     return m_leftClimberSide.atGoal() && m_rightClimberSide.atGoal();
   }
 
+  /**
+   * @return True when both climber actuators are in the calibration-complete state
+   */
   public boolean bothSidesCalibrated() {
     return m_leftClimberSide.getHasFinishedCalibrating()
         && m_rightClimberSide.getHasFinishedCalibrating();
@@ -70,7 +79,7 @@ public class Climber extends SubsystemBase {
       SmartDashboard.putBoolean("Climber" + climberside.getName() + 
         "LowerSoftLimitState", climberside.getLowerSoftLimitSwtichDetected());
       SmartDashboard.putNumber("Climber" + climberside.getName() + 
-        "Current", climberside.getClimberCurrent());
+        "Current", climberside.getCurrent());
     }
   }
   // spotless:on

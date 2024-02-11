@@ -16,7 +16,7 @@ public class ClimberSide {
 
   private final CANSparkMax m_climberMover;
   private final RelativeEncoder m_climberRelativeEncoder;
-  // private final SparkPIDController m_climberPIDController;
+
   private final ProfiledPIDController m_climberPIDController =
       new ProfiledPIDController(
           ClimberConstants.kP,
@@ -50,12 +50,6 @@ public class ClimberSide {
 
     m_climberPIDController.setTolerance(ClimberConstants.kAllowableError);
 
-    // m_climberPIDController = m_climberMover.getPIDController();
-
-    // m_climberPIDController.setP(ClimberConstants.kP);
-    // m_climberPIDController.setI(ClimberConstants.kI);
-    // m_climberPIDController.setD(ClimberConstants.kD);
-
     m_climberRelativeEncoder = m_climberMover.getEncoder();
 
     m_climberRelativeEncoder.setPositionConversionFactor(
@@ -64,27 +58,18 @@ public class ClimberSide {
         ClimberConstants.kVelocityConversionFactor);
   }
 
-  // public void setVelocity(double targetVelocity) {
-  //   m_climberPIDController.setReference(targetVelocity, ControlType.kVelocity);
-  // }
-
-  public void setVoltage(double voltage) {
-    m_climberMover.setVoltage(voltage);
-  }
-
   public void driveRapidlyTo(double targetPosition) {
     m_climberPIDController.setConstraints(ClimberConstants.rapidConstraints);
-    m_climberPIDController.setGoal(targetPosition);
-    drive();
+    driveTo(targetPosition);
   }
 
   public void driveSlowlyTo(double targetPosition) {
     m_climberPIDController.setConstraints(ClimberConstants.slowConstraints);
-    m_climberPIDController.setGoal(targetPosition);
-    drive();
+    driveTo(targetPosition);
   }
 
-  public void drive() {
+  public void driveTo(double targetPosition) {
+    m_climberPIDController.setGoal(targetPosition);
     m_climberMover.setVoltage(
         m_climberPIDController.calculate(m_climberRelativeEncoder.getPosition()));
   }
@@ -93,8 +78,11 @@ public class ClimberSide {
     m_climberMover.set(power);
   }
 
-  public void configureUpperLimit(boolean upperLImitEnabled) {
-    m_climberMover.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, upperLImitEnabled);
+  /**
+   * @param upperLimitEnabled Whether the upper soft limit should be enabled
+   */
+  public void configureUpperLimit(boolean upperLimitEnabled) {
+    m_climberMover.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, upperLimitEnabled);
   }
 
   public void resetEncoder() {
@@ -118,26 +106,45 @@ public class ClimberSide {
     m_climberMover.setVoltage(0.0);
   }
 
+  /**
+   * @return Whether the calibration is complete
+   */
   public boolean getHasFinishedCalibrating() {
     return hasFinishedCalibrating;
   }
 
+  /**
+   * @param hasFinishedCalibrating Whether the calibration is complete
+   */
   public void setHasFinishedCalibrating(boolean hasFinishedCalibrating) {
     this.hasFinishedCalibrating = hasFinishedCalibrating;
   }
 
+  /**
+   * @return True when climber actuator is within allowable error of setpoint of closed-loop
+   *     position controller
+   */
   public boolean atGoal() {
     return m_climberPIDController.atGoal();
   }
 
+  /**
+   * @return Position of climber actuator in inches
+   */
   public double getHeight() {
     return m_climberRelativeEncoder.getPosition();
   }
 
-  public double getClimberCurrent() {
+  /**
+   * @return Current output in Amps
+   */
+  public double getCurrent() {
     return m_climberMover.getOutputCurrent();
   }
 
+  /**
+   * @return Name of climber actuator
+   */
   public String getName() {
     return climberName;
   }
