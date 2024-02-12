@@ -141,10 +141,10 @@ public class ClimberSide {
   }
 
   /**
-   * @return Current output in Amps
+   * @return Current in Amps, output of linear filter
    */
   public double getCurrent() {
-    return m_climberMover.getOutputCurrent();
+    return m_filter.calculate(m_climberMover.getOutputCurrent());
   }
 
   /**

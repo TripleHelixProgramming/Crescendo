@@ -64,7 +64,9 @@ public class Climber extends SubsystemBase {
   public void periodic() {
     for (ClimberSide actuator : m_actuators) {
       SmartDashboard.putNumber("Climber" + actuator.getName() + 
-        "Height", actuator.getHeight());
+        "Stroke", actuator.getHeight());
+      SmartDashboard.putNumber("Climber" + actuator.getName() + 
+        "MotorRotations", actuator.getHeight()/ClimberConstants.kPositionConversionFactor);
       SmartDashboard.putBoolean("Climber" + actuator.getName() + 
         "UpperSoftLimitState", actuator.getUpperSoftLimitSwtichState());
       SmartDashboard.putBoolean("Climber" + actuator.getName() + 
