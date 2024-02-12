@@ -28,7 +28,7 @@ public static final double kPositionConversionFactor =
 
 ## Velocity
 
-The velocity of the motor's internal encoder is read in native units of [[RPM of motor]](https://codedocs.revrobotics.com/java/com/revrobotics/sparkrelativeencoder#getVelocity()).
+The velocity of the motor's internal encoder is read in native units of [`[RPM of motor]`](https://codedocs.revrobotics.com/java/com/revrobotics/sparkrelativeencoder#getVelocity()).
 >```java
 >public double getVelocity()
 >```
