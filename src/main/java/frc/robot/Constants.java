@@ -200,11 +200,11 @@ public final class Constants {
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    public static final double kGearRatio = 24.0 / 36.0; // gear ratio of climber motor
+    public static final double kGearRatio = 36.0 / 24.0; // pulley ratio
     public static final double kPitch = 10.0; // turns per inch
 
     public static final double kPositionConversionFactor =
-        1 / (kGearRatio * kPitch); // inches per rotation
+        1.0 / (kGearRatio * kPitch); // inches per rotation
     public static final double kVelocityConversionFactor =
         kPositionConversionFactor / 60.0; // inches per second
 
