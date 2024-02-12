@@ -34,7 +34,7 @@ The velocity of the motor's internal encoder is read in native units of [[RPM of
 >```
 >Get the velocity of the motor. This returns the native units of 'RPM' by default, and can be changed by a scale factor using setVelocityConversionFactor().
 
-The parameter we pass to [`setVelocityConversionFactor()`](https://codedocs.revrobotics.com/java/com/revrobotics/sparkrelativeencoder#setVelocityConversionFactor(double)) will need to have units of [desired unit]/[native unit].
+The parameter we pass to [`setVelocityConversionFactor()`](https://codedocs.revrobotics.com/java/com/revrobotics/sparkrelativeencoder#setVelocityConversionFactor(double)) will need to have units of `[desired unit]/[native unit]`.
 
 Our desired unit for controlling the velocity of the climber actuator is `[in/s of actuator travel]`. So we need to calculate the conversion factor `[in/s of actuator travel]/[RPM of motor]`.
 
