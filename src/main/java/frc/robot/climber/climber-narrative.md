@@ -46,7 +46,7 @@ Assembling these by unit analysis, we get:
 
 ```java
 public static final double kVelocityConversionFactor =
-  kPositionConversionFactor / 60.0; // inches per second
+  kPositionConversionFactor / 60.0; // in/s per RPM
 ```
 
 # Maximum speed and acceleration
