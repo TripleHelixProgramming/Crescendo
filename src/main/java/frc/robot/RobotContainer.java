@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.Alliance;
 import frc.robot.Constants.AutoConstants.Auto;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.arm.Arm;
 import frc.robot.climber.CalibrateCommand;
 import frc.robot.climber.Climber;
@@ -58,9 +59,9 @@ public class RobotContainer {
     // Operator controller buttons
 
     // Calibrate upper limit of climber actuators
-    new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber));
-        // .andThen(m_climber.createDriveToCommand(ClimberConstants.kHomePosition)
-        // .until(m_climber::bothSidesAtSetpoint)));
+    new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
+        .andThen(m_climber.createDriveToCommand(ClimberConstants.kHomePosition)
+        .until(m_climber::bothSidesAtSetpoint)));
 
     // Deploy climber and begin climbing
     // BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, 0.75, m_loop).debounce(0.1);
