@@ -206,7 +206,7 @@ public final class Constants {
     public static final double kPositionConversionFactor =
         1.0 / (kGearRatio * kPitch); // inches per rotation
     public static final double kVelocityConversionFactor =
-        kPositionConversionFactor / 60.0; // inches per second
+        kPositionConversionFactor / 60.0; // in/s per RPM
 
     public static final double kRapidMaxVelocity = (0.8 * 5880.0) * kVelocityConversionFactor;
     public static final double kRapidMaxAcceleration = kRapidMaxVelocity / 0.25;
