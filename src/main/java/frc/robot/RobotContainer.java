@@ -6,15 +6,23 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
+import frc.robot.climber.Climber;
+import frc.robot.climber.commands.CalibrateCommand;
+import frc.robot.climber.commands.DriveToPositionCommand;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
@@ -24,7 +32,9 @@ public class RobotContainer {
   private final Drivetrain m_swerve = new Drivetrain();
   private final Arm m_arm = new Arm();
   private final Intake m_intake = new Intake();
+  private final Climber m_climber = new Climber();
 
+  private final EventLoop m_loop = new EventLoop();
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
@@ -45,17 +55,39 @@ public class RobotContainer {
     m_swerve.configurePathPlanner();
 
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
+    m_climber.setDefaultCommand(m_climber.createStopCommand());
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
         new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
-          .ignoringDisable(true));
+        .ignoringDisable(true));
 
     // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
-          .ignoringDisable(true));
+        .ignoringDisable(true));
+
     // Operator controller buttons
+
+    // Calibrate upper limit of climber actuators
+    new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
+        .andThen(new DriveToPositionCommand(m_climber, ClimberConstants.kHomePosition)));
+
+    // Deploy climber and begin climbing
+    BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, -0.9, m_loop).debounce(0.1);
+    Trigger climbTrigger = climbThreshold.castTo(Trigger::new);
+    climbTrigger.onTrue(new DriveToPositionCommand(m_climber, ClimberConstants.kDeployPosition)
+        .andThen(m_climber.createArcadeDriveCommand(m_operator)));
+    
+    //Run climber drive while B button down
+    // new JoystickButton(m_operator,Button.kB.value)
+    // .whileTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));
+    // .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
+    
+    new JoystickButton(m_operator,Button.kB.value)
+        .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
+
+    // Raise and lower arm
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
 
@@ -107,6 +139,7 @@ public class RobotContainer {
   }
 
   public void periodic() {
+    m_loop.poll();
     updateSelectedAutonomous();
     if (m_autonomous != null) {
       SmartDashboard.putString("Auto", m_autonomous.getFilename());

@@ -5,6 +5,7 @@ package frc.robot;
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 public final class Constants {
@@ -186,6 +187,51 @@ public final class Constants {
     public static final int kArmMoverRightReverseChannel = 3;
 
     public static final int kNoteSensorDIOPort = 1;
+  }
+
+  public static final class ClimberConstants {
+    public static final int kLeftMotorPort = 24;
+    public static final int kRightMotorPort = 23;
+
+    public static final int kMotorCurrentLimit = 20;
+    public static final double kMotorCurrentHardStop = 10.0;
+
+    public static final double kP = 3.0;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+
+    public static final double kGearRatio = 36.0 / 24.0; // pulley ratio
+    public static final double kPitch = 10.0; // turns per inch
+
+    public static final double kPositionConversionFactor =
+        1.0 / (kGearRatio * kPitch); // inches per rotation
+    public static final double kVelocityConversionFactor =
+        kPositionConversionFactor / 60.0; // in/s per RPM
+
+    public static final double kRapidMaxVelocity = (0.8 * 5880.0) * kVelocityConversionFactor;
+    public static final double kRapidMaxAcceleration = kRapidMaxVelocity / 0.25;
+    public static final TrapezoidProfile.Constraints rapidConstraints =
+        new TrapezoidProfile.Constraints(kRapidMaxVelocity, kRapidMaxAcceleration);
+
+    public static final double kSlowMaxVelocity = (0.1 * 5880.0) * kVelocityConversionFactor;
+    public static final double kSlowMaxAcceleration = kSlowMaxVelocity / 0.25;
+    public static final TrapezoidProfile.Constraints slowConstraints =
+        new TrapezoidProfile.Constraints(kSlowMaxVelocity, kSlowMaxAcceleration);
+
+    public static final float kUpperLimit = -0.25f;
+    public static final float kLowerLimit = -15.0f;
+
+    public static final double kSeekPosition = 25.0;
+    public static final double kHomePosition = -3.2;
+    public static final double kDeployPosition = -0.25;
+
+    public static final double kAllowablePositionError = 0.01;
+
+    public static enum CalibrationState {
+      UNCALIBRATED,
+      HOMING,
+      CALIBRATED
+    }
   }
 
   public static final class AutoConstants {
