@@ -5,7 +5,6 @@ package frc.robot.drivetrain;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,9 +13,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
 
@@ -67,8 +69,15 @@ public class Drivetrain extends SubsystemBase {
             m_rearRight.getPosition()
           });
 
+  private final Field2d m_field = new Field2d();
+
+  private final DigitalInput allianceSelectionSwitch =
+      new DigitalInput(AutoConstants.kAllianceColorSelectorPort);
+
   public Drivetrain() {
-    resetGyro();
+    m_gyro.reset();
+
+    SmartDashboard.putData("Field", m_field);
 
     for (SwerveModule module : modules) {
       module.resetDriveEncoder();
@@ -77,13 +86,10 @@ public class Drivetrain extends SubsystemBase {
     }
   }
 
-  public void resetGyro() {
-    m_gyro.reset();
-  }
-
   @Override
   public void periodic() {
     updateOdometry();
+    m_field.setRobotPose(m_odometry.getPoseMeters());
 
     for (SwerveModule module : modules) {
       SmartDashboard.putNumber(
@@ -100,15 +106,18 @@ public class Drivetrain extends SubsystemBase {
       SmartDashboard.putNumber(
           module.getName() + "AbsoluteMagnetOffset",
           module.getAbsTurningEncoderOffset().getDegrees());
+
+      SmartDashboard.putNumber(module.getName() + "OutputCurrent", module.getDriveMotorCurrent());
     }
 
+    SmartDashboard.putBoolean("isRed", getRedAlliance());
     SmartDashboard.putNumber("GyroAngle", m_gyro.getRotation2d().getDegrees());
   }
 
   /**
    * @param chassisSpeeds Robot-relative chassis speeds (x, y, theta)
    */
-  public void drive(ChassisSpeeds chassisSpeeds) {
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
@@ -159,6 +168,15 @@ public class Drivetrain extends SubsystemBase {
     m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
   }
 
+  public void resetHeading() {
+    Pose2d pose =
+        getRedAlliance()
+            ? new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI))
+            : new Pose2d(getPose().getTranslation(), new Rotation2d());
+
+    m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
+  }
+
   /**
    * @return Array of swerve module positions
    */
@@ -197,33 +215,34 @@ public class Drivetrain extends SubsystemBase {
         m_rearRight.getState());
   }
 
+  // spotless:off
   public void configurePathPlanner() {
     AutoBuilder.configureHolonomic(
-        this::getPose,
-        this::setPose,
-        this::getChassisSpeeds,
-        this::drive,
+        this::getPose, // Supplier for the current pose
+        this::setPose, // Consumer for resetting the pose
+        this::getChassisSpeeds, // Supplier for the current robot-relative chassis speeds
+        this::setChassisSpeeds, // Consumer for setting the robot-relative chassis speeds
 
-        // update these to fit our robot
+        // Configuring the path following commands
         new HolonomicPathFollowerConfig(
-            // Translation PID constants
-            new PIDConstants(
-                Constants.ModuleConstants.kDriveP,
-                Constants.ModuleConstants.kDriveI,
-                Constants.ModuleConstants.kDriveD),
-            // Rotation PID constants
-            new PIDConstants(
-                Constants.ModuleConstants.kTurningP,
-                Constants.ModuleConstants.kDriveI,
-                Constants.ModuleConstants.kDriveD),
-            Constants.DriveConstants.kMaxTranslationalVelocity, // Max module speed, in m/s
-            Constants.DriveConstants.kRadius, // Drive base radius in meters
+            AutoConstants.kTranslationControllerGains, // Translation PID constants
+            AutoConstants.kRotationControllerGains, // Rotation PID constants
+            DriveConstants.kMaxTranslationalVelocity, // Max module speed, in m/s
+            DriveConstants.kRadius, // Drive base radius in meters
             new ReplanningConfig() // Default path replanning config
             ),
-        () -> {
-          return false;
-        }, // Never mirror path
-        this // Reference to this subsystem to set requirements
+        
+        () -> {return false;}, // Never mirror path
+        this // Requires this subsystem
         );
+  }
+  // spotless:on
+
+  public boolean getFieldRotated() {
+    return allianceSelectionSwitch.get();
+  }
+
+  public boolean getRedAlliance() {
+    return allianceSelectionSwitch.get();
   }
 }

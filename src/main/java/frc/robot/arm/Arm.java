@@ -36,12 +36,12 @@ public class Arm extends SubsystemBase {
         null);
   }
 
-  public void pneumaticDeploy() {
+  private void pneumaticDeploy() {
     m_armMoverLeft.set(Value.kForward);
     m_armMoverRight.set(Value.kForward);
   }
 
-  public void pneumaticRetract() {
+  private void pneumaticRetract() {
     m_armMoverLeft.set(Value.kReverse);
     m_armMoverRight.set(Value.kReverse);
   }
@@ -51,11 +51,27 @@ public class Arm extends SubsystemBase {
   // https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#instance-command-factory-methods
 
   public Command createLowerArmCommand() {
-    return this.startEnd(() -> this.pneumaticRetract(), () -> {});
+    return this.runOnce(() -> this.pneumaticRetract());
   }
 
   public Command createRaiseArmCommand() {
-    return this.startEnd(() -> this.pneumaticDeploy(), () -> {});
+    return this.runOnce(() -> this.pneumaticDeploy());
+  }
+
+  public BooleanSupplier isArmRaised() {
+    BooleanSupplier ArmRaised =
+        () ->
+            m_armMoverLeft.get().equals(Value.kForward)
+                & m_armMoverRight.get().equals(Value.kForward);
+    return ArmRaised;
+  }
+
+  public BooleanSupplier isArmLowered() {
+    BooleanSupplier ArmLowered =
+        () ->
+            m_armMoverLeft.get().equals(Value.kReverse)
+                & m_armMoverRight.get().equals(Value.kReverse);
+    return ArmLowered;
   }
 
   public BooleanSupplier isArmRaised() {

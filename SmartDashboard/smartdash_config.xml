@@ -8,9 +8,21 @@
       class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
       <location x="366" y="165" />
     </widget>
-    <widget field="Alliance" type="String"
+    <widget field="rotateField" type="Boolean"
       class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-      <location x="158" y="126" />
+      <location x="31" y="252" />
+    </widget>
+    <widget field="fieldRelative" type="Boolean"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="25" y="275" />
+    </widget>
+    <widget field="isRed" type="Boolean"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="56" y="230" />
+    </widget>
+    <widget field="Auto" type="String"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="59" y="208" />
     </widget>
     <widget field="Climberright atLowerLimit" type="Boolean"
       class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
@@ -48,6 +60,9 @@
     <widget field="RearLeftRelativeTurningPosition" type="Number"
       class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
       <location x="0" y="483" />
+    <widget field="GyroAngle" type="Number"
+      class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+      <location x="232" y="240" />
     </widget>
     <widget field="RearRightAbsoluteMagnetOffset" type="Number"
       class="edu.wpi.first.smartdashboard.gui.elements.TextBox">

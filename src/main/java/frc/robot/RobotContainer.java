@@ -3,6 +3,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
@@ -16,15 +17,15 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Alliance;
-import frc.robot.Constants.AutoConstants.Auto;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
 import frc.robot.climber.Climber;
 import frc.robot.climber.commands.CalibrateCommand;
 import frc.robot.climber.commands.DriveToPositionCommand;
 import frc.robot.drivetrain.Drivetrain;
-import frc.robot.drivetrain.commands.ZorroDrive;
+import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
 
 public class RobotContainer {
@@ -38,13 +39,20 @@ public class RobotContainer {
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
-  private Auto m_selectedAuto;
+  // digital inputs for autonomous selection
+  private final DigitalInput[] autonomousModes =
+      new DigitalInput[AutoConstants.kAutonomousModeSelectorPorts.length];
+
+  private Autonomous m_autonomous;
 
   // spotless:off
   public RobotContainer() {
-    m_selectedAuto = Auto.B_DRIVEFWD2M;
 
-    m_swerve.setDefaultCommand(new ZorroDrive(m_swerve, m_driver, getAlliance()));
+    for (int i = 0; i < AutoConstants.kAutonomousModeSelectorPorts.length; i++) {
+      autonomousModes[i] = new DigitalInput(AutoConstants.kAutonomousModeSelectorPorts[i]);
+    }
+
+    m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
     m_swerve.configurePathPlanner();
 
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
@@ -53,12 +61,12 @@ public class RobotContainer {
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
         new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
-            .ignoringDisable(true));
+          .ignoringDisable(true));
 
     // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
-        .onTrue(new InstantCommand(() -> m_swerve.resetGyro())
-            .ignoringDisable(true));
+          .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
+          .ignoringDisable(true));
 
     // Operator controller buttons
 
@@ -73,9 +81,9 @@ public class RobotContainer {
         .andThen(m_climber.createArcadeDriveCommand(m_operator)));
     
     //Run climber drive while B button down
-    new JoystickButton(m_operator,Button.kB.value)
+    // new JoystickButton(m_operator,Button.kB.value)
     // .whileTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));
-        .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
+    // .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
     
     new JoystickButton(m_operator,Button.kB.value)
         .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
@@ -105,8 +113,8 @@ public class RobotContainer {
     //     .whileTrue(m_intake.createSetVoltageCommand(-12.0));
 
     // Moves note back in order to place in trap
-    // new JoystickButton(m_operator, Button.kB.value)
-    //     .whileTrue(m_intake.createSetPositionCommand(-0.27));
+    new JoystickButton(m_operator, Button.kB.value)
+        .whileTrue(m_intake.createSetPositionCommand(-0.27));
 
     // Gives note to teammates
     new JoystickButton(m_operator, Button.kBack.value)
@@ -119,28 +127,12 @@ public class RobotContainer {
   }
   // spotless:on
 
+  /**
+   * @return The Command that runs the selected autonomous mode
+   */
   public Command getAutonomousCommand() {
-    switch (m_selectedAuto) {
-      case B_DRIVEFWD2M:
-        return new PathPlannerAuto("B-driveFwd2m");
-      case R_DRIVEFWD2M:
-        return new PathPlannerAuto("R-driveFwd2m");
-      case B_DRIVERIGHTTURNTORIGHT:
-        return new PathPlannerAuto("B_SpinForward");
-      default:
-        return null;
-    }
-  }
-
-  public Alliance getAlliance() {
-    switch (m_selectedAuto) {
-      case R_DRIVEFWD2M:
-        return Alliance.RED_ALLIANCE;
-      case B_DRIVEFWD2M:
-      case B_DRIVERIGHTTURNTORIGHT:
-      default:
-        return Alliance.BLUE_ALLIANCE;
-    }
+    updateSelectedAutonomous();
+    return m_autonomous.getPathPlannerAuto();
   }
 
   public void teleopInit() {
@@ -148,7 +140,75 @@ public class RobotContainer {
   }
 
   public void periodic() {
-    SmartDashboard.putString("Alliance", getAlliance().toString());
     m_loop.poll();
+    updateSelectedAutonomous();
+    if (m_autonomous != null) {
+      SmartDashboard.putString("Auto", m_autonomous.getFilename());
+    } else {
+      SmartDashboard.putString("Auto", "Null");
+    }
+  }
+
+  private class Autonomous {
+
+    private final String filename;
+
+    private Autonomous(String filename) {
+      this.filename = filename;
+    }
+
+    private Command getPathPlannerAuto() {
+      return new PathPlannerAuto(filename);
+    }
+
+    private String getFilename() {
+      return filename;
+    }
+  }
+
+  /** Updates the autonomous based on the physical selector switch */
+  private void updateSelectedAutonomous() {
+    switch (getSelectedAutonomousMode()) {
+      case 0:
+        m_autonomous =
+            m_swerve.getRedAlliance()
+                ? new Autonomous("R-driveFwd2m")
+                : new Autonomous("B-driveFwd2m");
+        break;
+
+      case 1:
+        m_autonomous =
+            m_swerve.getRedAlliance()
+                ? new Autonomous("R-driveFwd2m")
+                : new Autonomous("B_SpinForward");
+        break;
+
+      case 2:
+
+      case 3:
+
+      case 4:
+
+      case 5:
+
+      case 6:
+
+      case 7:
+
+      default:
+        m_autonomous = null;
+    }
+  }
+
+  /**
+   * @return Index in array of Digital Inputs corresponding to selected auto mode
+   */
+  private int getSelectedAutonomousMode() {
+    for (int port = 0; port < autonomousModes.length; port++) {
+      if (!autonomousModes[port].get()) {
+        return port;
+      }
+    }
+    return -1; // failure of the physical switch
   }
 }
