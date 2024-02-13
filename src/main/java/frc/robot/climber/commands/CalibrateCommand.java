@@ -1,10 +1,12 @@
 // Copyright (c) Triple Helix Robotics, FRC 2363. All rights reserved.
 
-package frc.robot.climber;
+package frc.robot.climber.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ClimberConstants.CalibrationState;
+import frc.robot.climber.Climber;
+import frc.robot.climber.ClimberSide;
 
 public class CalibrateCommand extends Command {
 
@@ -21,6 +23,8 @@ public class CalibrateCommand extends Command {
   public void initialize() {
     for (ClimberSide actuator : m_actuators) {
       actuator.configureUpperLimit(false);
+      actuator.configurePositionController(
+          ClimberConstants.slowConstraints, ClimberConstants.kSeekPosition);
       actuator.setCalibrationState(CalibrationState.UNCALIBRATED);
     }
   }
@@ -28,22 +32,17 @@ public class CalibrateCommand extends Command {
   @Override
   public void execute() {
     for (ClimberSide actuator : m_actuators) {
-      if (actuator.getCalibrationState() != CalibrationState.CALIBRATED) {
-        calibrate(actuator);
-      }
-      SmartDashboard.putString(
-          "Climber" + actuator.getName() + "CalibrationState",
-          actuator.getCalibrationState().name());
+      if (actuator.getCalibrationState() != CalibrationState.CALIBRATED) calibrate(actuator);
     }
   }
 
   private void calibrate(ClimberSide actuator) {
     if (actuator.getCurrentSenseState()) {
-      actuator.resetEncoder();
       actuator.stop();
+      actuator.resetEncoder();
       actuator.setCalibrationState(CalibrationState.CALIBRATED);
     } else {
-      actuator.driveSlowlyTo(100);
+      actuator.driveToTargetPosition();
       actuator.setCalibrationState(CalibrationState.HOMING);
     }
   }

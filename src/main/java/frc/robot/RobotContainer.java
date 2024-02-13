@@ -5,20 +5,24 @@ package frc.robot;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Alliance;
 import frc.robot.Constants.AutoConstants.Auto;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
-import frc.robot.climber.CalibrateCommand;
 import frc.robot.climber.Climber;
+import frc.robot.climber.commands.CalibrateCommand;
+import frc.robot.climber.commands.DriveToPositionCommand;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDrive;
 import frc.robot.intake.Intake;
@@ -60,22 +64,21 @@ public class RobotContainer {
 
     // Calibrate upper limit of climber actuators
     new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
-        .andThen(m_climber.createDriveToCommand(ClimberConstants.kHomePosition)
-        .until(m_climber::bothSidesAtSetpoint)));
+        .andThen(new DriveToPositionCommand(m_climber, ClimberConstants.kHomePosition)));
 
     // Deploy climber and begin climbing
-    // BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, 0.75, m_loop).debounce(0.1);
-    // Trigger climbTrigger = climbThreshold.castTo(Trigger::new);
-    // climbTrigger.onTrue(m_climber.createDriveToCommand(ClimberConstants.kDeployPosition)
-    //     .until(m_climber::bothSidesAtSetpoint)
-    //     .andThen(m_climber.createArcadeDriveCommand(m_operator)));
+    BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, -0.9, m_loop).debounce(0.1);
+    Trigger climbTrigger = climbThreshold.castTo(Trigger::new);
+    climbTrigger.onTrue(new DriveToPositionCommand(m_climber, ClimberConstants.kDeployPosition)
+        .andThen(m_climber.createArcadeDriveCommand(m_operator)));
     
-    //Run climber drive while dpad down
-    // new JoystickButton(m_operator,Button.kB.value)
-    // .whileTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));//m_climber.createArcadeDriveCommand(m_operator));
+    //Run climber drive while B button down
+    new JoystickButton(m_operator,Button.kB.value)
+    // .whileTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));
+        .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
     
     new JoystickButton(m_operator,Button.kB.value)
-    .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
+        .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
 
     // Raise and lower arm
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());

@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ClimberConstants.CalibrationState;
 import frc.robot.Constants.RobotConstants;
@@ -27,8 +28,8 @@ public class ClimberSide {
           ClimberConstants.kD,
           ClimberConstants.rapidConstraints);
 
-  private LinearFilter m_filter = LinearFilter.singlePoleIIR(0.1, RobotConstants.kPeriod);
-  private Debouncer m_debouncer = new Debouncer(0.1, DebounceType.kRising);
+  private LinearFilter m_filter = LinearFilter.singlePoleIIR(0.3, RobotConstants.kPeriod);
+  private Debouncer m_debouncer = new Debouncer(0.05, DebounceType.kRising);
 
   private CalibrationState m_calibrationState = CalibrationState.UNCALIBRATED;
 
@@ -62,20 +63,15 @@ public class ClimberSide {
         ClimberConstants.kVelocityConversionFactor);
   }
 
-  public void driveRapidlyTo(double targetPosition) {
-    m_climberPIDController.setConstraints(ClimberConstants.rapidConstraints);
-    driveTo(targetPosition);
-  }
-
-  public void driveSlowlyTo(double targetPosition) {
-    m_climberPIDController.setConstraints(ClimberConstants.slowConstraints);
-    driveTo(targetPosition);
-  }
-
-  private void driveTo(double targetPosition) {
+  public void configurePositionController(
+      TrapezoidProfile.Constraints constraints, double targetPosition) {
+    m_climberPIDController.setConstraints(constraints);
     m_climberPIDController.setGoal(targetPosition);
-    m_climberMover.setVoltage(
-        m_climberPIDController.calculate(m_climberRelativeEncoder.getPosition()));
+    m_climberPIDController.reset(m_climberRelativeEncoder.getPosition());
+  }
+
+  public void driveToTargetPosition() {
+    m_climberMover.set(m_climberPIDController.calculate(getPosition()));
   }
 
   public void setPower(double power) {
@@ -83,7 +79,7 @@ public class ClimberSide {
   }
 
   public void stop() {
-    m_climberMover.setVoltage(0.0);
+    m_climberMover.set(0.0);
   }
 
   /**
@@ -136,8 +132,15 @@ public class ClimberSide {
   /**
    * @return Position of climber actuator in inches
    */
-  public double getHeight() {
+  public double getPosition() {
     return m_climberRelativeEncoder.getPosition();
+  }
+
+  /**
+   * @return Velocity of climber actuator in in/s
+   */
+  public double getVelocity() {
+    return m_climberRelativeEncoder.getVelocity();
   }
 
   /**

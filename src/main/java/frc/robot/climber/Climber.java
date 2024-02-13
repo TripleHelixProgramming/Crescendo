@@ -36,13 +36,6 @@ public class Climber extends SubsystemBase {
         });
   }
 
-  public Command createDriveToCommand(double targetPosition) {
-    return this.run(
-        () -> {
-          for (ClimberSide actuator : m_actuators) actuator.driveRapidlyTo(targetPosition);
-        });
-  }
-
   public Command createArcadeDriveCommand(XboxController xboxController) {
     return this.run(
         () ->
@@ -50,29 +43,22 @@ public class Climber extends SubsystemBase {
                 -xboxController.getRightY(), -xboxController.getLeftX()));
   }
 
-  /**
-   * @return True when both climber actuators are within allowable error of setpoint of closed-loop
-   *     position controller
-   */
-  public boolean bothSidesAtSetpoint() {
-    for (ClimberSide actuator : m_actuators) if (!actuator.atGoal()) return false;
-    return true;
-  }
-
   // spotless:off
   @Override
   public void periodic() {
     for (ClimberSide actuator : m_actuators) {
       SmartDashboard.putNumber("Climber" + actuator.getName() + 
-        "Stroke", actuator.getHeight());
+        "Stroke", actuator.getPosition());
       SmartDashboard.putNumber("Climber" + actuator.getName() + 
-        "MotorRotations", actuator.getHeight()/ClimberConstants.kPositionConversionFactor);
+        "MotorRotations", actuator.getPosition()/ClimberConstants.kPositionConversionFactor);
       SmartDashboard.putBoolean("Climber" + actuator.getName() + 
         "UpperSoftLimitState", actuator.getUpperSoftLimitSwtichState());
       SmartDashboard.putBoolean("Climber" + actuator.getName() + 
         "LowerSoftLimitState", actuator.getLowerSoftLimitSwtichState());
       SmartDashboard.putNumber("Climber" + actuator.getName() + 
-        "Current", actuator.getCurrent());
+        "Current", Math.signum(actuator.getVelocity()) * actuator.getCurrent());
+      SmartDashboard.putString("Climber" + actuator.getName() + 
+        "CalibrationState", actuator.getCalibrationState().name());
     }
   }
   // spotless:on

@@ -193,10 +193,10 @@ public final class Constants {
     public static final int kLeftMotorPort = 24;
     public static final int kRightMotorPort = 23;
 
-    public static final int kMotorCurrentLimit = 40;
+    public static final int kMotorCurrentLimit = 20;
     public static final double kMotorCurrentHardStop = 10.0;
 
-    public static final double kP = 1.0;
+    public static final double kP = 3.0;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
@@ -213,18 +213,19 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints rapidConstraints =
         new TrapezoidProfile.Constraints(kRapidMaxVelocity, kRapidMaxAcceleration);
 
-    public static final double kSlowMaxVelocity = (0.2 * 5880.0) * kVelocityConversionFactor;
+    public static final double kSlowMaxVelocity = (0.1 * 5880.0) * kVelocityConversionFactor;
     public static final double kSlowMaxAcceleration = kSlowMaxVelocity / 0.25;
     public static final TrapezoidProfile.Constraints slowConstraints =
         new TrapezoidProfile.Constraints(kSlowMaxVelocity, kSlowMaxAcceleration);
 
-    public static final float kUpperLimit = -2f; // 3;
-    public static final float kLowerLimit = -6.0f; // -12;
+    public static final float kUpperLimit = -0.25f;
+    public static final float kLowerLimit = -15.0f;
 
-    public static final double kHomePosition = -3.0;
+    public static final double kSeekPosition = 25.0;
+    public static final double kHomePosition = -3.2;
     public static final double kDeployPosition = -0.25;
 
-    public static final double kAllowablePositionError = 0.1;
+    public static final double kAllowablePositionError = 0.01;
 
     public static enum CalibrationState {
       UNCALIBRATED,
