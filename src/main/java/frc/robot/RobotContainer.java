@@ -60,12 +60,12 @@ public class RobotContainer {
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
         new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
-          .ignoringDisable(true));
+        .ignoringDisable(true));
 
     // Driver controller buttons
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
-          .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
-          .ignoringDisable(true));
+        .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
+        .ignoringDisable(true));
 
     // Operator controller buttons
 
