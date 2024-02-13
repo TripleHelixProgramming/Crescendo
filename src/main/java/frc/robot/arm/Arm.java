@@ -73,20 +73,4 @@ public class Arm extends SubsystemBase {
                 & m_armMoverRight.get().equals(Value.kReverse);
     return ArmLowered;
   }
-
-  public BooleanSupplier isArmRaised() {
-    BooleanSupplier ArmRaised =
-        () ->
-            m_armMoverLeft.get().equals(Value.kForward)
-                & m_armMoverRight.get().equals(Value.kForward);
-    return ArmRaised;
-  }
-
-  public BooleanSupplier isArmLowered() {
-    BooleanSupplier ArmLowered =
-        () ->
-            m_armMoverLeft.get().equals(Value.kReverse)
-                & m_armMoverRight.get().equals(Value.kReverse);
-    return ArmLowered;
-  }
 }
