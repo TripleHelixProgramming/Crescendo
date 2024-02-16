@@ -31,12 +31,21 @@ import frc.robot.intake.Intake;
 
 public class RobotContainer {
 
+  private static RobotContainer INSTANCE = null;
+
+  public static RobotContainer getRobotContainer() {
+    if (INSTANCE == null) {
+      INSTANCE = new RobotContainer();
+    }
+    return INSTANCE;
+  }
+
   private final PowerDistribution m_PowerDistribution = new PowerDistribution(1, ModuleType.kRev);
 
   private final Drivetrain m_swerve = new Drivetrain();
   private final Arm m_arm = new Arm();
   private final Intake m_intake = new Intake();
-  private final Climber m_climber = new Climber(m_PowerDistribution);
+  private final Climber m_climber = new Climber();
 
   private final EventLoop m_loop = new EventLoop();
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
@@ -217,5 +226,16 @@ public class RobotContainer {
       }
     }
     return -1; // failure of the physical switch
+  }
+
+  /**
+   * Gets the current drawn from the Power Distribution Hub by a CAN motor controller, assuming that
+   * (PDH port number + 10) = CAN ID
+   *
+   * @param CANBusPort The CAN ID of the motor controller
+   * @return Current in Amps on the PDH channel corresponding to the motor channel
+   */
+  public double getPDHCurrent(int CANBusPort) {
+    return m_PowerDistribution.getCurrent(CANBusPort - 10);
   }
 }
