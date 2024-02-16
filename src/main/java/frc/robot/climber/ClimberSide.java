@@ -101,8 +101,7 @@ public class ClimberSide {
 
   public boolean getCurrentSenseState() {
     return m_debouncer.calculate(
-        m_filter.calculate(m_climberMover.getOutputCurrent())
-            > ClimberConstants.kMotorCurrentHardStop);
+        getPdhCurrent() > ClimberConstants.kMotorCurrentHardStop);
   }
 
   private boolean getUpperSoftLimitSwtichState() {
