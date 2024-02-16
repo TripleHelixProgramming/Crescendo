@@ -5,20 +5,26 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
+import edu.wpi.first.wpilibj.PowerDistribution;
 
 public class Climber extends SubsystemBase {
-  private final ClimberSide m_leftClimberSide =
-      new ClimberSide("Left", ClimberConstants.kLeftMotorPort);
-  private final ClimberSide m_rightClimberSide =
-      new ClimberSide("Right", ClimberConstants.kRightMotorPort);
+  
+  private ClimberSide[] m_actuators;
 
-  private ClimberSide[] m_actuators = {m_leftClimberSide, m_rightClimberSide};
+
+  private final PowerDistribution m_pdp;
 
   DifferentialDrive m_differentialDrive;
 
-  public Climber() {
+  public Climber(PowerDistribution pdp) {
+
+    this.m_pdp = pdp;
+    m_actuators[0] = new ClimberSide("Left", ClimberConstants.kLeftMotorPort, m_pdp);
+    m_actuators[1] = new ClimberSide("Right", ClimberConstants.kRightMotorPort, m_pdp);
+
     m_differentialDrive =
-        new DifferentialDrive(m_leftClimberSide::setPower, m_rightClimberSide::setPower);
+        new DifferentialDrive(m_actuators[0]::setPower, m_actuators[1]::setPower);
+
   }
 
   /**

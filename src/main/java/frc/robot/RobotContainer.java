@@ -31,16 +31,18 @@ import frc.robot.intake.Intake;
 
 public class RobotContainer {
 
+  private final PowerDistribution m_PowerDistribution = new PowerDistribution(1, ModuleType.kRev);
+
   private final Drivetrain m_swerve = new Drivetrain();
   private final Arm m_arm = new Arm();
   private final Intake m_intake = new Intake();
-  private final Climber m_climber = new Climber();
+  private final Climber m_climber = new Climber(m_PowerDistribution);
 
   private final EventLoop m_loop = new EventLoop();
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
-  private final PowerDistribution m_PowerDistribution = new PowerDistribution(1, ModuleType.kRev);
+  
 
   // digital inputs for autonomous selection
   private final DigitalInput[] autonomousModes =

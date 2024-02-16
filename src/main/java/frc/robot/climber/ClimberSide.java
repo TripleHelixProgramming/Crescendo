@@ -13,8 +13,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ClimberConstants.CalibrationState;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import frc.robot.Constants.RobotConstants;
-import frc.robot.RobotContainer;
 
 public class ClimberSide {
 
@@ -35,9 +35,13 @@ public class ClimberSide {
 
   private CalibrationState m_calibrationState = CalibrationState.UNCALIBRATED;
 
-  public ClimberSide(String climberName, int climberMotorChannel) {
+  private final PowerDistribution m_pdp;
+
+  public ClimberSide(String climberName, int climberMotorChannel, PowerDistribution pdp) {
 
     this.climberName = climberName;
+
+    this.m_pdp = pdp;
 
     m_climberMover = new CANSparkMax(climberMotorChannel, MotorType.kBrushless);
 
@@ -158,12 +162,14 @@ public class ClimberSide {
         getName() + "MotorRotations", getPosition() / ClimberConstants.kPositionConversionFactor);
     SmartDashboard.putBoolean(getName() + "UpperSoftLimitState", getUpperSoftLimitSwtichState());
     SmartDashboard.putBoolean(getName() + "LowerSoftLimitState", getLowerSoftLimitSwtichState());
-    SmartDashboard.putNumber(getName() + "SparkMaxCurrent", addPolarity(getCurrent()));
-    // SmartDashboard.putNumber(getName() + "PDHCurrent", m_powerDistribtion ClimberConstants.kLeftMotorPort - 10);
+    SmartDashboard.putNumber(getName() + "SparkMaxCurrent",  addPolarity(getCurrent()));
+    SmartDashboard.putNumber(getName() + "PDHCurrent",  addPolarity(m_pdp.getCurrent(ClimberConstants.kLeftMotorPort - 10)));
     SmartDashboard.putString(getName() + "CalibrationState", getCalibrationState().name());
   }
 
   private double addPolarity(double value) {
     return value * Math.signum(m_climberMover.getAppliedOutput());
   }
+
+
 }
