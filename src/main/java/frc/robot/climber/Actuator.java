@@ -17,7 +17,7 @@ import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ClimberConstants.CalibrationState;
 import frc.robot.Constants.RobotConstants;
 
-public class ClimberSide {
+public class Actuator {
 
   public final String climberName;
 
@@ -37,7 +37,7 @@ public class ClimberSide {
 
   private CalibrationState m_calibrationState = CalibrationState.UNCALIBRATED;
 
-  public ClimberSide(String climberName, int climberMotorChannel) {
+  public Actuator(String climberName, int climberMotorChannel) {
 
     this.climberName = climberName;
     this.motorChannel = climberMotorChannel;

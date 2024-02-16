@@ -8,29 +8,26 @@ import frc.robot.Constants.ClimberConstants;
 
 public class Climber extends SubsystemBase {
 
-  private ClimberSide[] m_actuators = new ClimberSide[2];
-
-  DifferentialDrive m_differentialDrive;
+  private final Actuator[] m_actuators = new Actuator[2];
+  private final DifferentialDrive m_differentialDrive;
 
   public Climber() {
-
-    m_actuators[0] = new ClimberSide("Left", ClimberConstants.kLeftMotorPort);
-    m_actuators[1] = new ClimberSide("Right", ClimberConstants.kRightMotorPort);
-
+    m_actuators[0] = new Actuator("Left", ClimberConstants.kLeftMotorPort);
+    m_actuators[1] = new Actuator("Right", ClimberConstants.kRightMotorPort);
     m_differentialDrive = new DifferentialDrive(m_actuators[0]::setPower, m_actuators[1]::setPower);
   }
 
   /**
    * @return Vector of climber actuators
    */
-  public ClimberSide[] getClimberSides() {
+  public Actuator[] getClimberSides() {
     return m_actuators;
   }
 
   public Command createStopCommand() {
     return this.runOnce(
         () -> {
-          for (ClimberSide actuator : m_actuators) actuator.stop();
+          for (Actuator actuator : m_actuators) actuator.stop();
         });
   }
 
@@ -43,6 +40,7 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    for (ClimberSide actuator : m_actuators) actuator.periodic();
+    m_differentialDrive.feed();
+    for (Actuator actuator : m_actuators) actuator.periodic();
   }
 }

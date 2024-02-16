@@ -4,13 +4,13 @@ package frc.robot.climber.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.climber.Actuator;
 import frc.robot.climber.Climber;
-import frc.robot.climber.ClimberSide;
 
 public class DriveToPositionCommand extends Command {
 
   private final Climber m_climber;
-  private final ClimberSide[] m_actuators;
+  private final Actuator[] m_actuators;
   private final double m_targetPosition;
 
   public DriveToPositionCommand(Climber subsystem, double targetPosition) {
@@ -22,14 +22,14 @@ public class DriveToPositionCommand extends Command {
 
   @Override
   public void initialize() {
-    for (ClimberSide actuator : m_actuators) {
+    for (Actuator actuator : m_actuators) {
       actuator.configurePositionController(ClimberConstants.rapidConstraints, m_targetPosition);
     }
   }
 
   @Override
   public void execute() {
-    for (ClimberSide actuator : m_actuators) {
+    for (Actuator actuator : m_actuators) {
       actuator.driveToTargetPosition();
     }
   }
@@ -40,7 +40,7 @@ public class DriveToPositionCommand extends Command {
    */
   @Override
   public boolean isFinished() {
-    for (ClimberSide actuator : m_actuators) if (!actuator.atGoal()) return false;
+    for (Actuator actuator : m_actuators) if (!actuator.atGoal()) return false;
     return true;
   }
 }
