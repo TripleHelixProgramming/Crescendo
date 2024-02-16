@@ -2,7 +2,6 @@ package frc.robot.climber;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
@@ -43,23 +42,8 @@ public class Climber extends SubsystemBase {
                 -xboxController.getRightY(), -xboxController.getLeftX()));
   }
 
-  // spotless:off
   @Override
   public void periodic() {
-    for (ClimberSide actuator : m_actuators) {
-      SmartDashboard.putNumber("Climber" + actuator.getName() + 
-        "Stroke", actuator.getPosition());
-      SmartDashboard.putNumber("Climber" + actuator.getName() + 
-        "MotorRotations", actuator.getPosition()/ClimberConstants.kPositionConversionFactor);
-      SmartDashboard.putBoolean("Climber" + actuator.getName() + 
-        "UpperSoftLimitState", actuator.getUpperSoftLimitSwtichState());
-      SmartDashboard.putBoolean("Climber" + actuator.getName() + 
-        "LowerSoftLimitState", actuator.getLowerSoftLimitSwtichState());
-      SmartDashboard.putNumber("Climber" + actuator.getName() + 
-        "Current", Math.signum(actuator.getVelocity()) * actuator.getCurrent());
-      SmartDashboard.putString("Climber" + actuator.getName() + 
-        "CalibrationState", actuator.getCalibrationState().name());
-    }
+    for (ClimberSide actuator : m_actuators) actuator.periodic();
   }
-  // spotless:on
 }

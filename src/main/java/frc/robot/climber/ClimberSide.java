@@ -10,9 +10,11 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ClimberConstants.CalibrationState;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.RobotContainer;
 
 public class ClimberSide {
 
@@ -99,11 +101,11 @@ public class ClimberSide {
             > ClimberConstants.kMotorCurrentHardStop);
   }
 
-  public boolean getUpperSoftLimitSwtichState() {
+  private boolean getUpperSoftLimitSwtichState() {
     return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitFwd);
   }
 
-  public boolean getLowerSoftLimitSwtichState() {
+  private boolean getLowerSoftLimitSwtichState() {
     return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitRev);
   }
 
@@ -132,28 +134,36 @@ public class ClimberSide {
   /**
    * @return Position of climber actuator in inches
    */
-  public double getPosition() {
+  private double getPosition() {
     return m_climberRelativeEncoder.getPosition();
-  }
-
-  /**
-   * @return Velocity of climber actuator in in/s
-   */
-  public double getVelocity() {
-    return m_climberRelativeEncoder.getVelocity();
   }
 
   /**
    * @return Current in Amps, output of linear filter
    */
-  public double getCurrent() {
+  private double getCurrent() {
     return m_filter.calculate(m_climberMover.getOutputCurrent());
   }
 
   /**
    * @return Name of climber actuator
    */
-  public String getName() {
-    return climberName;
+  private String getName() {
+    return "Climber" + climberName;
+  }
+
+  public void periodic() {
+    SmartDashboard.putNumber(getName() + "Stroke", getPosition());
+    SmartDashboard.putNumber(
+        getName() + "MotorRotations", getPosition() / ClimberConstants.kPositionConversionFactor);
+    SmartDashboard.putBoolean(getName() + "UpperSoftLimitState", getUpperSoftLimitSwtichState());
+    SmartDashboard.putBoolean(getName() + "LowerSoftLimitState", getLowerSoftLimitSwtichState());
+    SmartDashboard.putNumber(getName() + "SparkMaxCurrent", addPolarity(getCurrent()));
+    // SmartDashboard.putNumber(getName() + "PDHCurrent", m_powerDistribtion ClimberConstants.kLeftMotorPort - 10);
+    SmartDashboard.putString(getName() + "CalibrationState", getCalibrationState().name());
+  }
+
+  private double addPolarity(double value) {
+    return value * Math.signum(m_climberMover.getAppliedOutput());
   }
 }

@@ -5,6 +5,8 @@ package frc.robot;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -37,6 +39,8 @@ public class RobotContainer {
   private final EventLoop m_loop = new EventLoop();
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
+
+  private final PowerDistribution m_PowerDistribution = new PowerDistribution(1, ModuleType.kRev);
 
   // digital inputs for autonomous selection
   private final DigitalInput[] autonomousModes =
@@ -112,8 +116,8 @@ public class RobotContainer {
     //     .whileTrue(m_intake.createSetVoltageCommand(-12.0));
 
     // Moves note back in order to place in trap
-    new JoystickButton(m_operator, Button.kB.value)
-        .whileTrue(m_intake.createSetPositionCommand(-0.27));
+    // new JoystickButton(m_operator, Button.kB.value)
+    //     .whileTrue(m_intake.createSetPositionCommand(-0.27));
 
     // Gives note to teammates
     new JoystickButton(m_operator, Button.kBack.value)
@@ -141,11 +145,15 @@ public class RobotContainer {
   public void periodic() {
     m_loop.poll();
     updateSelectedAutonomous();
+
     if (m_autonomous != null) {
       SmartDashboard.putString("Auto", m_autonomous.getFilename());
     } else {
       SmartDashboard.putString("Auto", "Null");
     }
+
+    SmartDashboard.putNumber("PDHVoltage", m_PowerDistribution.getVoltage());
+    SmartDashboard.putNumber("PDHTotalCurrent", m_PowerDistribution.getTotalCurrent());
   }
 
   private class Autonomous {
