@@ -24,7 +24,6 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
 import frc.robot.climber.Climber;
 import frc.robot.climber.commands.CalibrateCommand;
-import frc.robot.climber.commands.DriveToPositionCommand;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
@@ -84,12 +83,12 @@ public class RobotContainer {
 
     // Calibrate upper limit of climber actuators
     new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
-        .andThen(new DriveToPositionCommand(m_climber, ClimberConstants.kHomePosition)));
+        .andThen(m_climber.createDriveToPositionCommand(ClimberConstants.kHomePosition)));
 
     // Deploy climber and begin climbing
     BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, -0.9, m_loop).debounce(0.1);
     Trigger climbTrigger = climbThreshold.castTo(Trigger::new);
-    climbTrigger.onTrue(new DriveToPositionCommand(m_climber, ClimberConstants.kDeployPosition)
+    climbTrigger.onTrue(m_climber.createDriveToPositionCommand(ClimberConstants.kDeployPosition)
         .andThen(m_climber.createArcadeDriveCommand(m_operator)));
     
     //Run climber drive while B button down
