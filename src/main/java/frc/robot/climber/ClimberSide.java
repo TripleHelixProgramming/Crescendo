@@ -10,10 +10,10 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ClimberConstants.CalibrationState;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import frc.robot.Constants.RobotConstants;
 
 public class ClimberSide {
@@ -102,8 +102,7 @@ public class ClimberSide {
   }
 
   public boolean getCurrentSenseState() {
-    return m_debouncer.calculate(
-        getSparkMaxCurrent() > ClimberConstants.kMotorCurrentHardStop);
+    return m_debouncer.calculate(getSparkMaxCurrent() > ClimberConstants.kMotorCurrentHardStop);
   }
 
   private boolean getUpperSoftLimitSwtichState() {
@@ -150,8 +149,8 @@ public class ClimberSide {
     return m_filter.calculate(m_climberMover.getOutputCurrent());
   }
 
-  private double getPdhCurrent(){
-    return m_pdp.getCurrent(motorChannel-10);
+  private double getPdhCurrent() {
+    return m_pdp.getCurrent(motorChannel - 10);
   }
 
   /**
@@ -167,14 +166,12 @@ public class ClimberSide {
         getName() + "MotorRotations", getPosition() / ClimberConstants.kPositionConversionFactor);
     SmartDashboard.putBoolean(getName() + "UpperSoftLimitState", getUpperSoftLimitSwtichState());
     SmartDashboard.putBoolean(getName() + "LowerSoftLimitState", getLowerSoftLimitSwtichState());
-    SmartDashboard.putNumber(getName() + "SparkMaxCurrent",  addPolarity(getSparkMaxCurrent()));
-    SmartDashboard.putNumber(getName() + "PDHCurrent",  addPolarity(getPdhCurrent()));
+    SmartDashboard.putNumber(getName() + "SparkMaxCurrent", addPolarity(getSparkMaxCurrent()));
+    SmartDashboard.putNumber(getName() + "PDHCurrent", addPolarity(getPdhCurrent()));
     SmartDashboard.putString(getName() + "CalibrationState", getCalibrationState().name());
   }
 
   private double addPolarity(double value) {
-    return m_climberMover.getAppliedOutput() < 0.0
-      ? -value
-      : value;
+    return m_climberMover.getAppliedOutput() < 0.0 ? -value : value;
   }
 }

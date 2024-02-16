@@ -42,8 +42,6 @@ public class RobotContainer {
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
   private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
-  
-
   // digital inputs for autonomous selection
   private final DigitalInput[] autonomousModes =
       new DigitalInput[AutoConstants.kAutonomousModeSelectorPorts.length];
