@@ -145,8 +145,12 @@ public class ClimberSide {
   /**
    * @return Current in Amps, output of linear filter
    */
-  private double getCurrent() {
+  private double getSparkMaxCurrent() {
     return m_filter.calculate(m_climberMover.getOutputCurrent());
+  }
+
+  private double getPdhCurrent(){
+    return m_pdp.getCurrent(ClimberConstants.kLeftMotorPort - 10);
   }
 
   /**
@@ -162,8 +166,8 @@ public class ClimberSide {
         getName() + "MotorRotations", getPosition() / ClimberConstants.kPositionConversionFactor);
     SmartDashboard.putBoolean(getName() + "UpperSoftLimitState", getUpperSoftLimitSwtichState());
     SmartDashboard.putBoolean(getName() + "LowerSoftLimitState", getLowerSoftLimitSwtichState());
-    SmartDashboard.putNumber(getName() + "SparkMaxCurrent",  addPolarity(getCurrent()));
-    SmartDashboard.putNumber(getName() + "PDHCurrent",  addPolarity(m_pdp.getCurrent(ClimberConstants.kLeftMotorPort - 10)));
+    SmartDashboard.putNumber(getName() + "SparkMaxCurrent",  addPolarity(getSparkMaxCurrent()));
+    SmartDashboard.putNumber(getName() + "PDHCurrent",  addPolarity(getPdhCurrent()));
     SmartDashboard.putString(getName() + "CalibrationState", getCalibrationState().name());
   }
 
