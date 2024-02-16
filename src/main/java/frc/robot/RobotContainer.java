@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,7 +30,7 @@ import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
 
-public class RobotContainer {
+public class RobotContainer extends SubsystemBase{
 
   private static RobotContainer INSTANCE = null;
 
@@ -151,6 +152,7 @@ public class RobotContainer {
     m_arm.createLowerArmCommand().schedule();
   }
 
+  @Override
   public void periodic() {
     m_loop.poll();
     updateSelectedAutonomous();
