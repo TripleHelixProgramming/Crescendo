@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 
 public class Climber extends SubsystemBase {
   
-  private ClimberSide[] m_actuators;
+  private ClimberSide[] m_actuators = new ClimberSide[2];
 
 
   private final PowerDistribution m_pdp;

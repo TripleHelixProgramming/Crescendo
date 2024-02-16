@@ -90,8 +90,8 @@ public class RobotContainer {
     // .whileTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));
     // .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
     
-    new JoystickButton(m_operator,Button.kB.value)
-        .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
+    // new JoystickButton(m_operator,Button.kB.value)
+    //     .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
 
     // Raise and lower arm
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
@@ -114,8 +114,8 @@ public class RobotContainer {
         .onlyIf(m_arm.isArmRaised()));
 
     // Reverses intake
-    // new JoystickButton(m_operator, Button.kB.value)
-    //     .whileTrue(m_intake.createSetVoltageCommand(-12.0));
+    new JoystickButton(m_operator, Button.kB.value)
+        .whileTrue(m_intake.createSetVoltageCommand(-12.0));
 
     // Moves note back in order to place in trap
     // new JoystickButton(m_operator, Button.kB.value)

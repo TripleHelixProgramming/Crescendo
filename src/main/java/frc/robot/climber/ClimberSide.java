@@ -22,6 +22,7 @@ public class ClimberSide {
 
   private final CANSparkMax m_climberMover;
   private final RelativeEncoder m_climberRelativeEncoder;
+  private final int motorChannel;
 
   private final ProfiledPIDController m_climberPIDController =
       new ProfiledPIDController(
@@ -30,7 +31,7 @@ public class ClimberSide {
           ClimberConstants.kD,
           ClimberConstants.rapidConstraints);
 
-  private LinearFilter m_filter = LinearFilter.singlePoleIIR(0.3, RobotConstants.kPeriod);
+  private LinearFilter m_filter = LinearFilter.singlePoleIIR(0.4, RobotConstants.kPeriod);
   private Debouncer m_debouncer = new Debouncer(0.05, DebounceType.kRising);
 
   private CalibrationState m_calibrationState = CalibrationState.UNCALIBRATED;
@@ -40,10 +41,11 @@ public class ClimberSide {
   public ClimberSide(String climberName, int climberMotorChannel, PowerDistribution pdp) {
 
     this.climberName = climberName;
+    this.motorChannel = climberMotorChannel;
 
     this.m_pdp = pdp;
 
-    m_climberMover = new CANSparkMax(climberMotorChannel, MotorType.kBrushless);
+    m_climberMover = new CANSparkMax(motorChannel, MotorType.kBrushless);
 
     m_climberMover.restoreFactoryDefaults();
 
@@ -101,7 +103,7 @@ public class ClimberSide {
 
   public boolean getCurrentSenseState() {
     return m_debouncer.calculate(
-        getPdhCurrent() > ClimberConstants.kMotorCurrentHardStop);
+        getSparkMaxCurrent() > ClimberConstants.kMotorCurrentHardStop);
   }
 
   private boolean getUpperSoftLimitSwtichState() {
@@ -149,7 +151,7 @@ public class ClimberSide {
   }
 
   private double getPdhCurrent(){
-    return m_pdp.getCurrent(ClimberConstants.kLeftMotorPort - 10);
+    return m_pdp.getCurrent(motorChannel-10);
   }
 
   /**
