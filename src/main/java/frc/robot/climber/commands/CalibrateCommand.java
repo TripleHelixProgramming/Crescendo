@@ -5,8 +5,8 @@ package frc.robot.climber.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ClimberConstants.CalibrationState;
-import frc.robot.climber.Climber;
 import frc.robot.climber.Actuator;
+import frc.robot.climber.Climber;
 
 public class CalibrateCommand extends Command {
 
