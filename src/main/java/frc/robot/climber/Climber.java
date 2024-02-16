@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.ClimberConstants.CalibrationState;
 
 public class Climber extends SubsystemBase {
 
@@ -56,6 +57,34 @@ public class Climber extends SubsystemBase {
         // isFinished
         () -> {
           for (Actuator actuator : m_actuators) if (!actuator.atGoal()) return false;
+          return true;
+        },
+        // requirements
+        this);
+  }
+
+  public Command createCalibrateCommand() {
+    return new FunctionalCommand(
+        // initialize
+        () -> {
+          for (Actuator actuator : m_actuators) actuator.calibrateInitialize();
+        },
+        // execute
+        () -> {
+          for (Actuator actuator : m_actuators) {
+            if (actuator.getCalibrationState() != CalibrationState.CALIBRATED)
+              actuator.calibrateExecute();
+          }
+        },
+        // end
+        interrupted -> {
+          for (Actuator actuator : m_actuators) actuator.calibrateEnd();
+        },
+        // isFinished
+        () -> {
+          for (Actuator actuator : m_actuators) {
+            if (actuator.getCalibrationState() != CalibrationState.CALIBRATED) return false;
+          }
           return true;
         },
         // requirements

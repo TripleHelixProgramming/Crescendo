@@ -90,15 +90,15 @@ public class Actuator {
   /**
    * @param upperLimitEnabled Whether the upper soft limit should be enabled
    */
-  public void configureUpperLimit(boolean upperLimitEnabled) {
+  private void configureUpperLimit(boolean upperLimitEnabled) {
     m_climberMover.enableSoftLimit(CANSparkMax.SoftLimitDirection.kForward, upperLimitEnabled);
   }
 
-  public void resetEncoder() {
+  private void resetEncoder() {
     m_climberRelativeEncoder.setPosition(0.0);
   }
 
-  public boolean getCurrentSenseState() {
+  private boolean getCurrentSenseState() {
     return m_debouncer.calculate(getOutputCurrent() > ClimberConstants.kMotorCurrentHardStop);
   }
 
@@ -120,7 +120,7 @@ public class Actuator {
   /**
    * @param calibrationState State of the actuator calibration
    */
-  public void setCalibrationState(CalibrationState calibrationState) {
+  private void setCalibrationState(CalibrationState calibrationState) {
     this.m_calibrationState = calibrationState;
   }
 
@@ -173,5 +173,26 @@ public class Actuator {
 
   private double addPolarity(double value) {
     return m_climberMover.getAppliedOutput() < 0.0 ? -value : value;
+  }
+
+  public void calibrateInitialize() {
+    configureUpperLimit(false);
+    configurePositionController(ClimberConstants.slowConstraints, ClimberConstants.kSeekPosition);
+    setCalibrationState(CalibrationState.UNCALIBRATED);
+  }
+
+  public void calibrateExecute() {
+    if (getCurrentSenseState()) {
+      stop();
+      resetEncoder();
+      setCalibrationState(CalibrationState.CALIBRATED);
+    } else {
+      driveToTargetPosition();
+      setCalibrationState(CalibrationState.HOMING);
+    }
+  }
+
+  public void calibrateEnd() {
+    configureUpperLimit(true);
   }
 }

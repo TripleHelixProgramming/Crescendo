@@ -23,7 +23,6 @@ import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
 import frc.robot.climber.Climber;
-import frc.robot.climber.commands.CalibrateCommand;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
@@ -82,7 +81,7 @@ public class RobotContainer {
     // Operator controller buttons
 
     // Calibrate upper limit of climber actuators
-    new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
+    new JoystickButton(m_operator, Button.kStart.value).onTrue(m_climber.createCalibrateCommand()
         .andThen(m_climber.createDriveToPositionCommand(ClimberConstants.kHomePosition)));
 
     // Deploy climber and begin climbing
