@@ -10,6 +10,8 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ClimberConstants.CalibrationState;
 import frc.robot.Constants.RobotConstants;
@@ -20,6 +22,7 @@ public class ClimberSide {
 
   private final CANSparkMax m_climberMover;
   private final RelativeEncoder m_climberRelativeEncoder;
+  private final int motorChannel;
 
   private final ProfiledPIDController m_climberPIDController =
       new ProfiledPIDController(
@@ -28,16 +31,21 @@ public class ClimberSide {
           ClimberConstants.kD,
           ClimberConstants.rapidConstraints);
 
-  private LinearFilter m_filter = LinearFilter.singlePoleIIR(0.3, RobotConstants.kPeriod);
+  private LinearFilter m_filter = LinearFilter.singlePoleIIR(0.4, RobotConstants.kPeriod);
   private Debouncer m_debouncer = new Debouncer(0.05, DebounceType.kRising);
 
   private CalibrationState m_calibrationState = CalibrationState.UNCALIBRATED;
 
-  public ClimberSide(String climberName, int climberMotorChannel) {
+  private final PowerDistribution m_pdp;
+
+  public ClimberSide(String climberName, int climberMotorChannel, PowerDistribution pdp) {
 
     this.climberName = climberName;
+    this.motorChannel = climberMotorChannel;
 
-    m_climberMover = new CANSparkMax(climberMotorChannel, MotorType.kBrushless);
+    this.m_pdp = pdp;
+
+    m_climberMover = new CANSparkMax(motorChannel, MotorType.kBrushless);
 
     m_climberMover.restoreFactoryDefaults();
 
@@ -94,16 +102,14 @@ public class ClimberSide {
   }
 
   public boolean getCurrentSenseState() {
-    return m_debouncer.calculate(
-        m_filter.calculate(m_climberMover.getOutputCurrent())
-            > ClimberConstants.kMotorCurrentHardStop);
+    return m_debouncer.calculate(getSparkMaxCurrent() > ClimberConstants.kMotorCurrentHardStop);
   }
 
-  public boolean getUpperSoftLimitSwtichState() {
+  private boolean getUpperSoftLimitSwtichState() {
     return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitFwd);
   }
 
-  public boolean getLowerSoftLimitSwtichState() {
+  private boolean getLowerSoftLimitSwtichState() {
     return m_climberMover.getFault(CANSparkBase.FaultID.kSoftLimitRev);
   }
 
@@ -132,28 +138,40 @@ public class ClimberSide {
   /**
    * @return Position of climber actuator in inches
    */
-  public double getPosition() {
+  private double getPosition() {
     return m_climberRelativeEncoder.getPosition();
-  }
-
-  /**
-   * @return Velocity of climber actuator in in/s
-   */
-  public double getVelocity() {
-    return m_climberRelativeEncoder.getVelocity();
   }
 
   /**
    * @return Current in Amps, output of linear filter
    */
-  public double getCurrent() {
+  private double getSparkMaxCurrent() {
     return m_filter.calculate(m_climberMover.getOutputCurrent());
+  }
+
+  private double getPdhCurrent() {
+    return m_pdp.getCurrent(motorChannel - 10);
   }
 
   /**
    * @return Name of climber actuator
    */
-  public String getName() {
-    return climberName;
+  private String getName() {
+    return "Climber" + climberName;
+  }
+
+  public void periodic() {
+    SmartDashboard.putNumber(getName() + "Stroke", getPosition());
+    SmartDashboard.putNumber(
+        getName() + "MotorRotations", getPosition() / ClimberConstants.kPositionConversionFactor);
+    SmartDashboard.putBoolean(getName() + "UpperSoftLimitState", getUpperSoftLimitSwtichState());
+    SmartDashboard.putBoolean(getName() + "LowerSoftLimitState", getLowerSoftLimitSwtichState());
+    SmartDashboard.putNumber(getName() + "SparkMaxCurrent", addPolarity(getSparkMaxCurrent()));
+    SmartDashboard.putNumber(getName() + "PDHCurrent", addPolarity(getPdhCurrent()));
+    SmartDashboard.putString(getName() + "CalibrationState", getCalibrationState().name());
+  }
+
+  private double addPolarity(double value) {
+    return m_climberMover.getAppliedOutput() < 0.0 ? -value : value;
   }
 }

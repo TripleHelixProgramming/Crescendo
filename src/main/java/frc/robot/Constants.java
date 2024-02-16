@@ -193,8 +193,8 @@ public final class Constants {
     public static final int kLeftMotorPort = 24;
     public static final int kRightMotorPort = 23;
 
-    public static final int kMotorCurrentLimit = 20;
-    public static final double kMotorCurrentHardStop = 10.0;
+    public static final int kMotorCurrentLimit = 60;
+    public static final double kMotorCurrentHardStop = 15.0;
 
     public static final double kP = 3.0;
     public static final double kI = 0.0;
@@ -219,7 +219,7 @@ public final class Constants {
         new TrapezoidProfile.Constraints(kSlowMaxVelocity, kSlowMaxAcceleration);
 
     public static final float kUpperLimit = -0.25f;
-    public static final float kLowerLimit = -15.0f;
+    public static final float kLowerLimit = -16.0f;
 
     public static final double kSeekPosition = 25.0;
     public static final double kHomePosition = -3.2;
