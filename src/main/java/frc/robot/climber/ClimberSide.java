@@ -173,8 +173,8 @@ public class ClimberSide {
   }
 
   private double addPolarity(double value) {
-    return value * Math.signum(m_climberMover.getAppliedOutput());
+    return m_climberMover.getAppliedOutput() < 0.0
+      ? -value
+      : value;
   }
-
-
 }
