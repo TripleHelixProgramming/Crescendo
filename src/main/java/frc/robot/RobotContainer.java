@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -174,16 +173,7 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("PDHVoltage", m_PowerDistribution.getVoltage());
     SmartDashboard.putNumber("PDHTotalCurrent", m_PowerDistribution.getTotalCurrent());
-    // SmartDashboard.putBoolean(
-    //     "Teleop commamd running",
-    //     CommandScheduler.getInstance()
-    //         .isScheduled(m_LEDs.createTeleopCommand(m_intake.gamePieceSensor())));
-    // SmartDashboard.putBoolean(
-    //     "Autonomous command running",
-    //     CommandScheduler.getInstance()
-    //         .isScheduled(
-    //             m_LEDs.createDisabledCommand(
-    //                 m_swerve.redAllianceSupplier(), autonomousModeSelector())));
+    SmartDashboard.putString("LED command", m_LEDs.getCurrentCommand().getName());
   }
 
   private class Autonomous {

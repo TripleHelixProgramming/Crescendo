@@ -19,31 +19,19 @@ public class LEDs extends SubsystemBase {
     m_LED.setLength(m_LEDBuffer.getLength());
   }
 
-  public void setColorYellow() {
+  private void setColor(Color color) {
     for (var i = 0; i < m_LEDBuffer.getLength(); i++) {
-      m_LEDBuffer.setLED(i, Color.kYellow);
+      m_LEDBuffer.setLED(i, color);
     }
   }
 
-  public void setColorPurple() {
-    for (var i = 0; i < m_LEDBuffer.getLength(); i++) {
-      m_LEDBuffer.setLED(i, Color.kPurple);
-    }
-  }
-
-  public void setColorGreen() {
-    for (var i = 0; i < m_LEDBuffer.getLength(); i++) {
-      m_LEDBuffer.setLED(i, Color.kGreen);
-    }
-  }
-
-  public void turnOffLEDs() {
+  private void turnOffLEDs() {
     for (var i = 0; i < m_LEDBuffer.getLength(); i++) {
       m_LEDBuffer.setRGB(i, 0, 0, 0);
     }
   }
 
-  public void autoColor(boolean isRed, int autoMode) {
+  private void autoColor(boolean isRed, int autoMode) {
     SmartDashboard.putString("LED Mode", "Displaying autonomous mode choice");
     int LEDChunk = LEDConstants.kLightSpaces + LEDConstants.kLEDSpacing;
     for (var mode = 0; mode < autoMode; mode++) {
@@ -57,19 +45,19 @@ public class LEDs extends SubsystemBase {
     }
   }
 
-  public void displayGamePieceDetected(boolean hasGamePiece) {
+  private void displayGamePieceDetected(boolean hasGamePiece) {
     SmartDashboard.putString("LED Mode", "Displaying game piece detection state");
-    if (hasGamePiece) setColorGreen();
+    if (hasGamePiece) setColor(Color.kGreen);
     else turnOffLEDs();
   }
 
   public Command createTeleopCommand(BooleanSupplier gamePieceSensor) {
-    return this.run(() -> displayGamePieceDetected(gamePieceSensor.getAsBoolean()));
+    return this.run(() -> this.displayGamePieceDetected(gamePieceSensor.getAsBoolean())).ignoringDisable(true);
   }
 
   public Command createDisabledCommand(
       BooleanSupplier redAllianceSupplier, IntSupplier autoModeSwitch) {
     return this.run(
-        () -> this.autoColor(redAllianceSupplier.getAsBoolean(), autoModeSwitch.getAsInt()));
+        () -> this.autoColor(redAllianceSupplier.getAsBoolean(), autoModeSwitch.getAsInt())).ignoringDisable(true);
   }
 }
