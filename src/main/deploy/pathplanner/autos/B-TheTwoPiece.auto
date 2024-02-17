@@ -84,15 +84,15 @@
                 }
               },
               {
-                "type": "named",
-                "data": {
-                  "name": "intakePiece"
-                }
-              },
-              {
                 "type": "sequential",
                 "data": {
                   "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakePiece"
+                      }
+                    },
                     {
                       "type": "wait",
                       "data": {
@@ -110,23 +110,23 @@
                       "data": {
                         "name": "raiseArm"
                       }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.8
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "scorePiece"
+                      }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.8
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "scorePiece"
           }
         }
       ]
