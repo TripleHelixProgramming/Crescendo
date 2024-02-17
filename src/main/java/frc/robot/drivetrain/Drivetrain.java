@@ -2,6 +2,8 @@
 
 package frc.robot.drivetrain;
 
+import java.util.function.BooleanSupplier;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -238,11 +240,15 @@ public class Drivetrain extends SubsystemBase {
   }
   // spotless:on
 
-  public boolean getFieldRotated() {
+  public BooleanSupplier fieldRotatedSupplier() {
+    return () -> allianceSelectionSwitch.get();
+  }
+
+  private boolean getRedAlliance() {
     return allianceSelectionSwitch.get();
   }
 
-  public boolean getRedAlliance() {
-    return allianceSelectionSwitch.get();
+  public BooleanSupplier redAllianceSupplier() {
+    return () -> allianceSelectionSwitch.get();
   }
 }

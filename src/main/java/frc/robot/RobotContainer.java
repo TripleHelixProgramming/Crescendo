@@ -2,6 +2,8 @@
 
 package frc.robot;
 
+import java.util.function.IntSupplier;
+
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
@@ -71,7 +73,6 @@ public class RobotContainer {
 
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
     m_climber.setDefaultCommand(m_climber.createStopCommand());
-    m_LEDs.setDefaultCommand(m_LEDs.createDefaultCommand(m_intake.gamePieceSensor()));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
@@ -152,6 +153,12 @@ public class RobotContainer {
 
   public void teleopInit() {
     m_arm.createLowerArmCommand().schedule();
+    m_LEDs.createTeleopCommand(m_intake.gamePieceSensor()).schedule();
+  }
+
+  public void disabledInit() {
+    m_LEDs.createAutonomousCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector())
+    .schedule();
   }
 
   public void periodic() {
@@ -187,17 +194,17 @@ public class RobotContainer {
 
   /** Updates the autonomous based on the physical selector switch */
   private void updateSelectedAutonomous() {
-    switch (getSelectedAutonomousMode()) {
+    switch (autonomousModeSelector().getAsInt()) {
       case 0:
         m_autonomous =
-            m_swerve.getRedAlliance()
+            m_swerve.redAllianceSupplier().getAsBoolean()
                 ? new Autonomous("R-driveFwd2m")
                 : new Autonomous("B-driveFwd2m");
         break;
 
       case 1:
         m_autonomous =
-            m_swerve.getRedAlliance()
+            m_swerve.redAllianceSupplier().getAsBoolean()
                 ? new Autonomous("R-driveFwd2m")
                 : new Autonomous("B_SpinForward");
         break;
@@ -222,13 +229,17 @@ public class RobotContainer {
   /**
    * @return Index in array of Digital Inputs corresponding to selected auto mode
    */
-  private int getSelectedAutonomousMode() {
+  private int getAutonomousModeSwitchIndex() {
     for (int port = 0; port < autonomousModes.length; port++) {
       if (!autonomousModes[port].get()) {
         return port;
       }
     }
     return -1; // failure of the physical switch
+  }
+
+  private IntSupplier autonomousModeSelector() {
+    return () -> getAutonomousModeSwitchIndex();
   }
 
   /**
@@ -240,10 +251,5 @@ public class RobotContainer {
    */
   public double getPDHCurrent(int CANBusPort) {
     return m_PowerDistribution.getCurrent(CANBusPort - 10);
-  }
-
-  public void disabledPeriodic() {
-    m_LEDs.createAutonomousLightsCommand(m_swerve.getRedAlliance(), getSelectedAutonomousMode())
-    .schedule();
   }
 }
