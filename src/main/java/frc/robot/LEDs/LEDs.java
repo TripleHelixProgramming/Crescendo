@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.function.BooleanSupplier;
 import frc.robot.Constants.LEDConstants;
+import java.util.function.BooleanSupplier;
 
 public class LEDs extends SubsystemBase {
-private final AddressableLED m_LED = new AddressableLED(LEDConstants.kLEDPort);
-private final AddressableLEDBuffer m_LEDBuffer =
-    new AddressableLEDBuffer(LEDConstants.kLEDLength);
+  private final AddressableLED m_LED = new AddressableLED(LEDConstants.kLEDPort);
+  private final AddressableLEDBuffer m_LEDBuffer =
+      new AddressableLEDBuffer(LEDConstants.kLEDLength);
 
   public LEDs() {
     m_LED.setLength(m_LEDBuffer.getLength());
@@ -54,11 +54,12 @@ private final AddressableLEDBuffer m_LEDBuffer =
     }
   }
 
-public void displayGamePieceDetected(boolean hasGamePiece) {
-    if (hasGamePiece) setColorGreen(); else turnOffLEDs();
-    }
+  public void displayGamePieceDetected(boolean hasGamePiece) {
+    if (hasGamePiece) setColorGreen();
+    else turnOffLEDs();
+  }
 
-public Command createDefaultCommand(BooleanSupplier gamePieceSensor) {
+  public Command createDefaultCommand(BooleanSupplier gamePieceSensor) {
     return this.run(() -> displayGamePieceDetected(gamePieceSensor.getAsBoolean()));
-    }
+  }
 }

@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.function.BooleanSupplier;
 import frc.robot.Constants.ArmConstants;
+import java.util.function.BooleanSupplier;
 
 public class Intake extends SubsystemBase {
   private final CANSparkMax m_intakeMotor;
@@ -97,21 +97,12 @@ public class Intake extends SubsystemBase {
   }
 
   public BooleanSupplier gamePieceSensor() {
-    BooleanSupplier HasPiece = () -> !m_noteSensor.get();
-    return HasPiece;
-  }
-
-  private double GamePieceDetected() {
-    if (gamePieceSensor().getAsBoolean() == true) {
-      return 1.0;
-    } else {
-      return 0.0;
-    }
+    return () -> !m_noteSensor.get();
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("OutputCurrent", m_intakeMotor.getOutputCurrent());
-    SmartDashboard.putNumber("hasGamePiece", GamePieceDetected());
+    SmartDashboard.putNumber("hasGamePiece", gamePieceSensor().getAsBoolean() ? 1d : 0d);
   }
 }

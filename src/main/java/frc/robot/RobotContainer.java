@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.LEDs.LEDs;
 import frc.robot.arm.Arm;
 import frc.robot.climber.Climber;
 import frc.robot.climber.commands.CalibrateCommand;
@@ -28,7 +29,6 @@ import frc.robot.climber.commands.DriveToPositionCommand;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
-import frc.robot.LEDs.LEDs;
 
 public class RobotContainer {
 
