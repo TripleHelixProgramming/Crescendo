@@ -1,5 +1,5 @@
 {
-    "version": "v0.2.1",
+    "version": "v0.2.2",
     "robotConfiguration": {
         "mass": 74.08797700309194,
         "rotationalInertia": 6,
@@ -149,15 +149,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "7e91ba94-df5e-471c-8cfe-69dc9bf3fe2f"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "d3850233-c649-4b42-9a8f-eb73ff2ea069"
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -301,15 +299,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "90f95f34-888f-4946-b77e-2a29cace01ef"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "fde698a9-6337-4bc2-90d0-320f55ae6314"
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -597,15 +593,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "6a8ecce1-4380-4675-8e47-aaf4a2439cb7"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "caea9b7a-f96e-433b-be3d-1e265a19c9b9"
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -812,15 +806,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "2f2286e8-fdfc-42d5-987a-7de584ed9a7b"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "59fa6ba4-a854-466d-a1ea-6f8d0890e14f"
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -828,7 +820,7 @@
             "usesDefaultFieldObstacles": true,
             "circleObstacles": []
         },
-        "OnePiece": {
+        "B_OnePiece": {
             "waypoints": [
                 {
                     "x": 1.449083685874939,
@@ -919,15 +911,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "61c11a70-cd94-4387-8233-1de1f73b06d5"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "d651a4ff-49a8-4597-82a6-4c5cb491781b"
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -1089,23 +1079,20 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "4e66ae1b-afaa-4bd6-8e22-34aa22084dda"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "e557f080-5760-4f6e-8ff9-37261caa7750"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "first",
                         "last"
                     ],
-                    "type": "ZeroAngularVelocity",
-                    "uuid": "661ff181-6aa0-4f64-82f5-f1f8e47736a1"
+                    "type": "ZeroAngularVelocity"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -1222,15 +1209,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "74ce71d4-7d8f-4e4e-845a-a282c98f841c"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "f57b26a3-dd8c-4319-a399-febf7dda39e6"
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -1239,5 +1224,6 @@
             "circleObstacles": []
         }
     },
-    "splitTrajectoriesAtStopPoints": false
+    "splitTrajectoriesAtStopPoints": false,
+    "usesObstacles": false
 }
