@@ -41,13 +41,13 @@ public class LEDs extends SubsystemBase {
 
   private void autoColor(boolean isRed, int autoMode) {
     clearBuffer();
-    int LEDChunk = LEDConstants.kLightSpaces + LEDConstants.kLEDSpacing;
+    int block = LEDConstants.kLEDsPerBlock + LEDConstants.kLEDsBetweenBlocks;
     for (var mode = 0; mode < autoMode; mode++) {
-      for (var i = 0; i < LEDConstants.kLightSpaces; i++) {
+      for (var i = 0; i < LEDConstants.kLEDsPerBlock; i++) {
         if (isRed) {
-          m_LEDBuffer.setLED(i + (mode * LEDChunk), Color.kRed);
+          m_LEDBuffer.setLED(i + (mode * block), Color.kRed);
         } else {
-          m_LEDBuffer.setLED(i + (mode * LEDChunk), Color.kBlue);
+          m_LEDBuffer.setLED(i + (mode * block), Color.kBlue);
         }
       }
     }
