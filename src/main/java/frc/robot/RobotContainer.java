@@ -144,6 +144,10 @@ public class RobotContainer {
         break;
 
       case 2:
+        m_autonomous =
+            m_swerve.getRedAlliance()
+              ? new Autonomous("R-SpinForward")
+              : new Autonomous("B-TheOnePiece");
 
       case 3:
 
