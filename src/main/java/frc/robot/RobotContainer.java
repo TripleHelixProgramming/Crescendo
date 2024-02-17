@@ -2,6 +2,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
@@ -63,6 +64,9 @@ public class RobotContainer {
     for (int i = 0; i < AutoConstants.kAutonomousModeSelectorPorts.length; i++) {
       autonomousModes[i] = new DigitalInput(AutoConstants.kAutonomousModeSelectorPorts[i]);
     }
+
+    NamedCommands.registerCommand("raiseArm", m_arm.createRaiseArmCommand());
+    NamedCommands.registerCommand("scorePiece", m_intake.createSetVoltageCommand(12));
 
     m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
     m_swerve.configurePathPlanner();
@@ -200,16 +204,14 @@ public class RobotContainer {
         break;
 
       case 2:
+        m_autonomous =
+            m_swerve.getRedAlliance()
+                ? new Autonomous("R-SpinForward")
+                : new Autonomous("B-TheOnePiece");
 
       case 3:
 
       case 4:
-
-      case 5:
-
-      case 6:
-
-      case 7:
 
       default:
         m_autonomous = null;

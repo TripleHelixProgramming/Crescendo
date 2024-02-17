@@ -238,7 +238,7 @@ public final class Constants {
     public static final int kAllianceColorSelectorPort = 10;
 
     // length is 8
-    public static final int[] kAutonomousModeSelectorPorts = {11, 12, 13, 18, 19, 20, 21, 22};
+    public static final int[] kAutonomousModeSelectorPorts = {11, 12, 13, 18, 19};
 
     // public static final double kMaxSpeedMetersPerSecond = 3.0;
     // public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
@@ -246,7 +246,7 @@ public final class Constants {
     // public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
     public static final PIDConstants kTranslationControllerGains = new PIDConstants(1.0, 0.0, 0.0);
-    public static final PIDConstants kRotationControllerGains = new PIDConstants(1.0, 0.0, 0.0);
+    public static final PIDConstants kRotationControllerGains = new PIDConstants(10.0, 0.0, 0.0);
 
     // Constraint for the motion profilied robot angle controller
     // public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
