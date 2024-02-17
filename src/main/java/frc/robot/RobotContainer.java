@@ -28,6 +28,7 @@ import frc.robot.climber.commands.DriveToPositionCommand;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
+import frc.robot.LEDs.LEDs;
 
 public class RobotContainer {
 
@@ -46,6 +47,7 @@ public class RobotContainer {
   private final Arm m_arm = new Arm();
   private final Intake m_intake = new Intake();
   private final Climber m_climber = new Climber();
+  private final LEDs m_LEDs = new LEDs();
 
   private final EventLoop m_loop = new EventLoop();
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
@@ -69,6 +71,7 @@ public class RobotContainer {
 
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
     m_climber.setDefaultCommand(m_climber.createStopCommand());
+    m_LEDs.setDefaultCommand(m_LEDs.createDefaultCommand(m_intake.gamePieceSensor()));
 
     // Create a button on Smart Dashboard to reset the encoders.
     SmartDashboard.putData("Align Encoders",
@@ -107,7 +110,7 @@ public class RobotContainer {
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
         .whileTrue(m_intake.createSetVoltageCommand(12.0)
-        .until(m_intake::hasGamePiece)
+        .until(m_intake.gamePieceSensor())
         .andThen(m_intake.createSetPositionCommand(0.2))
         .onlyIf(m_arm.isArmLowered()));
 

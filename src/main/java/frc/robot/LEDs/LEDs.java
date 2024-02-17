@@ -3,12 +3,15 @@ package frc.robot.LEDs;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.function.BooleanSupplier;
 import frc.robot.Constants.LEDConstants;
 
-public class LEDs {
-  private final AddressableLED m_LED = new AddressableLED(LEDConstants.kLEDPort);
-  private final AddressableLEDBuffer m_LEDBuffer =
-      new AddressableLEDBuffer(LEDConstants.kLEDLength);
+public class LEDs extends SubsystemBase {
+private final AddressableLED m_LED = new AddressableLED(LEDConstants.kLEDPort);
+private final AddressableLEDBuffer m_LEDBuffer =
+    new AddressableLEDBuffer(LEDConstants.kLEDLength);
 
   public LEDs() {
     m_LED.setLength(m_LEDBuffer.getLength());
@@ -39,14 +42,23 @@ public class LEDs {
   }
 
   public void autoColor(boolean isBlue, int autoMode) {
+    int LEDChunk = LEDConstants.kLightSpaces + LEDConstants.kLEDSpacing;
     for (var mode = 0; mode < autoMode; mode++) {
-      for (var i = 0; i < LEDConstants.kChunkSize + LEDConstants.kLEDSpacing; i++) {
+      for (var i = 0; i < LEDConstants.kLightSpaces; i++) {
         if (isBlue) {
-          m_LEDBuffer.setLED(i, Color.kBlue);
+          m_LEDBuffer.setLED(i + (mode * LEDChunk), Color.kBlue);
         } else {
-          m_LEDBuffer.setLED(i, Color.kRed);
+          m_LEDBuffer.setLED(i + (mode * LEDChunk), Color.kRed);
         }
       }
     }
   }
+
+public void displayGamePieceDetected(boolean hasGamePiece) {
+    if (hasGamePiece) setColorGreen(); else turnOffLEDs();
+    }
+
+public Command createDefaultCommand(BooleanSupplier gamePieceSensor) {
+    return this.run(() -> displayGamePieceDetected(gamePieceSensor.getAsBoolean()));
+    }
 }
