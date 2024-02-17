@@ -9,10 +9,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.lib.ControllerPatroller;
+import frc.robot.Constants.OIConstants;
 
 public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
+
+  private int usb_check_delay = OIConstants.kUSBCheckNumLoops;
 
   @Override
   public void robotInit() {
@@ -36,7 +40,23 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    // Scan the USB devices. If they change, remap the buttons.
+
+    /*
+     * Only check if controllers changed every kUSBCheckNumLoops loops of disablePeriodic().
+     * This prevents us from hammering on some routines that cause the RIO to lock up.
+     */
+    RobotContainer rc = getRobotContainer();
+    usb_check_delay--;
+    if (0 >= usb_check_delay) {
+      usb_check_delay = OIConstants.kUSBCheckNumLoops;
+      if (ControllerPatroller.getInstance().controllersChanged()) {
+        // Reset the joysticks & button mappings.
+        rc.configureButtonBindings();
+      }
+    }
+  }
 
   @Override
   public void autonomousInit() {
