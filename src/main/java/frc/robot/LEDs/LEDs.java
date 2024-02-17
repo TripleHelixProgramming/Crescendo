@@ -2,7 +2,6 @@ package frc.robot.LEDs;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,22 +16,31 @@ public class LEDs extends SubsystemBase {
 
   public LEDs() {
     m_LED.setLength(m_LEDBuffer.getLength());
+
+    m_LED.setData(m_LEDBuffer);
+    m_LED.start();
   }
 
   private void setColor(Color color) {
     for (var i = 0; i < m_LEDBuffer.getLength(); i++) {
       m_LEDBuffer.setLED(i, color);
     }
+    m_LED.setData(m_LEDBuffer);
   }
 
   private void turnOffLEDs() {
+    clearBuffer();
+    m_LED.setData(m_LEDBuffer);
+  }
+
+  private void clearBuffer() {
     for (var i = 0; i < m_LEDBuffer.getLength(); i++) {
       m_LEDBuffer.setRGB(i, 0, 0, 0);
     }
   }
 
   private void autoColor(boolean isRed, int autoMode) {
-    SmartDashboard.putString("LED Mode", "Displaying autonomous mode choice");
+    clearBuffer();
     int LEDChunk = LEDConstants.kLightSpaces + LEDConstants.kLEDSpacing;
     for (var mode = 0; mode < autoMode; mode++) {
       for (var i = 0; i < LEDConstants.kLightSpaces; i++) {
@@ -43,21 +51,23 @@ public class LEDs extends SubsystemBase {
         }
       }
     }
+    m_LED.setData(m_LEDBuffer);
   }
 
   private void displayGamePieceDetected(boolean hasGamePiece) {
-    SmartDashboard.putString("LED Mode", "Displaying game piece detection state");
     if (hasGamePiece) setColor(Color.kGreen);
     else turnOffLEDs();
   }
 
   public Command createTeleopCommand(BooleanSupplier gamePieceSensor) {
-    return this.run(() -> this.displayGamePieceDetected(gamePieceSensor.getAsBoolean())).ignoringDisable(true);
+    return this.run(() -> this.displayGamePieceDetected(gamePieceSensor.getAsBoolean()))
+        .ignoringDisable(true);
   }
 
   public Command createDisabledCommand(
       BooleanSupplier redAllianceSupplier, IntSupplier autoModeSwitch) {
     return this.run(
-        () -> this.autoColor(redAllianceSupplier.getAsBoolean(), autoModeSwitch.getAsInt())).ignoringDisable(true);
+            () -> this.autoColor(redAllianceSupplier.getAsBoolean(), autoModeSwitch.getAsInt()))
+        .ignoringDisable(true);
   }
 }
