@@ -94,39 +94,21 @@
                       }
                     },
                     {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "stopIntake"
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
                         "name": "raiseArm"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.8
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "scorePiece"
                       }
                     }
                   ]
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "scorePiece"
           }
         }
       ]

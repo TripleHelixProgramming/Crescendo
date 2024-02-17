@@ -71,7 +71,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("scorePiece", m_intake.createOutakePieceCommand());
     NamedCommands.registerCommand("intakePiece", m_intake.createSetVoltageCommand(12.0)
                                                               .until(m_intake::hasGamePiece)
-                                                              .andThen(m_intake.createSetPositionCommand(0.2)));
+                                                              .andThen(m_intake.createSetPositionCommand(0.2))
+                                                              .andThen(m_intake.createStopIntakeCommand()));
     NamedCommands.registerCommand("stopIntake", m_intake.createStopIntakeCommand());
 
     m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
