@@ -65,14 +65,14 @@ public class RobotContainer {
       autonomousModes[i] = new DigitalInput(AutoConstants.kAutonomousModeSelectorPorts[i]);
     }
 
-    NamedCommands.registerCommand("raiseArm", m_arm.createRaiseArmCommand());
-    NamedCommands.registerCommand("lowerArm", m_arm.createLowerArmCommand());
-
-    NamedCommands.registerCommand("scorePiece", m_intake.createOutakePieceCommand());
-    NamedCommands.registerCommand("intakePiece", m_intake.createSetVoltageCommand(12.0)
+    NamedCommands.registerCommand("raiseArmAndWait", m_arm.createRaiseArmCommand().andThen(new WaitCommand(1.5)));
+    NamedCommands.registerCommand("resetArmAndIntake", m_arm.createLowerArmCommand().alongWith(m_intake.createStopIntakeCommand()));
+    NamedCommands.registerCommand("outtakeAndWait", m_intake.createSetVoltageCommand(12).withTimeout(0.8));
+    NamedCommands.registerCommand("intakePieceAndRaise", m_intake.createSetVoltageCommand(12.0)
                                                               .until(m_intake::hasGamePiece)
-                                                              .andThen(m_intake.createSetPositionCommand(0.2))
-                                                              .andThen(m_intake.createStopIntakeCommand()));
+                                                              .andThen(m_intake.createSetPositionCommand(0.2)
+                                                              .andThen(m_arm.createRaiseArmCommand()
+                                                              .andThen(new WaitCommand(1.5)))));
     NamedCommands.registerCommand("stopIntake", m_intake.createStopIntakeCommand());
 
     m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));

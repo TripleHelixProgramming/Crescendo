@@ -24,7 +24,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "raiseArm"
+                  "name": "raiseArmAndWait"
                 }
               },
               {
@@ -39,7 +39,7 @@
         {
           "type": "named",
           "data": {
-            "name": "scorePiece"
+            "name": "outtakeAndWait"
           }
         }
       ]

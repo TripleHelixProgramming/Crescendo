@@ -88,12 +88,6 @@ public class Intake extends SubsystemBase {
   }
 
 
-
-  public Command createOutakePieceCommand(){
-    return this.runOnce(() -> this.setVoltage(12));
-  }
-
-
   public void resetIntakeEncoder() {
     m_intakeRelativeEncoder.setPosition(0.0);
   }
