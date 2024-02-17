@@ -62,4 +62,8 @@ public class LEDs extends SubsystemBase {
   public Command createDefaultCommand(BooleanSupplier gamePieceSensor) {
     return this.run(() -> displayGamePieceDetected(gamePieceSensor.getAsBoolean()));
   }
+
+  public Command createAutonomousLightsCommand(boolean isBlue, int autoMode) {
+    return this.runOnce(() -> this.autoColor(isBlue, autoMode));
+  }
 }

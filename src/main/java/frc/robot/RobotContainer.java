@@ -241,4 +241,9 @@ public class RobotContainer {
   public double getPDHCurrent(int CANBusPort) {
     return m_PowerDistribution.getCurrent(CANBusPort - 10);
   }
+
+  public void disabledPeriodic() {
+    m_LEDs.createAutonomousLightsCommand(m_swerve.getRedAlliance(), getSelectedAutonomousMode())
+    .schedule();
+  }
 }
