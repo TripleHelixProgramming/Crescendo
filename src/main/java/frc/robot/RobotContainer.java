@@ -156,7 +156,7 @@ public class RobotContainer {
       case 7:
 
       default:
-        m_autonomous = new Autonomous("scaleSpin");
+        m_autonomous = null;
     }
   }
 
