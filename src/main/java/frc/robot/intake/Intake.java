@@ -64,7 +64,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Command createSetPositionCommand(double targetPosition) {
-    return this.startEnd(() -> this.setPosition(targetPosition), () -> {});
+    return this.runOnce(() -> this.setPosition(targetPosition));
   }
 
   private void setVelocity(double targetVelocity) {
@@ -86,6 +86,13 @@ public class Intake extends SubsystemBase {
     // return this.startEnd(() -> this.setVoltage(targetVoltage), () -> {});
     return this.run(() -> this.setVoltage(targetVoltage));
   }
+
+
+
+  public Command createOutakePieceCommand(){
+    return this.runOnce(() -> this.setVoltage(12));
+  }
+
 
   public void resetIntakeEncoder() {
     m_intakeRelativeEncoder.setPosition(0.0);

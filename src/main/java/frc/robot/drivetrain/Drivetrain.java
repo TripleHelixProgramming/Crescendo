@@ -243,6 +243,6 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public boolean getRedAlliance() {
-    return allianceSelectionSwitch.get();
+    return !allianceSelectionSwitch.get();
   }
 }

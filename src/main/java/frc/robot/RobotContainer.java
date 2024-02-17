@@ -66,7 +66,13 @@ public class RobotContainer {
     }
 
     NamedCommands.registerCommand("raiseArm", m_arm.createRaiseArmCommand());
-    NamedCommands.registerCommand("scorePiece", m_intake.createSetVoltageCommand(12));
+    NamedCommands.registerCommand("lowerArm", m_arm.createLowerArmCommand());
+
+    NamedCommands.registerCommand("scorePiece", m_intake.createOutakePieceCommand());
+    NamedCommands.registerCommand("intakePiece", m_intake.createSetVoltageCommand(12.0)
+                                                              .until(m_intake::hasGamePiece)
+                                                              .andThen(m_intake.createSetPositionCommand(0.2)));
+    NamedCommands.registerCommand("stopIntake", m_intake.createStopIntakeCommand());
 
     m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
     m_swerve.configurePathPlanner();
@@ -165,6 +171,8 @@ public class RobotContainer {
       SmartDashboard.putString("Auto", "Null");
     }
 
+    SmartDashboard.putNumber("Dio port", getSelectedAutonomousMode());
+
     SmartDashboard.putNumber("PDHVoltage", m_PowerDistribution.getVoltage());
     SmartDashboard.putNumber("PDHTotalCurrent", m_PowerDistribution.getTotalCurrent());
   }
@@ -208,8 +216,14 @@ public class RobotContainer {
             m_swerve.getRedAlliance()
                 ? new Autonomous("R-TheOnePiece")
                 : new Autonomous("B-TheOnePiece");
+        break;
 
       case 3:
+        m_autonomous =
+            m_swerve.getRedAlliance()
+                ? null
+                : new Autonomous("B-TheTwoPiece");
+        break;
 
       case 4:
 
