@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.LEDs.LEDs;
 import frc.robot.arm.Arm;
 import frc.robot.climber.Climber;
 import frc.robot.climber.commands.CalibrateCommand;
@@ -29,6 +30,7 @@ import frc.robot.climber.commands.DriveToPositionCommand;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
+import java.util.function.IntSupplier;
 
 public class RobotContainer {
 
@@ -47,6 +49,7 @@ public class RobotContainer {
   private final Arm m_arm = new Arm();
   private final Intake m_intake = new Intake();
   private final Climber m_climber = new Climber();
+  private final LEDs m_LEDs = new LEDs();
 
   private final EventLoop m_loop = new EventLoop();
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
@@ -111,7 +114,7 @@ public class RobotContainer {
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
         .whileTrue(m_intake.createSetVoltageCommand(12.0)
-        .until(m_intake::hasGamePiece)
+        .until(m_intake.gamePieceSensor())
         .andThen(m_intake.createSetPositionCommand(0.2))
         .onlyIf(m_arm.isArmLowered()));
 
@@ -153,6 +156,13 @@ public class RobotContainer {
 
   public void teleopInit() {
     m_arm.createLowerArmCommand().schedule();
+    m_LEDs.createTeleopCommand(m_intake.gamePieceSensor()).schedule();
+  }
+
+  public void disabledInit() {
+    m_LEDs
+        .createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector())
+        .schedule();
   }
 
   public void periodic() {
@@ -188,24 +198,24 @@ public class RobotContainer {
 
   /** Updates the autonomous based on the physical selector switch */
   private void updateSelectedAutonomous() {
-    switch (getSelectedAutonomousMode()) {
+    switch (getAutonomousModeSwitchIndex()) {
       case 0:
         m_autonomous =
-            m_swerve.getRedAlliance()
+            m_swerve.redAllianceSupplier().getAsBoolean()
                 ? new Autonomous("R-driveFwd2m")
                 : new Autonomous("B-driveFwd2m");
         break;
 
       case 1:
         m_autonomous =
-            m_swerve.getRedAlliance()
+            m_swerve.redAllianceSupplier().getAsBoolean()
                 ? new Autonomous("R-driveFwd2m")
                 : new Autonomous("B_SpinForward");
         break;
 
       case 2:
         m_autonomous =
-            m_swerve.getRedAlliance()
+            m_swerve.redAllianceSupplier().getAsBoolean()
                 ? new Autonomous("R-SpinForward")
                 : new Autonomous("B-TheOnePiece");
 
@@ -221,13 +231,17 @@ public class RobotContainer {
   /**
    * @return Index in array of Digital Inputs corresponding to selected auto mode
    */
-  private int getSelectedAutonomousMode() {
+  private int getAutonomousModeSwitchIndex() {
     for (int port = 0; port < autonomousModes.length; port++) {
       if (!autonomousModes[port].get()) {
         return port;
       }
     }
     return -1; // failure of the physical switch
+  }
+
+  private IntSupplier autonomousModeSelector() {
+    return () -> getAutonomousModeSwitchIndex();
   }
 
   /**
