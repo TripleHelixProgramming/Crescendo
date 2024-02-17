@@ -206,7 +206,7 @@ public class RobotContainer {
       case 2:
         m_autonomous =
             m_swerve.getRedAlliance()
-                ? new Autonomous("R-SpinForward")
+                ? new Autonomous("R-TheOnePiece")
                 : new Autonomous("B-TheOnePiece");
 
       case 3:
