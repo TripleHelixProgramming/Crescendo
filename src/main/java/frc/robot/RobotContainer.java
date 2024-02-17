@@ -149,12 +149,6 @@ public class RobotContainer {
 
       case 4:
 
-      case 5:
-
-      case 6:
-
-      case 7:
-
       default:
         m_autonomous = null;
     }
