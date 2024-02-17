@@ -2,6 +2,7 @@ package frc.robot.LEDs;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -43,6 +44,7 @@ public class LEDs extends SubsystemBase {
   }
 
   public void autoColor(boolean isRed, int autoMode) {
+    SmartDashboard.putString("LED Mode", "Displaying autonomous mode choice");
     int LEDChunk = LEDConstants.kLightSpaces + LEDConstants.kLEDSpacing;
     for (var mode = 0; mode < autoMode; mode++) {
       for (var i = 0; i < LEDConstants.kLightSpaces; i++) {
@@ -56,6 +58,7 @@ public class LEDs extends SubsystemBase {
   }
 
   public void displayGamePieceDetected(boolean hasGamePiece) {
+    SmartDashboard.putString("LED Mode", "Displaying game piece detection state");
     if (hasGamePiece) setColorGreen();
     else turnOffLEDs();
   }
@@ -64,7 +67,7 @@ public class LEDs extends SubsystemBase {
     return this.run(() -> displayGamePieceDetected(gamePieceSensor.getAsBoolean()));
   }
 
-  public Command createAutonomousCommand(
+  public Command createDisabledCommand(
       BooleanSupplier redAllianceSupplier, IntSupplier autoModeSwitch) {
     return this.run(
         () -> this.autoColor(redAllianceSupplier.getAsBoolean(), autoModeSwitch.getAsInt()));
