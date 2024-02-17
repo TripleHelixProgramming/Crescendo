@@ -1,5 +1,5 @@
 {
-    "version": "v0.2.1",
+    "version": "v0.2.2",
     "robotConfiguration": {
         "mass": 74.08797700309194,
         "rotationalInertia": 6,
@@ -149,15 +149,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "b99a2ab5-a986-498c-b9a0-6a94d1f47702"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "a8d30fba-b8ce-4dee-957c-d028000d663d"
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -301,15 +299,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "03ca4f79-a827-4945-af7d-5b760cf388d4"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "0943c77c-97ed-49fc-a9dc-cf821ec03f9b"
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -597,15 +593,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "a8998a19-677b-4293-83b8-812155e9c1f2"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "afd8bca3-5a72-497b-80d7-f8794b1a0d21"
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -812,15 +806,13 @@
                     "scope": [
                         "first"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "45c487de-073d-41e6-b537-68cba5883d42"
+                    "type": "StopPoint"
                 },
                 {
                     "scope": [
                         "last"
                     ],
-                    "type": "StopPoint",
-                    "uuid": "2cb7fc83-faeb-4759-ab2c-c85410a3fbca"
+                    "type": "StopPoint"
                 }
             ],
             "usesControlIntervalGuessing": true,
@@ -829,5 +821,6 @@
             "circleObstacles": []
         }
     },
-    "splitTrajectoriesAtStopPoints": false
+    "splitTrajectoriesAtStopPoints": false,
+    "usesObstacles": false
 }

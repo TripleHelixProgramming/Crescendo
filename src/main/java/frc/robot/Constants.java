@@ -234,6 +234,17 @@ public final class Constants {
     }
   }
 
+  public static final class LEDConstants {
+    public static final int kLEDPort = 0;
+    public static final int kLEDLength = 20;
+
+    public static final int[] kColorYellow = {250, 250, 0};
+    public static final int[] kColorPurple = {138, 5, 227};
+    public static final int[] kColorGreen = {0, 255, 0};
+    public static final int[] kColorBlue = {0, 0, 255};
+    public static final int[] kColorRed = {255, 0, 0};
+  }
+
   public static final class AutoConstants {
     public static final int kAllianceColorSelectorPort = 10;
 
