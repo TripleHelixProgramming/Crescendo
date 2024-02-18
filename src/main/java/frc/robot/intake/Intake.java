@@ -29,7 +29,10 @@ public class Intake extends SubsystemBase {
           IntakeConstants.kPositionD,
           IntakeConstants.kConstraints);
 
-  private final DigitalInput m_noteSensor = new DigitalInput(IntakeConstants.kNoteSensorDIOPort);
+  private final DigitalInput m_noteSensorBeamBreak =
+      new DigitalInput(IntakeConstants.kBeamBreakSensorDIOPort);
+  private final DigitalInput m_noteSensorRetroReflective =
+      new DigitalInput(IntakeConstants.kRetroReflectiveSensorDIOPort);
 
   public Intake() {
     m_intakeMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
@@ -121,7 +124,7 @@ public class Intake extends SubsystemBase {
   }
 
   public BooleanSupplier gamePieceSensor() {
-    return () -> !m_noteSensor.get();
+    return () -> (!m_noteSensorRetroReflective.get() || m_noteSensorBeamBreak.get());
   }
 
   public BooleanSupplier atGoalSupplier() {
@@ -133,6 +136,8 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("OutputCurrent", m_intakeMotor.getOutputCurrent());
     SmartDashboard.putNumber("IntakePosition", m_relativeEncoder.getPosition());
     SmartDashboard.putNumber("IntakeGoal", m_positionController.getGoal().position);
-    SmartDashboard.putNumber("IntakeHasGamePiece", gamePieceSensor().getAsBoolean() ? 1d : 0d);
+    SmartDashboard.putNumber(
+        "IntakeSensorRetroReflective", !m_noteSensorRetroReflective.get() ? 1d : 0d);
+    SmartDashboard.putNumber("IntakeSensorBeamBreak", m_noteSensorBeamBreak.get() ? 1d : 0d);
   }
 }

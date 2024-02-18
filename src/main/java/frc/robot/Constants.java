@@ -188,7 +188,8 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kConstraints =
         new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
-    public static final int kNoteSensorDIOPort = 1;
+    public static final int kRetroReflectiveSensorDIOPort = 1;
+    public static final int kBeamBreakSensorDIOPort = 0;
   }
 
   public static final class ArmConstants {
