@@ -64,25 +64,28 @@ public class Intake extends SubsystemBase {
     return this.runOnce(() -> this.stopIntake());
   }
 
-  private void setPosition(double targetPosition) {
-    m_intakePIDController.setP(ArmConstants.kIntakePositionP);
-    m_intakePIDController.setI(ArmConstants.kIntakePositionI);
-    m_intakePIDController.setD(ArmConstants.kIntakePositionD);
-    m_intakeRelativeEncoder.setPosition(0.0);
-    m_intakePIDController.setReference(targetPosition, ControlType.kPosition);
-  }
+  // private void setPosition(double targetPosition) {
+  //   m_intakePIDController.setP(ArmConstants.kIntakePositionP);
+  //   m_intakePIDController.setI(ArmConstants.kIntakePositionI);
+  //   m_intakePIDController.setD(ArmConstants.kIntakePositionD);
+  //   m_intakeRelativeEncoder.setPosition(0.0);
+  //   m_intakePIDController.setReference(targetPosition, ControlType.kPosition);
+  // }
 
-  public Command createSetPositionCommand(double targetPosition) {
-    return this.startEnd(() -> this.setPosition(targetPosition), () -> {});
-  }
+  // public Command createSetPositionCommand(double targetPosition) {
+  //   return this.startEnd(() -> this.setPosition(targetPosition), () -> {});
+  // }
 
-  public void configurePositionController(double targetPosition){
+  public void driveToTargetPosition(double targetPosition){
     m_intakeProfiledPIDController.setGoal(targetPosition);
     m_intakeProfiledPIDController.reset(m_intakeRelativeEncoder.getPosition());
+    m_intakeMotor.set(m_intakeProfiledPIDController.calculate(getPosition()));
   }
 
-  public void driveToTargetPosition(){
-    m_intakeMotor.set(m_intakeProfiledPIDController.calculate(getPosition()));
+
+
+  public Command createSetPositionCommand(double targetPosition){
+    return this.run(()-> this.driveToTargetPosition(targetPosition));
   }
 
   private void setVelocity(double targetVelocity) {
