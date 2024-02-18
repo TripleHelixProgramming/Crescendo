@@ -117,7 +117,7 @@ public class RobotContainer {
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kX.value)
-        .onTrue(m_intake.createSetPositionCommand(0.025));
+        .onTrue(m_intake.createSetPositionCommand(0.25));
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kLeftBumper.value)

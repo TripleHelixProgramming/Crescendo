@@ -78,6 +78,7 @@ public class Intake extends SubsystemBase {
   // }
 
   public void configurePositionController(double targetPosition){
+    this.resetIntakeEncoder();
     m_intakeProfiledPIDController.setGoal(targetPosition);
     m_intakeProfiledPIDController.reset(m_intakeRelativeEncoder.getPosition());
   }
@@ -91,7 +92,7 @@ public class Intake extends SubsystemBase {
     return new FunctionalCommand(
         // initialize
         () -> this.configurePositionController(targetPosition),
-        // execute
+          // execute
         () -> this.driveToTargetPosition(),
         // end
         interrupted -> {
