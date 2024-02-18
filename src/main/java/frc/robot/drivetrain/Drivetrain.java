@@ -21,6 +21,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
+import java.util.function.BooleanSupplier;
 
 /** Constructs a swerve drive style drivetrain. */
 public class Drivetrain extends SubsystemBase {
@@ -238,11 +239,15 @@ public class Drivetrain extends SubsystemBase {
   }
   // spotless:on
 
-  public boolean getFieldRotated() {
+  public BooleanSupplier fieldRotatedSupplier() {
+    return () -> allianceSelectionSwitch.get();
+  }
+
+  private boolean getRedAlliance() {
     return allianceSelectionSwitch.get();
   }
 
-  public boolean getRedAlliance() {
-    return allianceSelectionSwitch.get();
+  public BooleanSupplier redAllianceSupplier() {
+    return () -> allianceSelectionSwitch.get();
   }
 }

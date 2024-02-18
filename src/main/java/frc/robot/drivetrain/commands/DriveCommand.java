@@ -33,7 +33,7 @@ public abstract class DriveCommand extends Command {
     thetaDot = getTheta() * DriveConstants.kMaxRotationalVelocity;
 
     SmartDashboard.putBoolean("fieldRelative", fieldRelative());
-    SmartDashboard.putBoolean("rotateField", drivetrain.getFieldRotated());
+    SmartDashboard.putBoolean("rotateField", drivetrain.fieldRotatedSupplier().getAsBoolean());
 
     drivetrain.setChassisSpeeds(
         fieldRelative() ? getFieldRelativeChassisSpeeds() : getRobotRelativeChassisSpeeds());
@@ -45,7 +45,7 @@ public abstract class DriveCommand extends Command {
 
   // spotless:off
   private ChassisSpeeds getFieldRelativeChassisSpeeds() {
-    return drivetrain.getFieldRotated()
+    return drivetrain.fieldRotatedSupplier().getAsBoolean()
         ? ChassisSpeeds.fromFieldRelativeSpeeds(
             xDot, yDot, thetaDot, drivetrain.getHeading().rotateBy(new Rotation2d(Math.PI)))
         : ChassisSpeeds.fromFieldRelativeSpeeds(

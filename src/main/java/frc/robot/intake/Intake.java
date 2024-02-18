@@ -84,7 +84,7 @@ public class Intake extends SubsystemBase {
             createSetPositionCommand(IntakeConstants.kRepositionAfterIntaking).schedule();
         },
         // isFinished
-        this.hasGamePieceSupplier(),
+        this.gamePieceSensor(),
         // requirements
         this);
   }
@@ -120,21 +120,12 @@ public class Intake extends SubsystemBase {
     return this.run(() -> this.setVoltage(targetVoltage));
   }
 
-  public boolean hasGamePiece() {
-    // return m_intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
-    return !m_noteSensor.get();
+  public Command createResetEncoderCommand() {
+    return this.runOnce(() -> this.resetIntakeEncoder());
   }
 
-  public BooleanSupplier hasGamePieceSupplier() {
+  public BooleanSupplier gamePieceSensor() {
     return () -> !m_noteSensor.get();
-  }
-
-  private double GamePieceDetected() {
-    if (hasGamePiece() == true) {
-      return 1.0;
-    } else {
-      return 0.0;
-    }
   }
 
   public BooleanSupplier atGoalSupplier() {
@@ -144,8 +135,8 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("OutputCurrent", m_intakeMotor.getOutputCurrent());
-    SmartDashboard.putNumber("hasGamePiece", GamePieceDetected());
     SmartDashboard.putNumber("IntakePosition", m_relativeEncoder.getPosition());
     SmartDashboard.putNumber("IntakeGoal", m_positionController.getGoal().position);
+    SmartDashboard.putNumber("hasGamePiece", gamePieceSensor().getAsBoolean() ? 1d : 0d);
   }
 }

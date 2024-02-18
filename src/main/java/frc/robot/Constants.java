@@ -112,7 +112,7 @@ public final class Constants {
     // public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254,
     // 0.137);
 
-    public static final double kWheelDiameterMeters = 0.102; // 3.7 in; 2023 Competion Robot
+    public static final double kWheelDiameterMeters = 0.10; // 3.7 in; 2023 Competion Robot
 
     // By default, the drive encoder in position mode measures rotations at the drive motor
     // Convert to meters at the wheel
@@ -243,6 +243,14 @@ public final class Constants {
     }
   }
 
+  public static final class LEDConstants {
+    public static final int kLEDPort = 0;
+    public static final int kLEDLength = 17;
+
+    public static final int kLEDsPerBlock = 2;
+    public static final int kLEDsBetweenBlocks = 1;
+  }
+
   public static final class AutoConstants {
     public static final int kAllianceColorSelectorPort = 10;
 
@@ -255,7 +263,7 @@ public final class Constants {
     // public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
     public static final PIDConstants kTranslationControllerGains = new PIDConstants(1.0, 0.0, 0.0);
-    public static final PIDConstants kRotationControllerGains = new PIDConstants(10.0, 0.0, 0.0);
+    public static final PIDConstants kRotationControllerGains = new PIDConstants(5.0, 0.0, 0.0);
 
     // Constraint for the motion profilied robot angle controller
     // public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
