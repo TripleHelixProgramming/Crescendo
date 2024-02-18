@@ -66,6 +66,12 @@
           "data": {
             "name": "outtakeAndWait"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "resetArmAndIntake"
+          }
         }
       ]
     }

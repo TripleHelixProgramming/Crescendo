@@ -173,7 +173,7 @@ public final class Constants {
     public static final double kPositionI = 0.0;
     public static final double kPositionD = 0.0;
 
-    public static final double kRepositionAfterIntaking = 0.2;
+    public static final double kRepositionAfterIntaking = 0.26;
     public static final double kPositionTolerance = 0.01;
 
     public static final double kRollerDiameter = 0.0508; // 2 inches
@@ -264,7 +264,7 @@ public final class Constants {
     // public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
     public static final PIDConstants kTranslationControllerGains = new PIDConstants(1.0, 0.0, 0.0);
-    public static final PIDConstants kRotationControllerGains = new PIDConstants(5.0, 0.0, 0.0);
+    public static final PIDConstants kRotationControllerGains = new PIDConstants(7.0, 0.0, 0.0);
 
     // Constraint for the motion profilied robot angle controller
     // public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
