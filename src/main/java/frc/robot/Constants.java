@@ -169,7 +169,7 @@ public final class Constants {
     public static final double kIntakeVelocityI = 0.0;
     public static final double kIntakeVelocityD = 0.0;
 
-    public static final double kIntakePositionP = 3.0;
+    public static final double kIntakePositionP = 4.0;
     public static final double kIntakePositionI = 0.0;
     public static final double kIntakePositionD = 0.0;
     
@@ -183,8 +183,8 @@ public final class Constants {
     public static final double kIntakeVelocityConversionFactor =
         kIntakePositionConversionFactor / 60.0;
     
-    public static final double kMaxIntakeVelocity = (1 * 5880.0) * kIntakeVelocityConversionFactor;
-    public static final double kMaxIntakeAcceleration = kMaxIntakeVelocity / 0.25;
+    public static final double kMaxIntakeVelocity = (0.2 * 5880.0) * kIntakeVelocityConversionFactor;
+    public static final double kMaxIntakeAcceleration = kMaxIntakeVelocity / 0.3;
 
     public static final TrapezoidProfile.Constraints intakeConstraints =
     new TrapezoidProfile.Constraints(kMaxIntakeVelocity, kMaxIntakeAcceleration);
