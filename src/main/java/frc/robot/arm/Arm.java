@@ -10,67 +10,50 @@ import frc.robot.Constants.ArmConstants;
 import java.util.function.BooleanSupplier;
 
 public class Arm extends SubsystemBase {
-  private final DoubleSolenoid m_armMoverLeft;
-  private final DoubleSolenoid m_armMoverRight;
+  private final DoubleSolenoid m_armDeployer;
+  private final DoubleSolenoid m_armHardStopper;
 
   public Arm() {
-    m_armMoverLeft =
+    m_armDeployer =
         new DoubleSolenoid(
             PneumaticsModuleType.REVPH,
-            ArmConstants.kLeftForwardChannel,
-            ArmConstants.kLeftReverseChannel);
-    m_armMoverRight =
+            ArmConstants.kDeployerForwardChannel,
+            ArmConstants.kDeployerReverseChannel);
+    m_armHardStopper =
         new DoubleSolenoid(
             PneumaticsModuleType.REVPH,
-            ArmConstants.kRightForwardChannel,
-            ArmConstants.kRightReverseChannel);
+            ArmConstants.kHardStopperForwardChannel,
+            ArmConstants.kHardStopperReverseChannel);
   }
 
   @Override
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
     // Publish the arm state to telemetry.
-    builder.addBooleanProperty(
-        "ArmRaised",
-        () -> (m_armMoverLeft.get() == Value.kForward) && (m_armMoverRight.get() == Value.kForward),
-        null);
+    builder.addBooleanProperty("ArmRaised", () -> m_armDeployer.get() == Value.kForward, null);
   }
-
-  private void pneumaticDeploy() {
-    m_armMoverLeft.set(Value.kForward);
-    m_armMoverRight.set(Value.kForward);
-  }
-
-  private void pneumaticRetract() {
-    m_armMoverLeft.set(Value.kReverse);
-    m_armMoverRight.set(Value.kReverse);
-  }
-
-  // Command Factory methods
-  // See
-  // https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#instance-command-factory-methods
 
   public Command createLowerArmCommand() {
-    return this.runOnce(() -> this.pneumaticRetract());
+    return this.runOnce(() -> this.m_armDeployer.set(Value.kReverse));
   }
 
   public Command createRaiseArmCommand() {
-    return this.runOnce(() -> this.pneumaticDeploy());
+    return this.runOnce(() -> this.m_armDeployer.set(Value.kForward));
+  }
+
+  public Command createHardStopDeployCommand() {
+    return this.runOnce(() -> this.m_armHardStopper.set(Value.kForward));
+  }
+
+  public Command createHardStopRetractCommand() {
+    return this.runOnce(() -> this.m_armHardStopper.set(Value.kReverse));
   }
 
   public BooleanSupplier isArmRaised() {
-    BooleanSupplier ArmRaised =
-        () ->
-            m_armMoverLeft.get().equals(Value.kForward)
-                & m_armMoverRight.get().equals(Value.kForward);
-    return ArmRaised;
+    return () -> m_armDeployer.get().equals(Value.kForward);
   }
 
   public BooleanSupplier isArmLowered() {
-    BooleanSupplier ArmLowered =
-        () ->
-            m_armMoverLeft.get().equals(Value.kReverse)
-                & m_armMoverRight.get().equals(Value.kReverse);
-    return ArmLowered;
+    return () -> m_armDeployer.get().equals(Value.kReverse);
   }
 }

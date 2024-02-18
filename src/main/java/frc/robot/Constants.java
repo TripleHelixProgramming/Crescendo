@@ -193,10 +193,11 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
-    public static final int kLeftForwardChannel = 0;
-    public static final int kLeftReverseChannel = 1;
-    public static final int kRightForwardChannel = 2;
-    public static final int kRightReverseChannel = 3;
+    public static final int kDeployerForwardChannel = 0;
+    public static final int kDeployerReverseChannel = 1;
+
+    public static final int kHardStopperForwardChannel = 2;
+    public static final int kHardStopperReverseChannel = 3;
   }
 
   public static final class ClimberConstants {
