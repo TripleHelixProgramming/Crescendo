@@ -96,28 +96,7 @@ public class Intake extends SubsystemBase {
     m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
   }
 
-  public Command createIntakeCommandSequence() {
-    return new SequentialCommandGroup(
-        new RunCommand(() -> this.setVoltage(12.0)).until(eitherSensorSupplier()),
-        createAdvanceAfterIntakingCommand()
-            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-  }
 
-  // public Command createIntakeCommand() {
-  //   return new FunctionalCommand(
-  //       // initialize
-  //       () -> {},
-  //       // execute
-  //       () -> this.setVoltage(12.0),
-  //       // end
-  //       interrupted -> {
-  //         if (!interrupted) createAdvanceAfterIntakingCommand().schedule();
-  //       },
-  //       // isFinished
-  //       this.eitherSensorSupplier(),
-  //       // requirements
-  //       this);
-  // }
 
   public Command createAdvanceAfterIntakingCommand() {
     return new FunctionalCommand(

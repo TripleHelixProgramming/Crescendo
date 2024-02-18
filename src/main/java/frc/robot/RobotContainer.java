@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -218,7 +220,7 @@ public class RobotContainer {
         .withTimeout(0.5));
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
-      m_intake.createIntakeCommandSequence()
+      createIntakeCommandSequence()
         .andThen(m_arm.createRaiseArmCommand())
         .andThen(new WaitCommand(1.9)));
     
@@ -270,7 +272,7 @@ public class RobotContainer {
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
-        .whileTrue(m_intake.createIntakeCommandSequence());
+        .whileTrue(createIntakeCommandSequence());
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kX.value)
@@ -299,4 +301,15 @@ public class RobotContainer {
           .alongWith(m_arm.createLowerArmCommand())));
   }
   // spotless:on
+
+  public Command createIntakeCommandSequence() {
+    return new SequentialCommandGroup(
+        m_intake.createSetVoltageCommand(12).until(m_intake.eitherSensorSupplier()),
+        m_arm.createHardStopDeployCommand(),
+        m_arm.createRaiseArmCommand(),
+        m_intake.createAdvanceAfterIntakingCommand()
+            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+  }
+
+
 }
