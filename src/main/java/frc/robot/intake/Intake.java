@@ -10,8 +10,11 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ClimberConstants.CalibrationState;
+import frc.robot.climber.Actuator;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 
 public class Intake extends SubsystemBase {
@@ -76,17 +79,34 @@ public class Intake extends SubsystemBase {
   //   return this.startEnd(() -> this.setPosition(targetPosition), () -> {});
   // }
 
-  public void driveToTargetPosition(double targetPosition){
+  public void configurePositionController(double targetPosition){
     m_intakeProfiledPIDController.setGoal(targetPosition);
     m_intakeProfiledPIDController.reset(m_intakeRelativeEncoder.getPosition());
+  }
+
+  public void driveToTargetPosition(){
     m_intakeMotor.set(m_intakeProfiledPIDController.calculate(getPosition()));
   }
 
 
-
-  public Command createSetPositionCommand(double targetPosition){
-    return this.run(()-> this.driveToTargetPosition(targetPosition));
+  public Command createSetPositionCommand(double targetPosition) {
+    return new FunctionalCommand(
+        // initialize
+        () -> this.configurePositionController(targetPosition),
+        // execute
+        () -> this.driveToTargetPosition(),
+        // end
+        interrupted -> {
+          this.stopIntake();
+        },
+        // isFinished
+        () -> {
+          return this.atGoal();
+        },
+        // requirements
+        this);
   }
+
 
   private void setVelocity(double targetVelocity) {
     m_intakePIDController.setP(ArmConstants.kIntakeVelocityP);
@@ -131,6 +151,10 @@ public class Intake extends SubsystemBase {
 
   private double getPosition(){
     return m_intakeRelativeEncoder.getPosition();
+  }
+
+  public boolean atGoal() {
+    return m_intakeProfiledPIDController.atGoal();
   }
 
   @Override
