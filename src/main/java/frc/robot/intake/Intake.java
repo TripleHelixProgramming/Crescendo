@@ -63,12 +63,12 @@ public class Intake extends SubsystemBase {
     return this.runOnce(() -> this.stopIntake());
   }
 
-  public void configurePositionController(double targetPosition) {
+  private void configurePositionController(double targetPosition) {
     m_positionController.reset(m_relativeEncoder.getPosition());
     m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
   }
 
-  public void driveToTargetPosition() {
+  private void driveToTargetPosition() {
     m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
   }
 
@@ -133,6 +133,6 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("OutputCurrent", m_intakeMotor.getOutputCurrent());
     SmartDashboard.putNumber("IntakePosition", m_relativeEncoder.getPosition());
     SmartDashboard.putNumber("IntakeGoal", m_positionController.getGoal().position);
-    SmartDashboard.putNumber("hasGamePiece", gamePieceSensor().getAsBoolean() ? 1d : 0d);
+    SmartDashboard.putNumber("IntakeHasGamePiece", gamePieceSensor().getAsBoolean() ? 1d : 0d);
   }
 }
