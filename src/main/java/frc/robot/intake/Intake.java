@@ -67,7 +67,7 @@ public class Intake extends SubsystemBase {
   }
 
   private void configurePositionController(double targetPosition) {
-    m_positionController.reset(m_relativeEncoder.getPosition());
+    m_positionController.reset(m_relativeEncoder.getPosition(),m_relativeEncoder.getVelocity());
     m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
   }
 

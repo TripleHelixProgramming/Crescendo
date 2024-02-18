@@ -173,7 +173,7 @@ public final class Constants {
     public static final double kPositionI = 0.0;
     public static final double kPositionD = 0.0;
 
-    public static final double kRepositionAfterIntaking = 0.35;
+    public static final double kRepositionAfterIntaking = 0.42;
     public static final double kPositionTolerance = 0.01;
 
     public static final double kRollerDiameter = 0.0508; // 2 inches
@@ -182,7 +182,7 @@ public final class Constants {
     public static final double kPositionConversionFactor = (kRollerDiameter * Math.PI) / kGearRatio;
     public static final double kVelocityConversionFactor = kPositionConversionFactor / 60.0;
 
-    public static final double kMaxVelocity = (0.2 * 5880.0) * kVelocityConversionFactor;
+    public static final double kMaxVelocity = (0.8 * 5880.0) * kVelocityConversionFactor;
     public static final double kMaxAcceleration = kMaxVelocity / 0.3;
 
     public static final TrapezoidProfile.Constraints kConstraints =
