@@ -179,8 +179,7 @@ public final class Constants {
     public static final double kRollerDiameter = 0.0508; // 2 inches
     public static final double kGearRatio = 10.0;
 
-    public static final double kPositionConversionFactor =
-        (kRollerDiameter * Math.PI) / kGearRatio;
+    public static final double kPositionConversionFactor = (kRollerDiameter * Math.PI) / kGearRatio;
     public static final double kVelocityConversionFactor = kPositionConversionFactor / 60.0;
 
     public static final double kMaxVelocity = (0.2 * 5880.0) * kVelocityConversionFactor;
