@@ -160,41 +160,43 @@ public final class Constants {
     public static int kZorroHIn = 14;
   }
 
-  public static final class ArmConstants {
-    public static final int k_intakeMotorPort = 16;
+  public static final class IntakeConstants {
+    public static final int kMotorID = 16;
 
-    public static final int k_intakeMotorCurrentLimit = 15;
+    public static final int kCurrentLimit = 15;
 
-    public static final double kIntakeVelocityP = 1.0;
-    public static final double kIntakeVelocityI = 0.0;
-    public static final double kIntakeVelocityD = 0.0;
+    public static final double kVelocityP = 1.0;
+    public static final double kVelocityI = 0.0;
+    public static final double kVelocityD = 0.0;
 
-    public static final double kIntakePositionP = 4.0;
-    public static final double kIntakePositionI = 0.0;
-    public static final double kIntakePositionD = 0.0;
+    public static final double kPositionP = 4.0;
+    public static final double kPositionI = 0.0;
+    public static final double kPositionD = 0.0;
     
-    public static final double kIntakeTolerance = 0.01;
+    public static final double kPositionTolerance = 0.01;
 
-    public static final double kIntakeRollerDiameterMeters = 0.0508; // 2 inches
-    public static final double kIntakeGearRatio = 10.0;
+    public static final double kRollerDiameterMeters = 0.0508; // 2 inches
+    public static final double kGearRatio = 10.0;
 
-    public static final double kIntakePositionConversionFactor =
-        (kIntakeRollerDiameterMeters * Math.PI) / kIntakeGearRatio;
-    public static final double kIntakeVelocityConversionFactor =
-        kIntakePositionConversionFactor / 60.0;
+    public static final double kPositionConversionFactor =
+        (kRollerDiameterMeters * Math.PI) / kGearRatio;
+    public static final double kVelocityConversionFactor =
+        kPositionConversionFactor / 60.0;
     
-    public static final double kMaxIntakeVelocity = (0.2 * 5880.0) * kIntakeVelocityConversionFactor;
-    public static final double kMaxIntakeAcceleration = kMaxIntakeVelocity / 0.3;
+    public static final double kMaxVelocity = (0.2 * 5880.0) * kVelocityConversionFactor;
+    public static final double kMaxAcceleration = kMaxVelocity / 0.3;
 
-    public static final TrapezoidProfile.Constraints intakeConstraints =
-    new TrapezoidProfile.Constraints(kMaxIntakeVelocity, kMaxIntakeAcceleration);
-
-    public static final int kArmMoverLeftForwardChannel = 0;
-    public static final int kArmMoverLeftReverseChannel = 1;
-    public static final int kArmMoverRightForwardChannel = 2;
-    public static final int kArmMoverRightReverseChannel = 3;
+    public static final TrapezoidProfile.Constraints kConstraints =
+    new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
     public static final int kNoteSensorDIOPort = 1;
+  }
+
+  public static final class ArmConstants {
+    public static final int kLeftForwardChannel = 0;
+    public static final int kLeftReverseChannel = 1;
+    public static final int kRightForwardChannel = 2;
+    public static final int kRightReverseChannel = 3;
   }
 
   public static final class ClimberConstants {

@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 
 public class Intake extends SubsystemBase {
@@ -26,37 +26,37 @@ public class Intake extends SubsystemBase {
   private final SparkPIDController m_velocityController;
 
   private final ProfiledPIDController m_positionController = 
-  new ProfiledPIDController(ArmConstants.kIntakePositionP, 
-                            ArmConstants.kIntakePositionI,
-                            ArmConstants.kIntakePositionD, 
-                            ArmConstants.intakeConstraints);
+  new ProfiledPIDController(IntakeConstants.kPositionP, 
+                            IntakeConstants.kPositionI,
+                            IntakeConstants.kPositionD, 
+                            IntakeConstants.kConstraints);
 
-  private final DigitalInput m_noteSensor = new DigitalInput(ArmConstants.kNoteSensorDIOPort);
+  private final DigitalInput m_noteSensor = new DigitalInput(IntakeConstants.kNoteSensorDIOPort);
 
   public Intake() {
-    m_intakeMotor = new CANSparkMax(ArmConstants.k_intakeMotorPort, MotorType.kBrushless);
+    m_intakeMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
 
     m_intakeMotor.restoreFactoryDefaults();
 
     m_intakeMotor.setIdleMode(IdleMode.kBrake);
 
-    m_intakeMotor.setSmartCurrentLimit(ArmConstants.k_intakeMotorCurrentLimit);
+    m_intakeMotor.setSmartCurrentLimit(IntakeConstants.kCurrentLimit);
 
     m_intakeMotor.setInverted(false);
 
     m_velocityController = m_intakeMotor.getPIDController();
-    m_velocityController.setP(ArmConstants.kIntakeVelocityP);
-    m_velocityController.setI(ArmConstants.kIntakeVelocityI);
-    m_velocityController.setD(ArmConstants.kIntakeVelocityD);
+    m_velocityController.setP(IntakeConstants.kVelocityP);
+    m_velocityController.setI(IntakeConstants.kVelocityI);
+    m_velocityController.setD(IntakeConstants.kVelocityD);
 
-    m_positionController.setTolerance(ArmConstants.kIntakeTolerance);
+    m_positionController.setTolerance(IntakeConstants.kPositionTolerance);
     
     m_relativeEncoder = m_intakeMotor.getEncoder();
     m_relativeEncoder.setPosition(0.0);
     m_relativeEncoder.setPositionConversionFactor(
-        ArmConstants.kIntakePositionConversionFactor);
+        IntakeConstants.kPositionConversionFactor);
     m_relativeEncoder.setVelocityConversionFactor(
-        ArmConstants.kIntakeVelocityConversionFactor);
+        IntakeConstants.kVelocityConversionFactor);
   }
 
   private void stopIntake() {
