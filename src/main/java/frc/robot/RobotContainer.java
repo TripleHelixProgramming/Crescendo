@@ -61,97 +61,25 @@ public class RobotContainer {
 
   private Autonomous m_autonomous;
 
-  // spotless:off
   public RobotContainer() {
 
     for (int i = 0; i < AutoConstants.kAutonomousModeSelectorPorts.length; i++) {
       autonomousModes[i] = new DigitalInput(AutoConstants.kAutonomousModeSelectorPorts[i]);
     }
 
-    NamedCommands.registerCommand("raiseArmAndWait", m_arm.createRaiseArmCommand().andThen(new WaitCommand(1.5)));
-    NamedCommands.registerCommand("resetArmAndIntake", m_arm.createLowerArmCommand().alongWith(m_intake.createStopIntakeCommand()));
-    NamedCommands.registerCommand("outtakeAndWait", m_intake.createSetVoltageCommand(12).withTimeout(0.8));
-    NamedCommands.registerCommand("intakePieceAndRaise", m_intake.createSetVoltageCommand(12.0)
-                                                              .until(m_intake::hasGamePiece)
-                                                              .andThen(m_intake.createSetPositionCommand(0.2)
-                                                              .andThen(m_arm.createRaiseArmCommand()
-                                                              .andThen(new WaitCommand(1.5)))));
-    NamedCommands.registerCommand("stopIntake", m_intake.createStopIntakeCommand());
+    createNamedCommands();
+    setDefaultCommands();
 
-    m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
     m_swerve.configurePathPlanner();
 
-    m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
-    m_climber.setDefaultCommand(m_climber.createStopCommand());
-
     // Create a button on Smart Dashboard to reset the encoders.
-    SmartDashboard.putData("Align Encoders",
-        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
-        .ignoringDisable(true));
+    SmartDashboard.putData(
+        "Align Encoders",
+        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets()).ignoringDisable(true));
 
-    // Driver controller buttons
-    new JoystickButton(m_driver, OIConstants.kZorroDIn)
-        .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
-        .ignoringDisable(true));
-
-    // Operator controller buttons
-
-    // Calibrate upper limit of climber actuators
-    new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
-        .andThen(new DriveToPositionCommand(m_climber, ClimberConstants.kHomePosition)));
-
-    // Deploy climber and begin climbing
-    BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, -0.9, m_loop).debounce(0.1);
-    Trigger climbTrigger = climbThreshold.castTo(Trigger::new);
-    climbTrigger.onTrue(new DriveToPositionCommand(m_climber, ClimberConstants.kDeployPosition)
-        .andThen(m_climber.createArcadeDriveCommand(m_operator)));
-    
-    //Run climber drive while B button down
-    // new JoystickButton(m_operator,Button.kB.value)
-    // .whileTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));
-    // .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
-    
-    // new JoystickButton(m_operator,Button.kB.value)
-    //     .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
-
-    // Raise and lower arm
-    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
-    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
-
-    // Intake Note from floor
-    new JoystickButton(m_operator, Button.kRightBumper.value)
-        .whileTrue(m_intake.createSetVoltageCommand(12.0)
-        .until(m_intake.gamePieceSensor())
-        .andThen(m_intake.createSetPositionCommand(0.2))
-        .onlyIf(m_arm.isArmLowered()));
-
-    // Shift Note further into Intake
-    new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue(m_intake.createSetPositionCommand(0.25));
-
-    // Shoot Note into Amp
-    new JoystickButton(m_operator, Button.kLeftBumper.value)
-        .whileTrue(m_intake.createSetVoltageCommand(12.0)
-        .onlyIf(m_arm.isArmRaised()));
-
-    // Reverses intake
-    new JoystickButton(m_operator, Button.kB.value)
-        .whileTrue(m_intake.createSetVoltageCommand(-12.0));
-
-    // Moves note back in order to place in trap
-    // new JoystickButton(m_operator, Button.kB.value)
-    //     .whileTrue(m_intake.createSetPositionCommand(-0.27));
-
-    // Gives note to teammates
-    new JoystickButton(m_operator, Button.kBack.value)
-        .onTrue(m_arm.createRaiseArmCommand()
-          .alongWith(new WaitCommand(0.8))
-        .andThen(m_intake.createSetVoltageCommand(-12)
-          .raceWith(new WaitCommand(0.8)))
-        .andThen(m_intake.createStopIntakeCommand()
-          .alongWith(m_arm.createLowerArmCommand())));
+    configureDriverButtonBindings();
+    configureOperatorButtonBindings();
   }
-  // spotless:on
 
   /**
    * @return The Command that runs the selected autonomous mode
@@ -181,8 +109,6 @@ public class RobotContainer {
     } else {
       SmartDashboard.putString("Auto", "Null");
     }
-
-    SmartDashboard.putNumber("Dio port", getSelectedAutonomousMode());
 
     SmartDashboard.putNumber("PDHVoltage", m_PowerDistribution.getVoltage());
     SmartDashboard.putNumber("PDHTotalCurrent", m_PowerDistribution.getTotalCurrent());
@@ -275,4 +201,107 @@ public class RobotContainer {
   public double getPDHCurrent(int CANBusPort) {
     return m_PowerDistribution.getCurrent(CANBusPort - 10);
   }
+
+  // spotless:off
+  private void createNamedCommands() {
+
+    NamedCommands.registerCommand("raiseArmAndWait", 
+      m_arm.createRaiseArmCommand()
+        .andThen(new WaitCommand(1.5)));
+    
+    NamedCommands.registerCommand("resetArmAndIntake", 
+      m_arm.createLowerArmCommand()
+        .alongWith(m_intake.createStopIntakeCommand()));
+    
+    NamedCommands.registerCommand("outtakeAndWait", 
+      m_intake.createSetVoltageCommand(12)
+        .withTimeout(0.8));
+    
+    NamedCommands.registerCommand("intakePieceAndRaise", 
+      m_intake.createSetVoltageCommand(12.0)
+        .until(m_intake.gamePieceSensor())
+        .andThen(m_intake.createSetPositionCommand(0.2)
+        .andThen(m_arm.createRaiseArmCommand()
+        .andThen(new WaitCommand(1.5)))));
+    
+    NamedCommands.registerCommand("stopIntake", 
+      m_intake.createStopIntakeCommand());
+  }
+  // spotless:on
+
+  private void setDefaultCommands() {
+    m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
+    m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
+    m_climber.setDefaultCommand(m_climber.createStopCommand());
+  }
+
+  // spotless:off
+  private void configureDriverButtonBindings() {
+
+    // Reset heading
+    new JoystickButton(m_driver, OIConstants.kZorroDIn)
+        .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
+        .ignoringDisable(true));
+  }
+  // spotless:on
+
+  // spotless:off
+  private void configureOperatorButtonBindings() {
+
+    // Calibrate upper limit of climber actuators
+    new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
+        .andThen(new DriveToPositionCommand(m_climber, ClimberConstants.kHomePosition)));
+
+    // Deploy climber and begin climbing
+    BooleanEvent climbThreshold = m_operator.axisGreaterThan(Axis.kRightY.value, -0.9, m_loop).debounce(0.1);
+    Trigger climbTrigger = climbThreshold.castTo(Trigger::new);
+    climbTrigger.onTrue(new DriveToPositionCommand(m_climber, ClimberConstants.kDeployPosition)
+        .andThen(m_climber.createArcadeDriveCommand(m_operator)));
+    
+    //Run climber drive while B button down
+    // new JoystickButton(m_operator,Button.kB.value)
+    // .whileTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));
+    // .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
+    
+    // new JoystickButton(m_operator,Button.kB.value)
+    //     .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
+
+    // Raise and lower arm
+    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
+    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
+
+    // Intake Note from floor
+    new JoystickButton(m_operator, Button.kRightBumper.value)
+        .whileTrue(m_intake.createSetVoltageCommand(12.0)
+        .until(m_intake.gamePieceSensor())
+        .andThen(m_intake.createSetPositionCommand(0.2))
+        .onlyIf(m_arm.isArmLowered()));
+
+    // Shift Note further into Intake
+    new JoystickButton(m_operator, Button.kX.value)
+        .whileTrue(m_intake.createSetPositionCommand(0.25));
+
+    // Shoot Note into Amp
+    new JoystickButton(m_operator, Button.kLeftBumper.value)
+        .whileTrue(m_intake.createSetVoltageCommand(12.0)
+        .onlyIf(m_arm.isArmRaised()));
+
+    // Reverses intake
+    new JoystickButton(m_operator, Button.kB.value)
+        .whileTrue(m_intake.createSetVoltageCommand(-12.0));
+
+    // Moves note back in order to place in trap
+    // new JoystickButton(m_operator, Button.kB.value)
+    //     .whileTrue(m_intake.createSetPositionCommand(-0.27));
+
+    // Gives note to teammates
+    new JoystickButton(m_operator, Button.kBack.value)
+        .onTrue(m_arm.createRaiseArmCommand()
+          .alongWith(new WaitCommand(0.8))
+        .andThen(m_intake.createSetVoltageCommand(-12)
+          .raceWith(new WaitCommand(0.8)))
+        .andThen(m_intake.createStopIntakeCommand()
+          .alongWith(m_arm.createLowerArmCommand())));
+  }
+  // spotless:on
 }
