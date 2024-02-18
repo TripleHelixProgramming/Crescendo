@@ -159,5 +159,6 @@ public class Intake extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("OutputCurrent", m_intakeMotor.getOutputCurrent());
     SmartDashboard.putNumber("hasGamePiece", GamePieceDetected());
+    SmartDashboard.putNumber("IntakePosition", m_intakeRelativeEncoder.getPosition());
   }
 }
