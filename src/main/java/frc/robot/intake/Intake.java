@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 
 public class Intake extends SubsystemBase {
   private final CANSparkMax m_intakeMotor;
@@ -19,6 +20,12 @@ public class Intake extends SubsystemBase {
   private final RelativeEncoder m_intakeRelativeEncoder;
 
   private final SparkPIDController m_intakePIDController;
+
+  private final ProfiledPIDController m_intakeProfiledPIDController = 
+  new ProfiledPIDController(ArmConstants.kIntakePositionP, 
+                            ArmConstants.kIntakePositionI,
+                            ArmConstants.kIntakePositionD, 
+                            ArmConstants.intakeConstraints);
 
   private final DigitalInput m_noteSensor = new DigitalInput(ArmConstants.kNoteSensorDIOPort);
 
@@ -40,6 +47,8 @@ public class Intake extends SubsystemBase {
     m_intakePIDController = m_intakeMotor.getPIDController();
 
     m_intakeRelativeEncoder = m_intakeMotor.getEncoder();
+
+    m_intakeProfiledPIDController.setTolerance(ArmConstants.kIntakeTolerance);
 
     m_intakeRelativeEncoder.setPositionConversionFactor(
         ArmConstants.kIntakePositionConversionFactor);
@@ -65,6 +74,15 @@ public class Intake extends SubsystemBase {
 
   public Command createSetPositionCommand(double targetPosition) {
     return this.startEnd(() -> this.setPosition(targetPosition), () -> {});
+  }
+
+  public void configurePositionController(double targetPosition){
+    m_intakeProfiledPIDController.setGoal(targetPosition);
+    m_intakeProfiledPIDController.reset(m_intakeRelativeEncoder.getPosition());
+  }
+
+  public void driveToTargetPosition(){
+    m_intakeMotor.set(m_intakeProfiledPIDController.calculate(getPosition()));
   }
 
   private void setVelocity(double targetVelocity) {
@@ -106,6 +124,10 @@ public class Intake extends SubsystemBase {
     } else {
       return 0.0;
     }
+  }
+
+  private double getPosition(){
+    return m_intakeRelativeEncoder.getPosition();
   }
 
   @Override

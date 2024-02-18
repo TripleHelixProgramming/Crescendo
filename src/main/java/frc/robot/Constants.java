@@ -172,6 +172,7 @@ public final class Constants {
     public static final double kIntakePositionP = 10.0;
     public static final double kIntakePositionI = 0.0;
     public static final double kIntakePositionD = 0.0;
+    public static final double kIntakeTolerance = 0.01;
 
     public static final double kIntakeRollerDiameterMeters = 0.0508; // 2 inches
     public static final double kIntakeGearRatio = 10.0;
@@ -180,6 +181,12 @@ public final class Constants {
         (kIntakeRollerDiameterMeters * Math.PI) / kIntakeGearRatio;
     public static final double kIntakeVelocityConversionFactor =
         kIntakePositionConversionFactor / 60.0;
+    
+    public static final double kMaxIntakeVelocity = (1 * 5880.0) * kIntakeVelocityConversionFactor;
+    public static final double kMaxIntakeAcceleration = kMaxIntakeVelocity / 0.25;
+
+    public static final TrapezoidProfile.Constraints intakeConstraints =
+    new TrapezoidProfile.Constraints(kMaxIntakeVelocity, kMaxIntakeAcceleration);
 
     public static final int kArmMoverLeftForwardChannel = 0;
     public static final int kArmMoverLeftReverseChannel = 1;
