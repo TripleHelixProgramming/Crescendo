@@ -108,12 +108,14 @@ public class RobotContainer {
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
 
+    Trigger intookGamePiece = new Trigger(m_intake::hasGamePiece);
+
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
-        .whileTrue(m_intake.createSetVoltageCommand(12.0)
-        .until(m_intake::hasGamePiece)
-        .andThen(m_intake.createSetPositionCommand(10.2))
-        );//.onlyIf(m_arm.isArmLowered()));
+        .whileTrue(m_intake.createSetVoltageCommand(12.0))
+        .and(intookGamePiece.negate());
+
+    intookGamePiece.onTrue(m_intake.createSetPositionCommand(0.5));
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kX.value)

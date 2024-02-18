@@ -52,6 +52,7 @@ public class Intake extends SubsystemBase {
     m_positionController.setTolerance(ArmConstants.kIntakeTolerance);
     
     m_relativeEncoder = m_intakeMotor.getEncoder();
+    m_relativeEncoder.setPosition(0.0);
     m_relativeEncoder.setPositionConversionFactor(
         ArmConstants.kIntakePositionConversionFactor);
     m_relativeEncoder.setVelocityConversionFactor(
