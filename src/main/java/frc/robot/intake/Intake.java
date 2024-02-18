@@ -87,7 +87,6 @@ public class Intake extends SubsystemBase {
     return this.run(() -> this.setVoltage(targetVoltage));
   }
 
-
   public void resetIntakeEncoder() {
     m_intakeRelativeEncoder.setPosition(0.0);
   }

@@ -220,10 +220,7 @@ public class RobotContainer {
         break;
 
       case 3:
-        m_autonomous =
-            m_swerve.getRedAlliance()
-                ? null
-                : new Autonomous("B-TheTwoPiece");
+        m_autonomous = m_swerve.getRedAlliance() ? null : new Autonomous("B-TheTwoPiece");
         break;
 
       case 4:
