@@ -1,6 +1,7 @@
 package frc.lib;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import frc.robot.Constants.OIConstants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -97,6 +98,20 @@ public class ControllerPatroller {
         return joystick.get();
       }
     }
+    // If we didn't find a controller with the provided name return the one at the
+    // default port
     return controllers.get(defaultPort);
+  }
+
+  public int findDriverPort() {
+    GenericHID driver =
+        get(OIConstants.kDriverControllerNames, OIConstants.kDefaultDriverControllerPort);
+    return driver.getPort();
+  }
+
+  public int findOperatorPort() {
+    GenericHID op =
+        get(OIConstants.kOperatorControllerNames, OIConstants.kDefaultOperatorControllerPort);
+    return op.getPort();
   }
 }

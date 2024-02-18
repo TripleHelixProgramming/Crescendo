@@ -5,7 +5,6 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -88,18 +87,12 @@ public class RobotContainer {
     // Clear any active buttons.
     CommandScheduler.getInstance().getActiveButtonLoop().clear();
 
-    // Find the joysticks
-    GenericHID driverHID =
-        ControllerPatroller.getInstance()
-            .get(OIConstants.kDriverControllerNames, OIConstants.kDefaultDriverControllerPort);
-    GenericHID operatorHID =
-        ControllerPatroller.getInstance()
-            .get(OIConstants.kOperatorControllerNames, OIConstants.kDefaultOperatorControllerPort);
+    ControllerPatroller cp = ControllerPatroller.getInstance();
 
     // We use two different types of controllers - Joystick & XboxController.
     // Create objects of the specific types.
-    m_driver = new Joystick(driverHID.getPort());
-    m_operator = new XboxController(operatorHID.getPort());
+    m_driver = new Joystick(cp.findDriverPort());
+    m_operator = new XboxController(cp.findOperatorPort());
 
     configureDriverButtonBindings();
     configureOperatorButtonBindings();

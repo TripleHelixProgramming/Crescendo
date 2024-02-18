@@ -16,7 +16,7 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
 
-  private int usb_check_delay = OIConstants.kUSBCheckNumLoops;
+  private int m_usb_check_delay = OIConstants.kUSBCheckNumLoops;
 
   @Override
   public void robotInit() {
@@ -50,9 +50,9 @@ public class Robot extends TimedRobot {
      * This prevents us from hammering on some routines that cause the RIO to lock up.
      */
     RobotContainer rc = getRobotContainer();
-    usb_check_delay--;
-    if (0 >= usb_check_delay) {
-      usb_check_delay = OIConstants.kUSBCheckNumLoops;
+    m_usb_check_delay--;
+    if (0 >= m_usb_check_delay) {
+      m_usb_check_delay = OIConstants.kUSBCheckNumLoops;
       if (ControllerPatroller.getInstance().controllersChanged()) {
         // Reset the joysticks & button mappings.
         rc.configureButtonBindings();
