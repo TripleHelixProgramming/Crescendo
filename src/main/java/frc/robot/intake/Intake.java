@@ -12,7 +12,10 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import java.util.function.BooleanSupplier;
@@ -93,21 +96,28 @@ public class Intake extends SubsystemBase {
     m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
   }
 
-  public Command createIntakeCommand() {
-    return new FunctionalCommand(
-        // initialize
-        () -> {},
-        // execute
-        () -> this.setVoltage(12.0),
-        // end
-        interrupted -> {
-          if (!interrupted) createAdvanceAfterIntakingCommand().schedule();
-        },
-        // isFinished
-        this.eitherSensorSupplier(),
-        // requirements
-        this);
+  public Command createIntakeCommandSequence() {
+    return new SequentialCommandGroup(
+        new RunCommand(() -> this.setVoltage(12.0)).until(eitherSensorSupplier()),
+        createAdvanceAfterIntakingCommand()
+            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
   }
+
+  // public Command createIntakeCommand() {
+  //   return new FunctionalCommand(
+  //       // initialize
+  //       () -> {},
+  //       // execute
+  //       () -> this.setVoltage(12.0),
+  //       // end
+  //       interrupted -> {
+  //         if (!interrupted) createAdvanceAfterIntakingCommand().schedule();
+  //       },
+  //       // isFinished
+  //       this.eitherSensorSupplier(),
+  //       // requirements
+  //       this);
+  // }
 
   public Command createAdvanceAfterIntakingCommand() {
     return new FunctionalCommand(

@@ -207,7 +207,7 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("raiseArmAndWait", 
       m_arm.createRaiseArmCommand()
-        .andThen(new WaitCommand(1.5)));
+        .andThen(new WaitCommand(1.2)));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
       m_arm.createLowerArmCommand()
@@ -215,14 +215,12 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("outtakeAndWait", 
       m_intake.createSetVoltageCommand(12)
-        .withTimeout(0.8));
+        .withTimeout(0.5));
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
-      m_intake.createSetVoltageCommand(12.0)
-        .until(m_intake.eitherSensorSupplier())
-        .andThen(m_intake.createAdvanceAfterIntakingCommand()
-        .andThen(m_arm.createRaiseArmCommand()
-        .andThen(new WaitCommand(1.5)))));
+      m_intake.createIntakeCommandSequence()
+        .andThen(m_arm.createRaiseArmCommand())
+        .andThen(new WaitCommand(1.9)));
     
     NamedCommands.registerCommand("stopIntake", 
       m_intake.createStopIntakeCommand());
@@ -272,7 +270,7 @@ public class RobotContainer {
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
-        .whileTrue(m_intake.createIntakeCommand());
+        .whileTrue(m_intake.createIntakeCommandSequence());
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kX.value)
