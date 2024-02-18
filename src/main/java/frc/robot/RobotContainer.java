@@ -208,11 +208,13 @@ public class RobotContainer {
   private void createNamedCommands() {
 
     NamedCommands.registerCommand("raiseArmAndWait", 
-      m_arm.createRaiseArmCommand()
+      m_arm.createHardStopRetractCommand()
+        .andThen(m_arm.createRaiseArmCommand())
         .andThen(new WaitCommand(1.2)));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
-      m_arm.createLowerArmCommand()
+      m_arm.createHardStopRetractCommand()
+        .andThen(m_arm.createLowerArmCommand())
         .alongWith(m_intake.createStopIntakeCommand()));
     
     NamedCommands.registerCommand("outtakeAndWait", 
@@ -221,7 +223,7 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
       createIntakeCommandSequence()
-        .andThen(m_arm.createRaiseArmCommand())
+        .andThen(m_arm.createHardStopRetractCommand())
         .andThen(new WaitCommand(1.9)));
     
     NamedCommands.registerCommand("stopIntake", 
@@ -267,8 +269,10 @@ public class RobotContainer {
     //     .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
 
     // Raise and lower arm
-    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
-    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
+    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand()
+        .andThen(m_arm.createHardStopRetractCommand()));
+    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand()
+        .andThen(m_arm.createHardStopRetractCommand()));
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
