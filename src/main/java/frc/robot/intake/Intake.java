@@ -44,10 +44,6 @@ public class Intake extends SubsystemBase {
 
     m_intakeMotor.setInverted(false);
 
-    // m_intakeMotor
-    //     .getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen)
-    //     .enableLimitSwitch(false);
-
     m_velocityController = m_intakeMotor.getPIDController();
     m_velocityController.setP(ArmConstants.kIntakeVelocityP);
     m_velocityController.setI(ArmConstants.kIntakeVelocityI);
@@ -70,22 +66,9 @@ public class Intake extends SubsystemBase {
     return this.runOnce(() -> this.stopIntake());
   }
 
-  // private void setPosition(double targetPosition) {
-  //   m_intakePIDController.setP(ArmConstants.kIntakePositionP);
-  //   m_intakePIDController.setI(ArmConstants.kIntakePositionI);
-  //   m_intakePIDController.setD(ArmConstants.kIntakePositionD);
-  //   m_intakeRelativeEncoder.setPosition(0.0);
-  //   m_intakePIDController.setReference(targetPosition, ControlType.kPosition);
-  // }
-
-  // public Command createSetPositionCommand(double targetPosition) {
-  //   return this.startEnd(() -> this.setPosition(targetPosition), () -> {});
-  // }
-
   public void configurePositionController(double targetPosition){
-    m_relativeEncoder.setPosition(0.0);
-    m_positionController.setGoal(targetPosition);
-    m_positionController.reset(0.0);
+    m_positionController.reset(m_relativeEncoder.getPosition());
+    m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
   }
 
   public void driveToTargetPosition(){
@@ -119,13 +102,9 @@ public class Intake extends SubsystemBase {
   }
 
   public Command createSetVoltageCommand(double targetVoltage) {
-    // return this.startEnd(() -> this.setVoltage(targetVoltage), () -> {});
+    // /return this.startEnd(() -> this.setVoltage(targetVoltage), () -> {});
     return this.run(() -> this.setVoltage(targetVoltage));
   }
-
-  // public void resetIntakeEncoder() {
-  //   m_intakeRelativeEncoder.setPosition(0.0);
-  // }
 
   public boolean hasGamePiece() {
     // return m_intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
@@ -140,10 +119,6 @@ public class Intake extends SubsystemBase {
     }
   }
 
-  // private double getPosition(){
-  //   return m_intakeRelativeEncoder.getPosition();
-  // }
-
   public BooleanSupplier atGoalSupplier() {
     return () -> m_positionController.atGoal();
   }
@@ -153,5 +128,6 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("OutputCurrent", m_intakeMotor.getOutputCurrent());
     SmartDashboard.putNumber("hasGamePiece", GamePieceDetected());
     SmartDashboard.putNumber("IntakePosition", m_relativeEncoder.getPosition());
+    SmartDashboard.putNumber("IntakeGoal", m_positionController.getGoal().position);
   }
 }
