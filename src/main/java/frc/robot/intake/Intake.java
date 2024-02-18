@@ -95,13 +95,14 @@ public class Intake extends SubsystemBase {
   private void driveToPosition() {
     m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
   }
-    
-  
+
   public Command createIntakeCommandSequence() {
     return new SequentialCommandGroup(
-      new RunCommand(() -> this.setVoltage(12.0)).until(eitherSensorSupplier()), 
-      createAdvanceAfterIntakingCommand().withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+        new RunCommand(() -> this.setVoltage(12.0)).until(eitherSensorSupplier()),
+        createAdvanceAfterIntakingCommand()
+            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
   }
+
   // public Command createIntakeCommand() {
   //   return new FunctionalCommand(
   //       // initialize
@@ -145,8 +146,6 @@ public class Intake extends SubsystemBase {
         // requirements
         this);
   }
-
-
 
   private void setVelocity(double targetVelocity) {
     m_velocityController.setReference(targetVelocity, ControlType.kVelocity);
