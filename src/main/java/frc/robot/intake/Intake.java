@@ -37,7 +37,8 @@ public class Intake extends SubsystemBase {
       new DigitalInput(IntakeConstants.kRetroReflectiveSensorDIOPort);
 
   private final EventLoop m_loop = new EventLoop();
-  private final BooleanEvent m_RRsensorTriggered = new BooleanEvent(m_loop, retroReflectiveSensorSupplier());
+  private final BooleanEvent m_RRsensorTriggered =
+      new BooleanEvent(m_loop, retroReflectiveSensorSupplier());
 
   public Intake() {
     m_intakeMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
@@ -77,10 +78,14 @@ public class Intake extends SubsystemBase {
   }
 
   private void advanceAfterIntaking(double targetPosition) {
-    m_RRsensorTriggered.rising().ifHigh(() -> {
-      m_positionController.reset(m_relativeEncoder.getPosition(), m_relativeEncoder.getVelocity());
-      m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
-    });
+    m_RRsensorTriggered
+        .rising()
+        .ifHigh(
+            () -> {
+              m_positionController.reset(
+                  m_relativeEncoder.getPosition(), m_relativeEncoder.getVelocity());
+              m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
+            });
     m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
   }
 
@@ -96,8 +101,7 @@ public class Intake extends SubsystemBase {
         () -> this.setVoltage(12.0),
         // end
         interrupted -> {
-          if (!interrupted)
-            createAdvanceAfterIntakingCommand().schedule();
+          if (!interrupted) createAdvanceAfterIntakingCommand().schedule();
         },
         // isFinished
         this.eitherSensorSupplier(),
