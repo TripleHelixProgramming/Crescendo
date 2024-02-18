@@ -124,7 +124,7 @@ public class Intake extends SubsystemBase {
   }
 
   public BooleanSupplier gamePieceSensor() {
-    return () -> (!m_noteSensorRetroReflective.get() || m_noteSensorBeamBreak.get());
+    return () -> (!m_noteSensorRetroReflective.get() || !m_noteSensorBeamBreak.get());
   }
 
   public BooleanSupplier atGoalSupplier() {
@@ -138,6 +138,6 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("IntakeGoal", m_positionController.getGoal().position);
     SmartDashboard.putNumber(
         "IntakeSensorRetroReflective", !m_noteSensorRetroReflective.get() ? 1d : 0d);
-    SmartDashboard.putNumber("IntakeSensorBeamBreak", m_noteSensorBeamBreak.get() ? 1d : 0d);
+    SmartDashboard.putNumber("IntakeSensorBeamBreak", !m_noteSensorBeamBreak.get() ? 1d : 0d);
   }
 }
