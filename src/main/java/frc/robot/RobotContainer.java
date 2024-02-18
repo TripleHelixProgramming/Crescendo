@@ -78,9 +78,9 @@ public class RobotContainer {
     m_swerve.configurePathPlanner();
 
     // Create a button on Smart Dashboard to reset the encoders.
-    SmartDashboard.putData("Align Encoders",
-        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
-        .ignoringDisable(true));
+    SmartDashboard.putData(
+        "Align Encoders",
+        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets()).ignoringDisable(true));
   }
 
   public void configureButtonBindings() {
