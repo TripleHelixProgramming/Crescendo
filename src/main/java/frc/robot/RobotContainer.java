@@ -115,7 +115,7 @@ public class RobotContainer {
 
   public void teleopInit() {
     m_arm.createLowerArmCommand().schedule();
-    m_LEDs.createTeleopCommand(m_intake.gamePieceSensor()).schedule();
+    m_LEDs.createTeleopCommand(m_intake.eitherSensorSupplier()).schedule();
   }
 
   public void disabledInit() {
@@ -243,8 +243,8 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
       m_intake.createSetVoltageCommand(12.0)
-        .until(m_intake.gamePieceSensor())
-        .andThen(m_intake.createSetPositionCommand(0.2)
+        .until(m_intake.eitherSensorSupplier())
+        .andThen(m_intake.createAdvanceAfterIntakingCommand()
         .andThen(m_arm.createRaiseArmCommand()
         .andThen(new WaitCommand(1.5)))));
     
@@ -296,14 +296,11 @@ public class RobotContainer {
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
-        .whileTrue(m_intake.createSetVoltageCommand(12.0)
-        .until(m_intake.gamePieceSensor())
-        .andThen(m_intake.createSetPositionCommand(0.2))
-        .onlyIf(m_arm.isArmLowered()));
+        .whileTrue(m_intake.createIntakeCommand());
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue(m_intake.createSetPositionCommand(0.25));
+        .onTrue(m_intake.createSetPositionCommand(0.05));
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kLeftBumper.value)

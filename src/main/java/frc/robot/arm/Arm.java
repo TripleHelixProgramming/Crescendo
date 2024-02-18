@@ -17,13 +17,13 @@ public class Arm extends SubsystemBase {
     m_armMoverLeft =
         new DoubleSolenoid(
             PneumaticsModuleType.REVPH,
-            ArmConstants.kArmMoverLeftForwardChannel,
-            ArmConstants.kArmMoverLeftReverseChannel);
+            ArmConstants.kLeftForwardChannel,
+            ArmConstants.kLeftReverseChannel);
     m_armMoverRight =
         new DoubleSolenoid(
             PneumaticsModuleType.REVPH,
-            ArmConstants.kArmMoverRightForwardChannel,
-            ArmConstants.kArmMoverRightReverseChannel);
+            ArmConstants.kRightForwardChannel,
+            ArmConstants.kRightReverseChannel);
   }
 
   @Override
