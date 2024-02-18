@@ -3,20 +3,17 @@ package frc.robot.intake;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
-import java.util.function.BooleanSupplier;
-
-// import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
-import edu.wpi.first.math.controller.ProfiledPIDController;
+import java.util.function.BooleanSupplier;
 
 public class Intake extends SubsystemBase {
   private final CANSparkMax m_intakeMotor;
@@ -25,11 +22,12 @@ public class Intake extends SubsystemBase {
 
   private final SparkPIDController m_velocityController;
 
-  private final ProfiledPIDController m_positionController = 
-  new ProfiledPIDController(IntakeConstants.kPositionP, 
-                            IntakeConstants.kPositionI,
-                            IntakeConstants.kPositionD, 
-                            IntakeConstants.kConstraints);
+  private final ProfiledPIDController m_positionController =
+      new ProfiledPIDController(
+          IntakeConstants.kPositionP,
+          IntakeConstants.kPositionI,
+          IntakeConstants.kPositionD,
+          IntakeConstants.kConstraints);
 
   private final DigitalInput m_noteSensor = new DigitalInput(IntakeConstants.kNoteSensorDIOPort);
 
@@ -50,13 +48,11 @@ public class Intake extends SubsystemBase {
     m_velocityController.setD(IntakeConstants.kVelocityD);
 
     m_positionController.setTolerance(IntakeConstants.kPositionTolerance);
-    
+
     m_relativeEncoder = m_intakeMotor.getEncoder();
     m_relativeEncoder.setPosition(0.0);
-    m_relativeEncoder.setPositionConversionFactor(
-        IntakeConstants.kPositionConversionFactor);
-    m_relativeEncoder.setVelocityConversionFactor(
-        IntakeConstants.kVelocityConversionFactor);
+    m_relativeEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
+    m_relativeEncoder.setVelocityConversionFactor(IntakeConstants.kVelocityConversionFactor);
   }
 
   private void stopIntake() {
@@ -67,20 +63,20 @@ public class Intake extends SubsystemBase {
     return this.runOnce(() -> this.stopIntake());
   }
 
-  public void configurePositionController(double targetPosition){
+  public void configurePositionController(double targetPosition) {
     m_positionController.reset(m_relativeEncoder.getPosition());
     m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
   }
 
-  public void driveToTargetPosition(){
+  public void driveToTargetPosition() {
     m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
   }
 
-    public Command createIntakeCommand() {
+  public Command createIntakeCommand() {
     return new FunctionalCommand(
         // initialize
         () -> {},
-          // execute
+        // execute
         () -> this.setVoltage(12.0),
         // end
         interrupted -> {
@@ -96,7 +92,7 @@ public class Intake extends SubsystemBase {
     return new FunctionalCommand(
         // initialize
         () -> this.configurePositionController(targetPosition),
-          // execute
+        // execute
         () -> this.driveToTargetPosition(),
         // end
         interrupted -> {},
