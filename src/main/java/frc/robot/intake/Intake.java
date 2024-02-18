@@ -120,10 +120,6 @@ public class Intake extends SubsystemBase {
     return this.run(() -> this.setVoltage(targetVoltage));
   }
 
-  public Command createResetEncoderCommand() {
-    return this.runOnce(() -> this.resetIntakeEncoder());
-  }
-
   public BooleanSupplier gamePieceSensor() {
     return () -> !m_noteSensor.get();
   }
