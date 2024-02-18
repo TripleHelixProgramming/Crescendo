@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.ClimberConstants.CalibrationState;
-import frc.robot.climber.Actuator;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 
 public class Intake extends SubsystemBase {
