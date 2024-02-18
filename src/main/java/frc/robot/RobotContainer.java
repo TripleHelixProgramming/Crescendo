@@ -61,33 +61,192 @@ public class RobotContainer {
 
   private Autonomous m_autonomous;
 
-  // spotless:off
   public RobotContainer() {
 
     for (int i = 0; i < AutoConstants.kAutonomousModeSelectorPorts.length; i++) {
       autonomousModes[i] = new DigitalInput(AutoConstants.kAutonomousModeSelectorPorts[i]);
     }
 
-    NamedCommands.registerCommand("raiseArm", m_arm.createRaiseArmCommand());
-    NamedCommands.registerCommand("scorePiece", m_intake.createSetVoltageCommand(12));
+    createNamedCommands();
+    setDefaultCommands();
 
-    m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
     m_swerve.configurePathPlanner();
 
+    // Create a button on Smart Dashboard to reset the encoders.
+    SmartDashboard.putData(
+        "Align Encoders",
+        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets()).ignoringDisable(true));
+
+    configureDriverButtonBindings();
+    configureOperatorButtonBindings();
+  }
+
+  /**
+   * @return The Command that runs the selected autonomous mode
+   */
+  public Command getAutonomousCommand() {
+    updateSelectedAutonomous();
+    return m_autonomous.getPathPlannerAuto();
+  }
+
+  public void teleopInit() {
+    m_arm.createLowerArmCommand().schedule();
+    m_LEDs.createTeleopCommand(m_intake.gamePieceSensor()).schedule();
+  }
+
+  public void disabledInit() {
+    m_LEDs
+        .createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector())
+        .schedule();
+  }
+
+  public void periodic() {
+    m_loop.poll();
+    updateSelectedAutonomous();
+
+    if (m_autonomous != null) {
+      SmartDashboard.putString("Auto", m_autonomous.getFilename());
+    } else {
+      SmartDashboard.putString("Auto", "Null");
+    }
+
+    SmartDashboard.putNumber("PDHVoltage", m_PowerDistribution.getVoltage());
+    SmartDashboard.putNumber("PDHTotalCurrent", m_PowerDistribution.getTotalCurrent());
+  }
+
+  private class Autonomous {
+
+    private final String filename;
+
+    private Autonomous(String filename) {
+      this.filename = filename;
+    }
+
+    private Command getPathPlannerAuto() {
+      return new PathPlannerAuto(filename);
+    }
+
+    private String getFilename() {
+      return filename;
+    }
+  }
+
+  // spotless:off
+  /** Updates the autonomous based on the physical selector switch */
+  private void updateSelectedAutonomous() {
+    switch (getAutonomousModeSwitchIndex()) {
+      case 0:
+        m_autonomous =
+            m_swerve.redAllianceSupplier().getAsBoolean()
+                ? new Autonomous("R-driveFwd2m")
+                : new Autonomous("B-driveFwd2m");
+        break;
+
+      case 1:
+        m_autonomous =
+            m_swerve.redAllianceSupplier().getAsBoolean()
+                ? new Autonomous("R-driveFwd2m")
+                : new Autonomous("B_SpinForward");
+        break;
+
+      case 2:
+        m_autonomous =
+            m_swerve.redAllianceSupplier().getAsBoolean()
+                ? new Autonomous("R-TheOnePiece")
+                : new Autonomous("B-TheOnePiece");
+        break;
+
+      case 3:
+        m_autonomous = 
+            m_swerve.redAllianceSupplier().getAsBoolean()
+                ? null 
+                : new Autonomous("B-TheTwoPiece");
+        break;
+
+      case 4:
+        m_autonomous = 
+            m_swerve.redAllianceSupplier().getAsBoolean()
+                ? null 
+                : null;
+
+      default:
+        m_autonomous = null;
+    }
+  }
+  // spotless:on
+
+  /**
+   * @return Index in array of Digital Inputs corresponding to selected auto mode
+   */
+  private int getAutonomousModeSwitchIndex() {
+    for (int port = 0; port < autonomousModes.length; port++) {
+      if (!autonomousModes[port].get()) {
+        return port;
+      }
+    }
+    return -1; // failure of the physical switch
+  }
+
+  private IntSupplier autonomousModeSelector() {
+    return () -> getAutonomousModeSwitchIndex();
+  }
+
+  /**
+   * Gets the current drawn from the Power Distribution Hub by a CAN motor controller, assuming that
+   * (PDH port number + 10) = CAN ID
+   *
+   * @param CANBusPort The CAN ID of the motor controller
+   * @return Current in Amps on the PDH channel corresponding to the motor channel
+   */
+  public double getPDHCurrent(int CANBusPort) {
+    return m_PowerDistribution.getCurrent(CANBusPort - 10);
+  }
+
+  // spotless:off
+  private void createNamedCommands() {
+
+    NamedCommands.registerCommand("raiseArmAndWait", 
+      m_arm.createRaiseArmCommand()
+        .andThen(new WaitCommand(1.5)));
+    
+    NamedCommands.registerCommand("resetArmAndIntake", 
+      m_arm.createLowerArmCommand()
+        .alongWith(m_intake.createStopIntakeCommand()));
+    
+    NamedCommands.registerCommand("outtakeAndWait", 
+      m_intake.createSetVoltageCommand(12)
+        .withTimeout(0.8));
+    
+    NamedCommands.registerCommand("intakePieceAndRaise", 
+      m_intake.createSetVoltageCommand(12.0)
+        .until(m_intake.gamePieceSensor())
+        .andThen(m_intake.createSetPositionCommand(0.2)
+        .andThen(m_arm.createRaiseArmCommand()
+        .andThen(new WaitCommand(1.5)))));
+    
+    NamedCommands.registerCommand("stopIntake", 
+      m_intake.createStopIntakeCommand());
+  }
+  // spotless:on
+
+  private void setDefaultCommands() {
+    m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
     m_climber.setDefaultCommand(m_climber.createStopCommand());
+  }
 
-    // Create a button on Smart Dashboard to reset the encoders.
-    SmartDashboard.putData("Align Encoders",
-        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
-        .ignoringDisable(true));
+  // spotless:off
+  private void configureDriverButtonBindings() {
 
-    // Driver controller buttons
+    // Reset heading
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
         .ignoringDisable(true));
+  }
+  // spotless:on
 
-    // Operator controller buttons
+  // spotless:off
+  private void configureOperatorButtonBindings() {
 
     // Calibrate upper limit of climber actuators
     new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
@@ -145,113 +304,4 @@ public class RobotContainer {
           .alongWith(m_arm.createLowerArmCommand())));
   }
   // spotless:on
-
-  /**
-   * @return The Command that runs the selected autonomous mode
-   */
-  public Command getAutonomousCommand() {
-    updateSelectedAutonomous();
-    return m_autonomous.getPathPlannerAuto();
-  }
-
-  public void teleopInit() {
-    m_arm.createLowerArmCommand().schedule();
-    m_LEDs.createTeleopCommand(m_intake.gamePieceSensor()).schedule();
-  }
-
-  public void disabledInit() {
-    m_LEDs
-        .createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector())
-        .schedule();
-  }
-
-  public void periodic() {
-    m_loop.poll();
-    updateSelectedAutonomous();
-
-    if (m_autonomous != null) {
-      SmartDashboard.putString("Auto", m_autonomous.getFilename());
-    } else {
-      SmartDashboard.putString("Auto", "Null");
-    }
-
-    SmartDashboard.putNumber("PDHVoltage", m_PowerDistribution.getVoltage());
-    SmartDashboard.putNumber("PDHTotalCurrent", m_PowerDistribution.getTotalCurrent());
-  }
-
-  private class Autonomous {
-
-    private final String filename;
-
-    private Autonomous(String filename) {
-      this.filename = filename;
-    }
-
-    private Command getPathPlannerAuto() {
-      return new PathPlannerAuto(filename);
-    }
-
-    private String getFilename() {
-      return filename;
-    }
-  }
-
-  /** Updates the autonomous based on the physical selector switch */
-  private void updateSelectedAutonomous() {
-    switch (getAutonomousModeSwitchIndex()) {
-      case 0:
-        m_autonomous =
-            m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-driveFwd2m")
-                : new Autonomous("B-driveFwd2m");
-        break;
-
-      case 1:
-        m_autonomous =
-            m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-driveFwd2m")
-                : new Autonomous("B_SpinForward");
-        break;
-
-      case 2:
-        m_autonomous =
-            m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-SpinForward")
-                : new Autonomous("B-TheOnePiece");
-
-      case 3:
-
-      case 4:
-
-      default:
-        m_autonomous = null;
-    }
-  }
-
-  /**
-   * @return Index in array of Digital Inputs corresponding to selected auto mode
-   */
-  private int getAutonomousModeSwitchIndex() {
-    for (int port = 0; port < autonomousModes.length; port++) {
-      if (!autonomousModes[port].get()) {
-        return port;
-      }
-    }
-    return -1; // failure of the physical switch
-  }
-
-  private IntSupplier autonomousModeSelector() {
-    return () -> getAutonomousModeSwitchIndex();
-  }
-
-  /**
-   * Gets the current drawn from the Power Distribution Hub by a CAN motor controller, assuming that
-   * (PDH port number + 10) = CAN ID
-   *
-   * @param CANBusPort The CAN ID of the motor controller
-   * @return Current in Amps on the PDH channel corresponding to the motor channel
-   */
-  public double getPDHCurrent(int CANBusPort) {
-    return m_PowerDistribution.getCurrent(CANBusPort - 10);
-  }
 }

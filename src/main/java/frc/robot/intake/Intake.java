@@ -65,7 +65,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Command createSetPositionCommand(double targetPosition) {
-    return this.startEnd(() -> this.setPosition(targetPosition), () -> {});
+    return this.runOnce(() -> this.setPosition(targetPosition));
   }
 
   private void setVelocity(double targetVelocity) {

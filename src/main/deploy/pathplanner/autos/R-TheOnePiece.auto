@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.449083685874939,
+      "x": 15.1,
       "y": 7.3158488273620605
     },
     "rotation": -90.0
@@ -18,19 +18,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B_OnePiece"
+                  "pathName": "R_OnePiece "
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "raiseArmAndWait"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
                 }
               }
             ]
