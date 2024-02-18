@@ -93,6 +93,7 @@ public class RobotContainer {
 
   public void teleopInit() {
     m_arm.createLowerArmCommand().schedule();
+    m_arm.createHardStopRetractCommand().schedule();
     m_LEDs.createTeleopCommand(m_intake.eitherSensorSupplier()).schedule();
   }
 
