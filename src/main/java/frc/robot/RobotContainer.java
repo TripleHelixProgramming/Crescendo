@@ -92,8 +92,8 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    m_arm.createLowerArmCommand().schedule();
     m_arm.createHardStopRetractCommand().schedule();
+    m_arm.createLowerArmCommand().schedule();
     m_LEDs.createTeleopCommand(m_intake.eitherSensorSupplier()).schedule();
   }
 
@@ -270,10 +270,10 @@ public class RobotContainer {
     //     .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
 
     // Raise and lower arm
-    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand()
-        .andThen(m_arm.createHardStopRetractCommand()));
-    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand()
-        .andThen(m_arm.createHardStopRetractCommand()));
+    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createHardStopRetractCommand()
+        .andThen(m_arm.createLowerArmCommand()));
+    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createHardStopRetractCommand()
+        .andThen(m_arm.createRaiseArmCommand()));
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
