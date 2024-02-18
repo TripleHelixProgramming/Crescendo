@@ -169,7 +169,7 @@ public final class Constants {
     public static final double kVelocityI = 0.0;
     public static final double kVelocityD = 0.0;
 
-    public static final double kPositionP = 4.0;
+    public static final double kPositionP = 8.0;
     public static final double kPositionI = 0.0;
     public static final double kPositionD = 0.0;
 

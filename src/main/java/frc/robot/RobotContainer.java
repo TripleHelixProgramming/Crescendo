@@ -218,14 +218,12 @@ public class RobotContainer {
         .withTimeout(0.8));
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
-      m_intake.createSetVoltageCommand(12.0)
-        .until(m_intake.eitherSensorSupplier())
-        .andThen(m_intake.createAdvanceAfterIntakingCommand()
-        .andThen(m_arm.createRaiseArmCommand()
-        .andThen(new WaitCommand(1.5)))));
+      m_intake.createIntakeCommandSequence()
+        .andThen(m_arm.createRaiseArmCommand()));
     
     NamedCommands.registerCommand("stopIntake", 
-      m_intake.createStopIntakeCommand());
+      m_intake.createStopIntakeCommand()
+      .andThen(new WaitCommand(2)));
   }
   // spotless:on
 
@@ -272,7 +270,7 @@ public class RobotContainer {
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
-        .whileTrue(m_intake.createIntakeCommand());
+        .whileTrue(m_intake.createIntakeCommandSequence());
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kX.value)

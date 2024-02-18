@@ -16,15 +16,15 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "B_OnePiece"
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "raiseArmAndWait"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B_OnePiece"
                 }
               }
             ]
