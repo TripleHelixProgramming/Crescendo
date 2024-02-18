@@ -26,12 +26,6 @@
                 "data": {
                   "name": "raiseArmAndWait"
                 }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 2.0
-                }
               }
             ]
           }
@@ -46,6 +40,31 @@
           "type": "named",
           "data": {
             "name": "resetArmAndIntake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "B_TwoPiece "
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intakePieceAndRaise"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outtakeAndWait"
           }
         }
       ]
