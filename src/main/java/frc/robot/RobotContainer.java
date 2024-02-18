@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.LEDs.LEDs;
 import frc.robot.arm.Arm;
@@ -220,7 +221,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("intakePieceAndRaise", 
       m_intake.createSetVoltageCommand(12.0)
         .until(m_intake.gamePieceSensor())
-        .andThen(m_intake.createSetPositionCommand(0.2)
+        .andThen(m_intake.createSetPositionCommand(IntakeConstants.kRepositionAfterIntaking)
         .andThen(m_arm.createRaiseArmCommand()
         .andThen(new WaitCommand(1.5)))));
     
@@ -272,14 +273,11 @@ public class RobotContainer {
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
-        .whileTrue(m_intake.createSetVoltageCommand(12.0)
-        .until(m_intake.gamePieceSensor())
-        .andThen(m_intake.createSetPositionCommand(0.2))
-        .onlyIf(m_arm.isArmLowered()));
+        .whileTrue(m_intake.createIntakeCommand());
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kX.value)
-        .whileTrue(m_intake.createSetPositionCommand(0.25));
+        .onTrue(m_intake.createSetPositionCommand(1.0));
 
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kLeftBumper.value)
