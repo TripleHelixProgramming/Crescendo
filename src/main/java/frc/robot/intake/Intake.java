@@ -20,9 +20,9 @@ public class Intake extends SubsystemBase {
 
   private final RelativeEncoder m_intakeRelativeEncoder;
 
-  private final SparkPIDController m_intakePIDController;
+  private final SparkPIDController m_velocityController;
 
-  private final ProfiledPIDController m_intakeProfiledPIDController = 
+  private final ProfiledPIDController m_positionController = 
   new ProfiledPIDController(ArmConstants.kIntakePositionP, 
                             ArmConstants.kIntakePositionI,
                             ArmConstants.kIntakePositionD, 
@@ -45,12 +45,14 @@ public class Intake extends SubsystemBase {
     //     .getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen)
     //     .enableLimitSwitch(false);
 
-    m_intakePIDController = m_intakeMotor.getPIDController();
+    m_velocityController = m_intakeMotor.getPIDController();
+    m_velocityController.setP(ArmConstants.kIntakeVelocityP);
+    m_velocityController.setI(ArmConstants.kIntakeVelocityI);
+    m_velocityController.setD(ArmConstants.kIntakeVelocityD);
 
+    m_positionController.setTolerance(ArmConstants.kIntakeTolerance);
+    
     m_intakeRelativeEncoder = m_intakeMotor.getEncoder();
-
-    m_intakeProfiledPIDController.setTolerance(ArmConstants.kIntakeTolerance);
-
     m_intakeRelativeEncoder.setPositionConversionFactor(
         ArmConstants.kIntakePositionConversionFactor);
     m_intakeRelativeEncoder.setVelocityConversionFactor(
@@ -79,12 +81,12 @@ public class Intake extends SubsystemBase {
 
   public void configurePositionController(double targetPosition){
     this.resetIntakeEncoder();
-    m_intakeProfiledPIDController.setGoal(targetPosition);
-    m_intakeProfiledPIDController.reset(m_intakeRelativeEncoder.getPosition());
+    m_positionController.setGoal(targetPosition);
+    m_positionController.reset(getPosition());
   }
 
   public void driveToTargetPosition(){
-    m_intakeMotor.set(m_intakeProfiledPIDController.calculate(getPosition()));
+    m_intakeMotor.set(m_positionController.calculate(getPosition()));
   }
 
 
@@ -106,12 +108,8 @@ public class Intake extends SubsystemBase {
         this);
   }
 
-
   private void setVelocity(double targetVelocity) {
-    m_intakePIDController.setP(ArmConstants.kIntakeVelocityP);
-    m_intakePIDController.setI(ArmConstants.kIntakeVelocityI);
-    m_intakePIDController.setD(ArmConstants.kIntakeVelocityD);
-    m_intakePIDController.setReference(targetVelocity, ControlType.kVelocity);
+    m_velocityController.setReference(targetVelocity, ControlType.kVelocity);
   }
 
   public Command createSetVelocityCommand(double targetVelocity) {
@@ -119,7 +117,7 @@ public class Intake extends SubsystemBase {
   }
 
   private void setVoltage(double targetVoltage) {
-    m_intakePIDController.setReference(targetVoltage, ControlType.kVoltage);
+    m_velocityController.setReference(targetVoltage, ControlType.kVoltage);
   }
 
   public Command createSetVoltageCommand(double targetVoltage) {
@@ -153,7 +151,7 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean atGoal() {
-    return m_intakeProfiledPIDController.atGoal();
+    return m_positionController.atGoal();
   }
 
   @Override
