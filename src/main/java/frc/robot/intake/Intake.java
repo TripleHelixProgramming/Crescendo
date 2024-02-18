@@ -80,7 +80,7 @@ public class Intake extends SubsystemBase {
         () -> this.setVoltage(12.0),
         // end
         interrupted -> {
-          if (!interrupted) createSetPositionCommand(0.35).schedule();
+          if (!interrupted) createSetPositionCommand(IntakeConstants.kRepositionAfterIntaking).schedule();
         },
         // isFinished
         this.hasGamePieceSupplier(),
