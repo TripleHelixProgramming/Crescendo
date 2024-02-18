@@ -12,10 +12,7 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import java.util.function.BooleanSupplier;
@@ -95,8 +92,6 @@ public class Intake extends SubsystemBase {
   private void driveToPosition() {
     m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
   }
-
-
 
   public Command createAdvanceAfterIntakingCommand() {
     return new FunctionalCommand(

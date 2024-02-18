@@ -307,9 +307,8 @@ public class RobotContainer {
         m_intake.createSetVoltageCommand(12).until(m_intake.eitherSensorSupplier()),
         m_arm.createHardStopDeployCommand(),
         m_arm.createRaiseArmCommand(),
-        m_intake.createAdvanceAfterIntakingCommand()
+        m_intake
+            .createAdvanceAfterIntakingCommand()
             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
   }
-
-
 }
