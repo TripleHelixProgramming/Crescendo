@@ -8,6 +8,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -29,7 +31,14 @@ public class Intake extends SubsystemBase {
           IntakeConstants.kPositionD,
           IntakeConstants.kConstraints);
 
-  private final DigitalInput m_noteSensor = new DigitalInput(IntakeConstants.kNoteSensorDIOPort);
+  private final DigitalInput m_noteSensorBeamBreak =
+      new DigitalInput(IntakeConstants.kBeamBreakSensorDIOPort);
+  private final DigitalInput m_noteSensorRetroReflective =
+      new DigitalInput(IntakeConstants.kRetroReflectiveSensorDIOPort);
+
+  private final EventLoop m_loop = new EventLoop();
+  private final BooleanEvent m_RRsensorTriggered =
+      new BooleanEvent(m_loop, retroReflectiveSensorSupplier());
 
   public Intake() {
     m_intakeMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
@@ -64,11 +73,23 @@ public class Intake extends SubsystemBase {
   }
 
   private void configurePositionController(double targetPosition) {
-    m_positionController.reset(m_relativeEncoder.getPosition());
+    m_positionController.reset(m_relativeEncoder.getPosition(), m_relativeEncoder.getVelocity());
     m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
   }
 
-  private void driveToTargetPosition() {
+  private void advanceAfterIntaking(double targetPosition) {
+    m_RRsensorTriggered
+        .rising()
+        .ifHigh(
+            () -> {
+              m_positionController.reset(
+                  m_relativeEncoder.getPosition(), m_relativeEncoder.getVelocity());
+              m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
+            });
+    m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
+  }
+
+  private void driveToPosition() {
     m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
   }
 
@@ -80,11 +101,24 @@ public class Intake extends SubsystemBase {
         () -> this.setVoltage(12.0),
         // end
         interrupted -> {
-          if (!interrupted)
-            createSetPositionCommand(IntakeConstants.kRepositionAfterIntaking).schedule();
+          if (!interrupted) createAdvanceAfterIntakingCommand().schedule();
         },
         // isFinished
-        this.gamePieceSensor(),
+        this.eitherSensorSupplier(),
+        // requirements
+        this);
+  }
+
+  public Command createAdvanceAfterIntakingCommand() {
+    return new FunctionalCommand(
+        // initialize
+        () -> this.configurePositionController(IntakeConstants.kRepositionAfterIntaking),
+        // execute
+        () -> this.advanceAfterIntaking(IntakeConstants.kRepositionAfterIntaking),
+        // end
+        interrupted -> {},
+        // isFinished
+        this.atGoalSupplier(),
         // requirements
         this);
   }
@@ -94,7 +128,7 @@ public class Intake extends SubsystemBase {
         // initialize
         () -> this.configurePositionController(targetPosition),
         // execute
-        () -> this.driveToTargetPosition(),
+        () -> this.driveToPosition(),
         // end
         interrupted -> {},
         // isFinished
@@ -120,8 +154,12 @@ public class Intake extends SubsystemBase {
     return this.run(() -> this.setVoltage(targetVoltage));
   }
 
-  public BooleanSupplier gamePieceSensor() {
-    return () -> !m_noteSensor.get();
+  public BooleanSupplier eitherSensorSupplier() {
+    return () -> (!m_noteSensorRetroReflective.get() || !m_noteSensorBeamBreak.get());
+  }
+
+  public BooleanSupplier retroReflectiveSensorSupplier() {
+    return () -> !m_noteSensorRetroReflective.get();
   }
 
   public BooleanSupplier atGoalSupplier() {
@@ -130,9 +168,13 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
+    m_loop.poll();
+
     SmartDashboard.putNumber("OutputCurrent", m_intakeMotor.getOutputCurrent());
     SmartDashboard.putNumber("IntakePosition", m_relativeEncoder.getPosition());
     SmartDashboard.putNumber("IntakeGoal", m_positionController.getGoal().position);
-    SmartDashboard.putNumber("IntakeHasGamePiece", gamePieceSensor().getAsBoolean() ? 1d : 0d);
+    SmartDashboard.putNumber(
+        "IntakeSensorRetroReflective", !m_noteSensorRetroReflective.get() ? 1d : 0d);
+    SmartDashboard.putNumber("IntakeSensorBeamBreak", !m_noteSensorBeamBreak.get() ? 1d : 0d);
   }
 }
