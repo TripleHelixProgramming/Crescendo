@@ -3,6 +3,9 @@ package frc.robot.intake;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+import java.util.function.BooleanSupplier;
+
 // import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -18,7 +21,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 public class Intake extends SubsystemBase {
   private final CANSparkMax m_intakeMotor;
 
-  private final RelativeEncoder m_intakeRelativeEncoder;
+  private final RelativeEncoder m_relativeEncoder;
 
   private final SparkPIDController m_velocityController;
 
@@ -52,15 +55,15 @@ public class Intake extends SubsystemBase {
 
     m_positionController.setTolerance(ArmConstants.kIntakeTolerance);
     
-    m_intakeRelativeEncoder = m_intakeMotor.getEncoder();
-    m_intakeRelativeEncoder.setPositionConversionFactor(
+    m_relativeEncoder = m_intakeMotor.getEncoder();
+    m_relativeEncoder.setPositionConversionFactor(
         ArmConstants.kIntakePositionConversionFactor);
-    m_intakeRelativeEncoder.setVelocityConversionFactor(
+    m_relativeEncoder.setVelocityConversionFactor(
         ArmConstants.kIntakeVelocityConversionFactor);
   }
 
   private void stopIntake() {
-    m_intakeMotor.setVoltage(0.0);
+    m_intakeMotor.set(0.0);
   }
 
   public Command createStopIntakeCommand() {
@@ -80,15 +83,14 @@ public class Intake extends SubsystemBase {
   // }
 
   public void configurePositionController(double targetPosition){
-    this.resetIntakeEncoder();
+    m_relativeEncoder.setPosition(0.0);
     m_positionController.setGoal(targetPosition);
-    m_positionController.reset(getPosition());
+    m_positionController.reset(0.0);
   }
 
   public void driveToTargetPosition(){
-    m_intakeMotor.set(m_positionController.calculate(getPosition()));
+    m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
   }
-
 
   public Command createSetPositionCommand(double targetPosition) {
     return new FunctionalCommand(
@@ -97,13 +99,9 @@ public class Intake extends SubsystemBase {
           // execute
         () -> this.driveToTargetPosition(),
         // end
-        interrupted -> {
-          this.stopIntake();
-        },
+        interrupted -> this.stopIntake(),
         // isFinished
-        () -> {
-          return this.atGoal();
-        },
+        this.atGoalSupplier(),
         // requirements
         this);
   }
@@ -125,13 +123,9 @@ public class Intake extends SubsystemBase {
     return this.run(() -> this.setVoltage(targetVoltage));
   }
 
-  public void resetIntakeEncoder() {
-    m_intakeRelativeEncoder.setPosition(0.0);
-  }
-
-  public Command createResetEncoderCommand() {
-    return this.runOnce(() -> this.resetIntakeEncoder());
-  }
+  // public void resetIntakeEncoder() {
+  //   m_intakeRelativeEncoder.setPosition(0.0);
+  // }
 
   public boolean hasGamePiece() {
     // return m_intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
@@ -146,18 +140,18 @@ public class Intake extends SubsystemBase {
     }
   }
 
-  private double getPosition(){
-    return m_intakeRelativeEncoder.getPosition();
-  }
+  // private double getPosition(){
+  //   return m_intakeRelativeEncoder.getPosition();
+  // }
 
-  public boolean atGoal() {
-    return m_positionController.atGoal();
+  public BooleanSupplier atGoalSupplier() {
+    return () -> m_positionController.atGoal();
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("OutputCurrent", m_intakeMotor.getOutputCurrent());
     SmartDashboard.putNumber("hasGamePiece", GamePieceDetected());
-    SmartDashboard.putNumber("IntakePosition", m_intakeRelativeEncoder.getPosition());
+    SmartDashboard.putNumber("IntakePosition", m_relativeEncoder.getPosition());
   }
 }
