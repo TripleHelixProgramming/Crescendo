@@ -76,6 +76,22 @@ public class Intake extends SubsystemBase {
     m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
   }
 
+    public Command createIntakeCommand() {
+    return new FunctionalCommand(
+        // initialize
+        () -> {},
+          // execute
+        () -> this.setVoltage(12.0),
+        // end
+        interrupted -> {
+          if (!interrupted) createSetPositionCommand(0.25).schedule();
+        },
+        // isFinished
+        this.hasGamePieceSupplier(),
+        // requirements
+        this);
+  }
+
   public Command createSetPositionCommand(double targetPosition) {
     return new FunctionalCommand(
         // initialize
@@ -83,7 +99,7 @@ public class Intake extends SubsystemBase {
           // execute
         () -> this.driveToTargetPosition(),
         // end
-        interrupted -> this.stopIntake(),
+        interrupted -> {},
         // isFinished
         this.atGoalSupplier(),
         // requirements
@@ -110,6 +126,10 @@ public class Intake extends SubsystemBase {
   public boolean hasGamePiece() {
     // return m_intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen).isPressed();
     return !m_noteSensor.get();
+  }
+
+  public BooleanSupplier hasGamePieceSupplier() {
+    return () -> !m_noteSensor.get();
   }
 
   private double GamePieceDetected() {
