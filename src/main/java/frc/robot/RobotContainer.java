@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -90,6 +92,7 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
+    m_arm.createHardStopRetractCommand().schedule();
     m_arm.createLowerArmCommand().schedule();
     m_LEDs.createTeleopCommand(m_intake.eitherSensorSupplier()).schedule();
   }
@@ -206,11 +209,13 @@ public class RobotContainer {
   private void createNamedCommands() {
 
     NamedCommands.registerCommand("raiseArmAndWait", 
-      m_arm.createRaiseArmCommand()
+      m_arm.createHardStopRetractCommand()
+        .andThen(m_arm.createRaiseArmCommand())
         .andThen(new WaitCommand(1.2)));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
-      m_arm.createLowerArmCommand()
+      m_arm.createHardStopRetractCommand()
+        .andThen(m_arm.createLowerArmCommand())
         .alongWith(m_intake.createStopIntakeCommand()));
     
     NamedCommands.registerCommand("outtakeAndWait", 
@@ -218,8 +223,8 @@ public class RobotContainer {
         .withTimeout(0.5));
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
-      m_intake.createIntakeCommandSequence()
-        .andThen(m_arm.createRaiseArmCommand())
+      createIntakeCommandSequence()
+        .andThen(m_arm.createHardStopRetractCommand())
         .andThen(new WaitCommand(1.9)));
     
     NamedCommands.registerCommand("stopIntake", 
@@ -265,12 +270,14 @@ public class RobotContainer {
     //     .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
 
     // Raise and lower arm
-    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createLowerArmCommand());
-    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createRaiseArmCommand());
+    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createHardStopRetractCommand()
+        .andThen(m_arm.createLowerArmCommand()));
+    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createHardStopRetractCommand()
+        .andThen(m_arm.createRaiseArmCommand()));
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
-        .whileTrue(m_intake.createIntakeCommandSequence());
+        .whileTrue(createIntakeCommandSequence());
 
     // Shift Note further into Intake
     new JoystickButton(m_operator, Button.kX.value)
@@ -299,4 +306,14 @@ public class RobotContainer {
           .alongWith(m_arm.createLowerArmCommand())));
   }
   // spotless:on
+
+  public Command createIntakeCommandSequence() {
+    return new SequentialCommandGroup(
+        m_intake.createSetVoltageCommand(12).until(m_intake.eitherSensorSupplier()),
+        m_arm.createHardStopDeployCommand(),
+        m_arm.createRaiseArmCommand(),
+        m_intake
+            .createAdvanceAfterIntakingCommand()
+            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
+  }
 }

@@ -173,7 +173,7 @@ public final class Constants {
     public static final double kPositionI = 0.0;
     public static final double kPositionD = 0.0;
 
-    public static final double kRepositionAfterIntaking = 0.26;
+    public static final double kRepositionAfterIntaking = 0.24;
     public static final double kPositionTolerance = 0.01;
 
     public static final double kRollerDiameter = 0.0508; // 2 inches
@@ -193,10 +193,11 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
-    public static final int kLeftForwardChannel = 0;
-    public static final int kLeftReverseChannel = 1;
-    public static final int kRightForwardChannel = 2;
-    public static final int kRightReverseChannel = 3;
+    public static final int kDeployerForwardChannel = 0;
+    public static final int kDeployerReverseChannel = 1;
+
+    public static final int kHardStopperForwardChannel = 3;
+    public static final int kHardStopperReverseChannel = 2;
   }
 
   public static final class ClimberConstants {
