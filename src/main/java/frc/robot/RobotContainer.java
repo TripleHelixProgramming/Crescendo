@@ -260,6 +260,12 @@ public class RobotContainer {
     Trigger climbTrigger = climbThreshold.castTo(Trigger::new);
     climbTrigger.onTrue(new DriveToPositionCommand(m_climber, ClimberConstants.kDeployPosition)
         .andThen(m_climber.createArcadeDriveCommand(m_operator)));
+
+    Trigger intaketriigger = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
+    intaketriigger.whileTrue(m_intake.createIntakeJoystickControlCommand(m_operator));
+
+
+    
     
     //Run climber drive while B button down
     // new JoystickButton(m_operator,Button.kB.value)
