@@ -243,12 +243,16 @@ public class RobotContainer {
   private void configureDriverButtonBindings() {
 
     // Reset heading
-    new JoystickButton(m_driver, OIConstants.kZorroDIn)
+    new JoystickButton(m_driver, OIConstants.kZorroHIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
         .ignoringDisable(true));
 
     new JoystickButton(m_driver,OIConstants.kZorroAIn)
     .whileTrue((new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematicsDriveFromArm, m_driver)));
+
+    new JoystickButton(m_driver, OIConstants.kZorroDIn)
+    .whileTrue(m_intake.createSetVoltageCommand(12.0)
+    .onlyIf(m_arm.isArmRaised()));
   }
   // spotless:on
 
