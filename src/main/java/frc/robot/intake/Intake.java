@@ -155,10 +155,6 @@ public class Intake extends SubsystemBase {
     return () -> m_positionController.atGoal();
   }
 
-  public BooleanSupplier intakeDeadareaSupplier(XboxController m_controller) {
-    return () -> (m_controller.getLeftY() < 0.1);
-  }
-
   public void intakeJoystickControl(XboxController m_controller) {
     this.xboxSpeed = m_controller.getLeftY();
     m_intakeMotor.set(xboxSpeed / 16);
