@@ -3,6 +3,7 @@
 package frc.robot.drivetrain.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
@@ -11,8 +12,8 @@ public class ZorroDriveCommand extends DriveCommand {
 
   Joystick m_controller;
 
-  public ZorroDriveCommand(Drivetrain subsystem, Joystick joysticks) {
-    super(subsystem);
+  public ZorroDriveCommand(Drivetrain subsystem,SwerveDriveKinematics kinematicsType, Joystick joysticks) {
+    super(subsystem, kinematicsType);
     this.m_controller = joysticks;
   }
 

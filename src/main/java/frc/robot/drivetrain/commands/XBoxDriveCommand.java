@@ -5,6 +5,7 @@ package frc.robot.drivetrain.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.drivetrain.Drivetrain;
 
 public class XBoxDriveCommand extends DriveCommand {
@@ -17,7 +18,7 @@ public class XBoxDriveCommand extends DriveCommand {
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
   public XBoxDriveCommand(Drivetrain subsystem, XboxController joysticks) {
-    super(subsystem);
+    super(subsystem, DriveConstants.kDriveKinematics);
     this.m_controller = joysticks;
   }
 
