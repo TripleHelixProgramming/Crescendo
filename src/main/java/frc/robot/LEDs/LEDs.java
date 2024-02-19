@@ -28,10 +28,10 @@ public class LEDs extends SubsystemBase {
     m_LED.setData(m_LEDBuffer);
   }
 
-  private void turnOffLEDs() {
-    clearBuffer();
-    m_LED.setData(m_LEDBuffer);
-  }
+  // private void turnOffLEDs() {
+  //   clearBuffer();
+  //   m_LED.setData(m_LEDBuffer);
+  // }
 
   private void clearBuffer() {
     for (var i = 0; i < m_LEDBuffer.getLength(); i++) {
@@ -56,7 +56,7 @@ public class LEDs extends SubsystemBase {
 
   private void displayGamePieceDetected(boolean hasGamePiece) {
     if (hasGamePiece) setColor(Color.kGreen);
-    else turnOffLEDs();
+    else setColor(Color.kPurple);
   }
 
   public Command createTeleopCommand(BooleanSupplier gamePieceSensor) {
@@ -69,5 +69,9 @@ public class LEDs extends SubsystemBase {
     return this.run(
             () -> this.autoColor(redAllianceSupplier.getAsBoolean(), autoModeSwitch.getAsInt()))
         .ignoringDisable(true);
+  }
+
+  public Command createDefaultLEDCommand() {
+    return this.run(() -> this.setColor(Color.kPurple));
   }
 }
