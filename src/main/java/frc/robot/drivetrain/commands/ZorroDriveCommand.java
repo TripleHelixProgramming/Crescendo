@@ -12,7 +12,8 @@ public class ZorroDriveCommand extends DriveCommand {
 
   Joystick m_controller;
 
-  public ZorroDriveCommand(Drivetrain subsystem,SwerveDriveKinematics kinematicsType, Joystick joysticks) {
+  public ZorroDriveCommand(
+      Drivetrain subsystem, SwerveDriveKinematics kinematicsType, Joystick joysticks) {
     super(subsystem, kinematicsType);
     this.m_controller = joysticks;
   }

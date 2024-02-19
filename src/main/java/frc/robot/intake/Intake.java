@@ -1,14 +1,11 @@
 package frc.robot.intake;
 
-import java.util.function.BooleanSupplier;
-
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
@@ -19,12 +16,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
-
+import java.util.function.BooleanSupplier;
 
 public class Intake extends SubsystemBase {
 
   private double xboxSpeed;
-
 
   private final CANSparkMax m_intakeMotor;
 
@@ -47,7 +43,6 @@ public class Intake extends SubsystemBase {
   private final EventLoop m_loop = new EventLoop();
   private final BooleanEvent m_RRsensorTriggered =
       new BooleanEvent(m_loop, retroReflectiveSensorSupplier());
-
 
   public Intake() {
 
@@ -72,7 +67,6 @@ public class Intake extends SubsystemBase {
     m_relativeEncoder.setPosition(0.0);
     m_relativeEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
     m_relativeEncoder.setVelocityConversionFactor(IntakeConstants.kVelocityConversionFactor);
-
   }
 
   private void stopIntake() {
@@ -161,20 +155,18 @@ public class Intake extends SubsystemBase {
     return () -> m_positionController.atGoal();
   }
 
-  public BooleanSupplier intakeDeadareaSupplier(XboxController m_controller){
+  public BooleanSupplier intakeDeadareaSupplier(XboxController m_controller) {
     return () -> (m_controller.getLeftY() < 0.1);
   }
 
-  public void intakeJoystickControl(XboxController m_controller){
+  public void intakeJoystickControl(XboxController m_controller) {
     this.xboxSpeed = m_controller.getLeftY();
-    m_intakeMotor.set(xboxSpeed/16);
-
+    m_intakeMotor.set(xboxSpeed / 16);
   }
 
   public Command createIntakeJoystickControlCommand(XboxController m_controller) {
     return this.run(() -> this.intakeJoystickControl(m_controller));
   }
-
 
   @Override
   public void periodic() {

@@ -3,7 +3,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.util.PIDConstants;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -70,8 +69,6 @@ public final class Constants {
     // Robot Radius
     public static final double kRadius = 0.423;
 
-
-
     // Units are meters per second
     public static final double kMaxTranslationalVelocity = 4.0; // 2023 Competion Robot // max 4.5
 
@@ -95,7 +92,7 @@ public final class Constants {
             new Translation2d(kWheelBase, -kTrackWidth / 2.0), // front right
             new Translation2d(0.0, kTrackWidth / 2.0), // rear left
             new Translation2d(0.0, -kTrackWidth / 2.0) // rear right
-            );            
+            );
     // public static final boolean kGyroReversed = false;
 
     // public static final double ksVolts = 1.0;

@@ -118,8 +118,7 @@ public class Drivetrain extends SubsystemBase {
   /**
    * @param chassisSpeeds Robot-relative chassis speeds (x, y, theta)
    */
-
-    public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
@@ -129,6 +128,7 @@ public class Drivetrain extends SubsystemBase {
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
+
   // uses kinematics type to determine robot center
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveDriveKinematics kinematicsType) {
     var swerveModuleStates =
@@ -140,7 +140,6 @@ public class Drivetrain extends SubsystemBase {
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
-
 
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {

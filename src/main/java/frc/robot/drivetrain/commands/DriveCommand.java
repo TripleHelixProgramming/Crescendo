@@ -4,11 +4,11 @@ package frc.robot.drivetrain.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.drivetrain.Drivetrain;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 public abstract class DriveCommand extends Command {
 
@@ -16,7 +16,7 @@ public abstract class DriveCommand extends Command {
   private double yDot;
   private double thetaDot;
 
-  //used to swap control locations
+  // used to swap control locations
   SwerveDriveKinematics kinematicsType;
 
   // The subsystem the command runs on
@@ -25,7 +25,7 @@ public abstract class DriveCommand extends Command {
   public DriveCommand(Drivetrain subsystem, SwerveDriveKinematics kinematicsType) {
     drivetrain = subsystem;
     addRequirements(drivetrain);
-    
+
     this.kinematicsType = kinematicsType;
   }
 
@@ -42,7 +42,8 @@ public abstract class DriveCommand extends Command {
     SmartDashboard.putBoolean("rotateField", drivetrain.fieldRotatedSupplier().getAsBoolean());
 
     drivetrain.setChassisSpeeds(
-        fieldRelative() ? getFieldRelativeChassisSpeeds() : getRobotRelativeChassisSpeeds(), kinematicsType);
+        fieldRelative() ? getFieldRelativeChassisSpeeds() : getRobotRelativeChassisSpeeds(),
+        kinematicsType);
   }
 
   private ChassisSpeeds getRobotRelativeChassisSpeeds() {

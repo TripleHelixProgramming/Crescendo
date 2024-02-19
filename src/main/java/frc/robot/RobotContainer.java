@@ -234,7 +234,8 @@ public class RobotContainer {
   // spotless:on
 
   private void setDefaultCommands() {
-    m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematics, m_driver));
+    m_swerve.setDefaultCommand(
+        new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematics, m_driver));
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
     m_climber.setDefaultCommand(m_climber.createStopCommand());
   }
