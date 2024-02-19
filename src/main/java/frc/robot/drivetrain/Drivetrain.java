@@ -129,6 +129,18 @@ public class Drivetrain extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
+  // uses kinematics type to determine robot center
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveDriveKinematics kinematicsType) {
+    var swerveModuleStates =
+        kinematicsType.toSwerveModuleStates(
+            ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
+
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
     m_odometry.update(

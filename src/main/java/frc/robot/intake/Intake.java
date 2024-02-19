@@ -8,6 +8,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +19,9 @@ import frc.robot.Constants.IntakeConstants;
 import java.util.function.BooleanSupplier;
 
 public class Intake extends SubsystemBase {
+
+  private double xboxSpeed;
+
   private final CANSparkMax m_intakeMotor;
 
   private final RelativeEncoder m_relativeEncoder;
@@ -41,6 +45,7 @@ public class Intake extends SubsystemBase {
       new BooleanEvent(m_loop, retroReflectiveSensorSupplier());
 
   public Intake() {
+
     m_intakeMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
 
     m_intakeMotor.restoreFactoryDefaults();
@@ -150,6 +155,15 @@ public class Intake extends SubsystemBase {
     return () -> m_positionController.atGoal();
   }
 
+  public void intakeJoystickControl(XboxController m_controller) {
+    this.xboxSpeed = m_controller.getLeftY();
+    m_intakeMotor.set(xboxSpeed / 16);
+  }
+
+  public Command createIntakeJoystickControlCommand(XboxController m_controller) {
+    return this.run(() -> this.intakeJoystickControl(m_controller));
+  }
+
   @Override
   public void periodic() {
     m_loop.poll();
@@ -160,5 +174,6 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber(
         "IntakeSensorRetroReflective", !m_noteSensorRetroReflective.get() ? 1d : 0d);
     SmartDashboard.putNumber("IntakeSensorBeamBreak", !m_noteSensorBeamBreak.get() ? 1d : 0d);
+    SmartDashboard.putNumber("Speed", xboxSpeed);
   }
 }

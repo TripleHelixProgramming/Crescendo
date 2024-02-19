@@ -58,10 +58,13 @@ public final class Constants {
 
     // Units are meters.
     // Distance between centers of right and left wheels on robot
-    public static final double kTrackWidth = 0.572; // 2023 Competion Robot
+    public static final double kTrackWidth = 0.6096; // 2024 Competion Robot 24 inches
 
     // Distance between front and rear wheels on robot
-    public static final double kWheelBase = 0.622; // 2023 Competion Robot
+    public static final double kWheelBase = 0.5715; // 2024 Competion Robot 22.5 inches
+
+    // public static final double kTrackWidth = 0.572; // 2023 Competion Robot
+    // public static final double kWheelBase = 0.622; // 2023 Competion Robot
 
     // Robot Radius
     public static final double kRadius = 0.423;
@@ -83,6 +86,13 @@ public final class Constants {
             new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0) // rear right
             );
 
+    public static final SwerveDriveKinematics kDriveKinematicsDriveFromArm =
+        new SwerveDriveKinematics(
+            new Translation2d(kWheelBase, kTrackWidth / 2.0), // front left
+            new Translation2d(kWheelBase, -kTrackWidth / 2.0), // front right
+            new Translation2d(0.0, kTrackWidth / 2.0), // rear left
+            new Translation2d(0.0, -kTrackWidth / 2.0) // rear right
+            );
     // public static final boolean kGyroReversed = false;
 
     // public static final double ksVolts = 1.0;
