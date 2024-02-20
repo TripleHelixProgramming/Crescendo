@@ -142,29 +142,29 @@ public class RobotContainer {
       case 0:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-driveFwd2m")
-                : new Autonomous("B-TwoPieceFar");
+                ? new Autonomous("R-TheOnePiece")
+                : new Autonomous("B-TheOnePiece");
         break;
 
       case 1:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-driveFwd2m")
-                : new Autonomous("B-SpinForward");
+                ? null
+                : new Autonomous("B-TheTwoPieceNear");
         break;
 
       case 2:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-TheOnePiece")
-                : new Autonomous("B-TheOnePiece");
+                ? null
+                : new Autonomous("B-TwoPieceFar1");
         break;
 
       case 3:
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? null 
-                : new Autonomous("B-TheTwoPiece");
+                : null;
         break;
 
       case 4:
