@@ -74,7 +74,7 @@ public class LEDs extends SubsystemBase {
     else setInsideColor(Color.kPurple); 
   }
 
-  public Command createTeleopCommand(BooleanSupplier gamePieceSensor, BooleanSupplier isArmRaised) {
+  public Command createEnabledCommand(BooleanSupplier gamePieceSensor, BooleanSupplier isArmRaised) {
     return this.run(() -> {this.displayGamePieceDetected(gamePieceSensor.getAsBoolean());
                             this.setOutsideColor(isArmRaised);
                           });

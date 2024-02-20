@@ -95,7 +95,11 @@ public class RobotContainer {
   public void teleopInit() {
     m_arm.createHardStopRetractCommand().schedule();
     m_arm.createLowerArmCommand().schedule();
-    m_LEDs.createTeleopCommand(m_intake.eitherSensorSupplier(), m_arm.isArmRaised());
+    m_LEDs.createEnabledCommand(m_intake.eitherSensorSupplier(), m_arm.isArmRaised());
+  }
+
+  public void autonomousInit() {
+    m_LEDs.createEnabledCommand(m_intake.eitherSensorSupplier(), m_arm.isArmRaised());
   }
 
   public void disabledInit() {
