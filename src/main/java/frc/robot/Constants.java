@@ -260,8 +260,7 @@ public final class Constants {
     public static final int kLEDLength = 17;
 
     public static final int kLEDsPerBlock = 2;
-    public static final int kLEDsBetweenBlocksForAuto = 1;
-    public static final int kLEDsBetweenBlocksForTeleop = 15;
+    public static final int kLEDsBetweenBlocks = 1;
   }
 
   public static final class AutoConstants {
