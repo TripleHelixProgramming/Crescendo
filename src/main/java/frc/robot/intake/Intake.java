@@ -101,7 +101,7 @@ public class Intake extends SubsystemBase {
   public Command createAdvanceAfterIntakingCommand() {
     return new FunctionalCommand(
         // initialize
-        
+
         () -> this.configurePositionController(IntakeConstants.kRepositionAfterIntaking),
         // execute
         () -> this.advanceAfterIntaking(IntakeConstants.kRepositionAfterIntakingReflect),

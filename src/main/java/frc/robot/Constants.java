@@ -110,7 +110,7 @@ public final class Constants {
     public static final double kDriveD = 0.0; // 2023 Competition Robot
     public static final double kDriveFF = 0.255; // 2023 Competition Robot
 
-    public static final double kTurningP = 10.0;//1.5;
+    public static final double kTurningP = 10.0; // 1.5;
     public static final double kTurningI = 0.0; // 2023 Competition Robot
     public static final double kTurningD = 0.0; // 2023 Competition Robot
 
