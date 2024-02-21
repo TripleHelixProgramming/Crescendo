@@ -317,6 +317,15 @@ public class RobotContainer {
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createHardStopRetractCommand()
         .andThen(m_arm.createRaiseArmCommand()));
 
+    // Deploy flap
+    // B button
+    // only while arm is raised
+
+    // Stow flap
+    // X button
+    // only while arm is raised
+
+    // MULTIPLE SUBSYSTEMS
     // Give Note to teammates
     new JoystickButton(m_operator, Button.kBack.value)
         .onTrue(m_arm.createRaiseArmCommand()
