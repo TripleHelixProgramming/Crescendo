@@ -7,7 +7,6 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
 
 public class XBoxDriveCommand extends DriveCommand {
@@ -46,7 +45,7 @@ public class XBoxDriveCommand extends DriveCommand {
 
   @Override
   public Translation2d getSteeringCenter() {
-    return m_controller.getRawButton(OIConstants.kZorroAIn)
+    return m_controller.getRightBumper()
         ? ArmConstants.kChassisCentroidToArmCentroid
         : null;
   }
