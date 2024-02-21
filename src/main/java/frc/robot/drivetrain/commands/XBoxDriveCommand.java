@@ -45,8 +45,6 @@ public class XBoxDriveCommand extends DriveCommand {
 
   @Override
   public Translation2d getSteeringCenter() {
-    return m_controller.getRightBumper()
-        ? ArmConstants.kChassisCentroidToArmCentroid
-        : null;
+    return m_controller.getRightBumper() ? ArmConstants.kChassisCentroidToArmCentroid : null;
   }
 }
