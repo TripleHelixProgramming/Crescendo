@@ -143,35 +143,35 @@ public class RobotContainer {
   /** Updates the autonomous based on the physical selector switch */
   private void updateSelectedAutonomous() {
     switch (getAutonomousModeSwitchIndex()) {
-      case 0:
+      case 1:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? new Autonomous("R-driveFwd2m")
                 : new Autonomous("B-driveFwd2m");
         break;
 
-      case 1:
+      case 2:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? new Autonomous("R-driveFwd2m")
                 : new Autonomous("B_SpinForward");
         break;
 
-      case 2:
+      case 3:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? new Autonomous("R-TheOnePiece")
                 : new Autonomous("B-TheOnePiece");
         break;
 
-      case 3:
+      case 4:
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? null 
                 : new Autonomous("B-TheTwoPiece");
         break;
 
-      case 4:
+      case 5:
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? null 
@@ -189,10 +189,10 @@ public class RobotContainer {
   private int getAutonomousModeSwitchIndex() {
     for (int port = 0; port < autonomousModes.length; port++) {
       if (!autonomousModes[port].get()) {
-        return port;
+        return port + 1;
       }
     }
-    return -1; // failure of the physical switch
+    return 0; // failure of the physical switch
   }
 
   private IntSupplier autonomousModeSelector() {
