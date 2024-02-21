@@ -95,7 +95,11 @@ public class RobotContainer {
   public void teleopInit() {
     m_arm.createHardStopRetractCommand().schedule();
     m_arm.createLowerArmCommand().schedule();
-    m_LEDs.createTeleopCommand(m_intake.eitherSensorSupplier()).schedule();
+    m_LEDs.createEnabledCommand(m_intake.eitherSensorSupplier(), m_arm.isArmRaised()).schedule();
+  }
+
+  public void autonomousInit() {
+    m_LEDs.createEnabledCommand(m_intake.eitherSensorSupplier(), m_arm.isArmRaised()).schedule();
   }
 
   public void disabledInit() {
@@ -238,7 +242,6 @@ public class RobotContainer {
         new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematics, m_driver));
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
     m_climber.setDefaultCommand(m_climber.createStopCommand());
-    m_LEDs.setDefaultCommand(m_LEDs.createDefaultLEDCommand());
   }
 
   // spotless:off
