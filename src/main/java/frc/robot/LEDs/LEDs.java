@@ -62,22 +62,25 @@ public class LEDs extends SubsystemBase {
             m_LEDBuffer.setLED(i + (mode * block), Color.kRed);
           } else {
             m_LEDBuffer.setLED(i + (mode * block), Color.kBlue);
+          }
         }
       }
     }
-  }
     m_LED.setData(m_LEDBuffer);
   }
 
   private void displayGamePieceDetected(boolean hasGamePiece) {
     if (hasGamePiece) setInsideColor(Color.kGreen);
-    else setInsideColor(Color.kPurple); 
+    else setInsideColor(Color.kPurple);
   }
 
-  public Command createEnabledCommand(BooleanSupplier gamePieceSensor, BooleanSupplier isArmRaised) {
-    return this.run(() -> {this.displayGamePieceDetected(gamePieceSensor.getAsBoolean());
-                            this.setOutsideColor(isArmRaised);
-                          });
+  public Command createEnabledCommand(
+      BooleanSupplier gamePieceSensor, BooleanSupplier isArmRaised) {
+    return this.run(
+        () -> {
+          this.displayGamePieceDetected(gamePieceSensor.getAsBoolean());
+          this.setOutsideColor(isArmRaised);
+        });
   }
 
   public Command createDisabledCommand(
