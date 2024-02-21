@@ -4,8 +4,10 @@ package frc.robot.drivetrain.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
 
 public class XBoxDriveCommand extends DriveCommand {
@@ -18,7 +20,7 @@ public class XBoxDriveCommand extends DriveCommand {
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
   public XBoxDriveCommand(Drivetrain subsystem, XboxController joysticks) {
-    super(subsystem, DriveConstants.kDriveKinematics);
+    super(subsystem);
     this.m_controller = joysticks;
   }
 
@@ -40,5 +42,12 @@ public class XBoxDriveCommand extends DriveCommand {
   @Override
   public boolean fieldRelative() {
     return m_controller.getLeftBumper();
+  }
+
+  @Override
+  public Translation2d getSteeringCenter() {
+    return m_controller.getRawButton(OIConstants.kZorroAIn)
+        ? ArmConstants.kChassisCentroidToArmCentroid
+        : new Translation2d();
   }
 }

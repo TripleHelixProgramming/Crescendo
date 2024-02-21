@@ -3,12 +3,13 @@
 package frc.robot.drivetrain.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.drivetrain.Drivetrain;
+import java.util.Optional;
 
 public abstract class DriveCommand extends Command {
 
@@ -16,17 +17,12 @@ public abstract class DriveCommand extends Command {
   private double yDot;
   private double thetaDot;
 
-  // used to swap control locations
-  SwerveDriveKinematics kinematicsType;
-
   // The subsystem the command runs on
   public final Drivetrain drivetrain;
 
-  public DriveCommand(Drivetrain subsystem, SwerveDriveKinematics kinematicsType) {
+  public DriveCommand(Drivetrain subsystem) {
     drivetrain = subsystem;
     addRequirements(drivetrain);
-
-    this.kinematicsType = kinematicsType;
   }
 
   @Override
@@ -43,7 +39,7 @@ public abstract class DriveCommand extends Command {
 
     drivetrain.setChassisSpeeds(
         fieldRelative() ? getFieldRelativeChassisSpeeds() : getRobotRelativeChassisSpeeds(),
-        kinematicsType);
+        Optional.of(getSteeringCenter()));
   }
 
   private ChassisSpeeds getRobotRelativeChassisSpeeds() {
@@ -79,4 +75,9 @@ public abstract class DriveCommand extends Command {
    * @return Boolean representing whether to drive in field-relative mode
    */
   public abstract boolean fieldRelative();
+
+  /**
+   * @return Transform2d representing the vector between chassis center and desired steering center
+   */
+  public abstract Translation2d getSteeringCenter();
 }

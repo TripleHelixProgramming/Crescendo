@@ -8,6 +8,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -21,6 +22,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
 /** Constructs a swerve drive style drivetrain. */
@@ -117,11 +119,17 @@ public class Drivetrain extends SubsystemBase {
 
   /**
    * @param chassisSpeeds Robot-relative chassis speeds (x, y, theta)
+   * @param rotationCenter Vector from the chassis center to the desired center of rotation
    */
-  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+  public void setChassisSpeeds(
+      ChassisSpeeds chassisSpeeds, Optional<Translation2d> rotationCenterOptional) {
+    Translation2d rotationCenter =
+        rotationCenterOptional.isPresent() ? rotationCenterOptional.get() : new Translation2d();
+
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
+            ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod), rotationCenter);
+
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
@@ -129,10 +137,12 @@ public class Drivetrain extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
-  // uses kinematics type to determine robot center
-  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveDriveKinematics kinematicsType) {
+  /**
+   * @param chassisSpeeds Robot-relative chassis speeds (x, y, theta)
+   */
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
     var swerveModuleStates =
-        kinematicsType.toSwerveModuleStates(
+        DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);

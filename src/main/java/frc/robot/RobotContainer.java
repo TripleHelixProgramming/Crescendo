@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.LEDs.LEDs;
 import frc.robot.arm.Arm;
@@ -234,8 +233,7 @@ public class RobotContainer {
   // spotless:on
 
   private void setDefaultCommands() {
-    m_swerve.setDefaultCommand(
-        new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematics, m_driver));
+    m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_arm, m_driver));
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
     m_climber.setDefaultCommand(m_climber.createStopCommand());
     m_LEDs.setDefaultCommand(m_LEDs.createDefaultLEDCommand());
@@ -248,9 +246,6 @@ public class RobotContainer {
     new JoystickButton(m_driver, OIConstants.kZorroHIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
         .ignoringDisable(true));
-
-    new JoystickButton(m_driver,OIConstants.kZorroAIn)
-    .whileTrue((new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematicsDriveFromArm, m_driver)));
 
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
     .whileTrue(m_intake.createSetVoltageCommand(12.0)
