@@ -32,13 +32,13 @@ public class LEDs extends SubsystemBase {
     if (isArmRaised.getAsBoolean()) {
       m_LEDBuffer.setLED(0, Color.kYellow);
       m_LEDBuffer.setLED(1, Color.kYellow);
+      m_LEDBuffer.setLED(15, Color.kYellow);
       m_LEDBuffer.setLED(16, Color.kYellow);
-      m_LEDBuffer.setLED(17, Color.kYellow);
     } else {
       m_LEDBuffer.setLED(0, Color.kLightGoldenrodYellow);
       m_LEDBuffer.setLED(1, Color.kLightGoldenrodYellow);
+      m_LEDBuffer.setLED(15, Color.kLightGoldenrodYellow);
       m_LEDBuffer.setLED(16, Color.kLightGoldenrodYellow);
-      m_LEDBuffer.setLED(17, Color.kLightGoldenrodYellow);
     }
   }
 
