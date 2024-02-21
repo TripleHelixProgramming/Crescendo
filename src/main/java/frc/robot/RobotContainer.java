@@ -264,6 +264,7 @@ public class RobotContainer {
   // spotless:off
   private void configureOperatorButtonBindings() {
 
+    // CLIMBER
     // Calibrate upper limit of climber actuators
     new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
         .andThen(new DriveToPositionCommand(m_climber, ClimberConstants.kHomePosition)));
@@ -274,48 +275,49 @@ public class RobotContainer {
     climbTrigger.onTrue(new DriveToPositionCommand(m_climber, ClimberConstants.kDeployPosition)
         .andThen(m_climber.createArcadeDriveCommand(m_operator)));
 
-    Trigger intaketriigger = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
-    intaketriigger.whileTrue(m_intake.createIntakeJoystickControlCommand(m_operator));
-
-    
-    
-    
-    //Run climber drive while B button down
+    // Move climber to home position
     // new JoystickButton(m_operator,Button.kB.value)
-    // .whileTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));
-    // .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
+    //     .onTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));
     
+    // Run climber drive while B button down
     // new JoystickButton(m_operator,Button.kB.value)
     //     .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
 
+    // INTAKE
+    // Control position of Note in intake
+    Trigger intakeTrigger = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
+    intakeTrigger.whileTrue(m_intake.createIntakeJoystickControlCommand(m_operator));
+
+    // Intake Note from floor
+    new JoystickButton(m_operator, Button.kRightBumper.value)
+        .whileTrue(createIntakeCommandSequence());
+
+    // Reverse intake to reject intaking Note
+    new JoystickButton(m_operator, Button.kLeftBumper.value)
+        .whileTrue(m_intake.createSetVoltageCommand(-12.0)
+        .onlyIf(m_arm.isArmLowered()));
+    
+    // Shoot Note into Amp
+    new JoystickButton(m_operator, Button.kLeftBumper.value)
+        .whileTrue(m_intake.createSetVoltageCommand(12.0)
+        .onlyIf(m_arm.isArmRaised()));
+    
+    // Shift Note further into Intake
+    // new JoystickButton(m_operator, Button.kX.value)
+    //     .onTrue(m_intake.createSetPositionCommand(0.05));
+
+    // Move Note back in order to place in trap
+    // new JoystickButton(m_operator, Button.kB.value)
+    //     .whileTrue(m_intake.createSetPositionCommand(-0.27));
+
+    // ARM
     // Raise and lower arm
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createHardStopRetractCommand()
         .andThen(m_arm.createLowerArmCommand()));
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createHardStopRetractCommand()
         .andThen(m_arm.createRaiseArmCommand()));
 
-    // Intake Note from floor
-    new JoystickButton(m_operator, Button.kRightBumper.value)
-        .whileTrue(createIntakeCommandSequence());
-
-    // Shift Note further into Intake
-    new JoystickButton(m_operator, Button.kX.value)
-        .onTrue(m_intake.createSetPositionCommand(0.05));
-
-    // Shoot Note into Amp
-    new JoystickButton(m_operator, Button.kLeftBumper.value)
-        .whileTrue(m_intake.createSetVoltageCommand(12.0)
-        .onlyIf(m_arm.isArmRaised()));
-
-    // Reverses intake
-    new JoystickButton(m_operator, Button.kB.value)
-        .whileTrue(m_intake.createSetVoltageCommand(-12.0));
-
-    // Moves note back in order to place in trap
-    // new JoystickButton(m_operator, Button.kB.value)
-    //     .whileTrue(m_intake.createSetPositionCommand(-0.27));
-
-    // Gives note to teammates
+    // Give Note to teammates
     new JoystickButton(m_operator, Button.kBack.value)
         .onTrue(m_arm.createRaiseArmCommand()
           .alongWith(new WaitCommand(0.8))
