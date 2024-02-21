@@ -321,6 +321,7 @@ public class RobotContainer {
 
   public Command createIntakeCommandSequence() {
     return new SequentialCommandGroup(
+        m_arm.createStowCommand(),
         m_intake.createSetVoltageCommand(12).until(m_intake.eitherSensorSupplier()),
         m_arm.createCarryCommand(),
         m_intake
