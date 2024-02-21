@@ -51,12 +51,12 @@ public class LEDs extends SubsystemBase {
   private void autoColor(boolean isRed, int autoMode) {
     clearBuffer();
     int block = LEDConstants.kLEDsPerBlock + LEDConstants.kLEDsBetweenBlocks;
-    if (0 > autoMode) { // -1 indicates no auto selected.
+    if (1 > autoMode) { // 0 indicates no auto selected.
       for (var led = 0; led < LEDConstants.kLEDsPerBlock; led++) {
         m_LEDBuffer.setLED(led, Color.kYellow);
       }
     } else {
-      for (var mode = 0; mode < autoMode + 1; mode++) {
+      for (var mode = 0; mode < autoMode; mode++) {
         for (var i = 0; i < LEDConstants.kLEDsPerBlock; i++) {
           if (isRed) {
             m_LEDBuffer.setLED(i + (mode * block), Color.kRed);
