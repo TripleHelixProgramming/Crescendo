@@ -48,6 +48,6 @@ public class XBoxDriveCommand extends DriveCommand {
   public Translation2d getSteeringCenter() {
     return m_controller.getRawButton(OIConstants.kZorroAIn)
         ? ArmConstants.kChassisCentroidToArmCentroid
-        : new Translation2d();
+        : null;
   }
 }

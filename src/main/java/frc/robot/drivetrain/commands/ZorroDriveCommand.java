@@ -46,11 +46,11 @@ public class ZorroDriveCommand extends DriveCommand {
     // offset steering angle whenever arm is raised
     // return m_arm.isArmRaised().getAsBoolean()
     //   ? ArmConstants.kChassisCentroidToArmCentroid
-    //   : new Translation2d();
+    //   : null;
 
     // offset steering angle when Zorro A button is pressed
     return m_controller.getRawButton(OIConstants.kZorroAIn)
         ? ArmConstants.kChassisCentroidToArmCentroid
-        : new Translation2d();
+        : null;
   }
 }
