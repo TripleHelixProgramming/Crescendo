@@ -203,6 +203,12 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
+    public static enum ArmState {
+      STOWED,
+      CARRY,
+      DEPLOYED
+    }
+
     public static final int kDeployerForwardChannel = 0;
     public static final int kDeployerReverseChannel = 1;
 

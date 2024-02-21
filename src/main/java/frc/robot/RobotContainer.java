@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmConstants.ArmState;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.DriveConstants;
@@ -93,8 +94,7 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    m_arm.createHardStopRetractCommand().schedule();
-    m_arm.createLowerArmCommand().schedule();
+    m_arm.createStowCommand().schedule();
     m_LEDs.createTeleopCommand(m_intake.eitherSensorSupplier()).schedule();
   }
 
@@ -210,13 +210,11 @@ public class RobotContainer {
   private void createNamedCommands() {
 
     NamedCommands.registerCommand("raiseArmAndWait", 
-      m_arm.createHardStopRetractCommand()
-        .andThen(m_arm.createRaiseArmCommand())
+      m_arm.createDeployCommand()
         .andThen(new WaitCommand(1.2)));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
-      m_arm.createHardStopRetractCommand()
-        .andThen(m_arm.createLowerArmCommand())
+      m_arm.createStowCommand()
         .alongWith(m_intake.createStopIntakeCommand()));
     
     NamedCommands.registerCommand("outtakeAndWait", 
@@ -225,7 +223,7 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
       createIntakeCommandSequence()
-        .andThen(m_arm.createHardStopRetractCommand())
+        .andThen(m_arm.createCarryCommand())
         .andThen(new WaitCommand(1.9)));
     
     NamedCommands.registerCommand("stopIntake", 
@@ -254,7 +252,7 @@ public class RobotContainer {
 
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
     .whileTrue(m_intake.createSetVoltageCommand(12.0)
-    .onlyIf(m_arm.isArmRaised()));
+    .onlyIf(m_arm.stateChecker(ArmState.DEPLOYED)));
   }
   // spotless:on
 
@@ -286,10 +284,8 @@ public class RobotContainer {
     //     .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
 
     // Raise and lower arm
-    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createHardStopRetractCommand()
-        .andThen(m_arm.createLowerArmCommand()));
-    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createHardStopRetractCommand()
-        .andThen(m_arm.createRaiseArmCommand()));
+    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createStowCommand());
+    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createDeployCommand());
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
@@ -302,7 +298,7 @@ public class RobotContainer {
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kLeftBumper.value)
         .whileTrue(m_intake.createSetVoltageCommand(12.0)
-        .onlyIf(m_arm.isArmRaised()));
+        .onlyIf(m_arm.stateChecker(ArmState.DEPLOYED)));
 
     // Reverses intake
     new JoystickButton(m_operator, Button.kB.value)
@@ -314,20 +310,19 @@ public class RobotContainer {
 
     // Gives note to teammates
     new JoystickButton(m_operator, Button.kBack.value)
-        .onTrue(m_arm.createRaiseArmCommand()
+        .onTrue(m_arm.createDeployCommand()
           .alongWith(new WaitCommand(0.8))
         .andThen(m_intake.createSetVoltageCommand(-12)
           .raceWith(new WaitCommand(0.8)))
         .andThen(m_intake.createStopIntakeCommand()
-          .alongWith(m_arm.createLowerArmCommand())));
+          .alongWith(m_arm.createStowCommand())));
   }
   // spotless:on
 
   public Command createIntakeCommandSequence() {
     return new SequentialCommandGroup(
         m_intake.createSetVoltageCommand(12).until(m_intake.eitherSensorSupplier()),
-        m_arm.createHardStopDeployCommand(),
-        m_arm.createRaiseArmCommand(),
+        m_arm.createCarryCommand(),
         m_intake
             .createAdvanceAfterIntakingCommand()
             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
