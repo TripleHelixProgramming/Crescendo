@@ -89,7 +89,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     updateSelectedAutonomous();
-    return m_autonomous.getPathPlannerAuto();
+    if(m_autonomous != null) return m_autonomous.getPathPlannerAuto();
+    else return null;
+    
   }
 
   public void teleopInit() {
@@ -131,8 +133,7 @@ public class RobotContainer {
     }
 
     private Command getPathPlannerAuto() {
-      if(filename!=null) return new PathPlannerAuto(filename);
-      else return null;
+      return new PathPlannerAuto(filename);
     }
 
     private String getFilename() {
