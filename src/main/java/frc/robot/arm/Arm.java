@@ -12,6 +12,7 @@ import java.util.function.BooleanSupplier;
 public class Arm extends SubsystemBase {
   private final DoubleSolenoid m_armDeployer;
   private final DoubleSolenoid m_armHardStopper;
+  private final DoubleSolenoid m_flapRetracter;
 
   public Arm() {
     m_armDeployer =
@@ -24,6 +25,11 @@ public class Arm extends SubsystemBase {
             PneumaticsModuleType.REVPH,
             ArmConstants.kHardStopperForwardChannel,
             ArmConstants.kHardStopperReverseChannel);
+    m_flapRetracter =
+        new DoubleSolenoid(
+            PneumaticsModuleType.REVPH,
+            ArmConstants.kFlapForwardChannel,
+            ArmConstants.kFlapReverseChannel);
   }
 
   @Override
@@ -47,6 +53,14 @@ public class Arm extends SubsystemBase {
 
   public Command createHardStopRetractCommand() {
     return this.runOnce(() -> this.m_armHardStopper.set(Value.kReverse));
+  }
+
+  public Command createFlapDeployCommand() {
+    return this.runOnce(() -> this.m_flapRetracter.set(Value.kForward));
+  }
+
+  public Command createFapRetractCommand() {
+    return this.runOnce(() -> this.m_flapRetracter.set(Value.kReverse));
   }
 
   public BooleanSupplier isArmRaised() {

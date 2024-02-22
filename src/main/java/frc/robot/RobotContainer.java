@@ -293,6 +293,10 @@ public class RobotContainer {
         .andThen(m_arm.createLowerArmCommand()));
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createHardStopRetractCommand()
         .andThen(m_arm.createRaiseArmCommand()));
+    new JoystickButton(m_operator, m_operator.getPOV(OIConstants.kUp))
+        .onTrue(m_arm.createFlapDeployCommand());
+    new JoystickButton(m_operator, m_operator.getPOV(OIConstants.kDown))
+        .onTrue(m_arm.createFapRetractCommand());
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
