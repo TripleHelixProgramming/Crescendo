@@ -131,7 +131,8 @@ public class RobotContainer {
     }
 
     private Command getPathPlannerAuto() {
-      return new PathPlannerAuto(filename);
+      if(filename!=null) return new PathPlannerAuto(filename);
+      else return null;
     }
 
     private String getFilename() {
