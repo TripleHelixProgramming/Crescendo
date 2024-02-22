@@ -146,36 +146,37 @@ public class RobotContainer {
       case 1:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-driveFwd2m")
-                : new Autonomous("B-driveFwd2m");
+                ? new Autonomous("R-TheOnePiece")
+                : new Autonomous("B-TheOnePiece");
         break;
 
       case 2:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-driveFwd2m")
-                : new Autonomous("B_SpinForward");
+                ? null
+                : new Autonomous("B-TheTwoPieceNear");
         break;
 
       case 3:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-TheOnePiece")
-                : new Autonomous("B-TheOnePiece");
+                ? null
+                : new Autonomous("B-TwoPieceFar1");
         break;
 
       case 4:
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? null 
-                : new Autonomous("B-TheTwoPiece");
+                : null;
         break;
 
       case 5:
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? null 
-                : null;
+                : new Autonomous("B-ThreePieceAutoKachow");
+            break;
 
       default:
         m_autonomous = null;
@@ -216,7 +217,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("raiseArmAndWait", 
       m_arm.createHardStopRetractCommand()
         .andThen(m_arm.createRaiseArmCommand())
-        .andThen(new WaitCommand(1.2)));
+        .andThen(new WaitCommand(1.4)));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
       m_arm.createHardStopRetractCommand()
@@ -225,7 +226,7 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("outtakeAndWait", 
       m_intake.createSetVoltageCommand(12)
-        .withTimeout(0.5));
+        .withTimeout(0.7));
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
       createIntakeCommandSequence()
@@ -328,6 +329,8 @@ public class RobotContainer {
 
   public Command createIntakeCommandSequence() {
     return new SequentialCommandGroup(
+        m_arm.createHardStopRetractCommand(),
+        m_arm.createLowerArmCommand(),
         m_intake.createSetVoltageCommand(12).until(m_intake.eitherSensorSupplier()),
         m_arm.createHardStopDeployCommand(),
         m_arm.createRaiseArmCommand(),
