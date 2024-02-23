@@ -89,7 +89,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     updateSelectedAutonomous();
-    return m_autonomous.getPathPlannerAuto();
+    if (m_autonomous != null) return m_autonomous.getPathPlannerAuto();
+    else return null;
   }
 
   public void teleopInit() {
