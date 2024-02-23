@@ -77,7 +77,7 @@ public class Arm extends SubsystemBase {
           this.m_armDeployer.set(Value.kForward);
         });
   }
-  
+
   public Command createFlapDeployCommand() {
     return this.runOnce(() -> this.m_flapRetracter.set(Value.kForward));
   }

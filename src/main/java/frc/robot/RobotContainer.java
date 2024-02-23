@@ -95,26 +95,23 @@ public class RobotContainer {
     else return null;
   }
 
+  // spotless:off
   public void teleopInit() {
     m_arm.createStowCommand().schedule();
-    m_LEDs
-        .createEnabledCommand(
-            m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED))
-        .schedule();
+    m_LEDs.createEnabledCommand(
+    m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
   }
 
   public void autonomousInit() {
-    m_LEDs
-        .createEnabledCommand(
-            m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED))
-        .schedule();
+    m_LEDs.createEnabledCommand(
+      m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
   }
 
   public void disabledInit() {
-    m_LEDs
-        .createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector())
-        .schedule();
+    m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector()).schedule();
   }
+
+    // spotless:on
 
   public void periodic() {
     m_loop.poll();
