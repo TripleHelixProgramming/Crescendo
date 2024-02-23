@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
@@ -293,9 +294,9 @@ public class RobotContainer {
         .andThen(m_arm.createLowerArmCommand()));
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createHardStopRetractCommand()
         .andThen(m_arm.createRaiseArmCommand()));
-    new JoystickButton(m_operator, m_operator.getPOV(OIConstants.kUp))
+    new POVButton(m_operator, OIConstants.kUp)
         .onTrue(m_arm.createFlapDeployCommand());
-    new JoystickButton(m_operator, m_operator.getPOV(OIConstants.kDown))
+    new POVButton(m_operator, OIConstants.kDown)
         .onTrue(m_arm.createFapRetractCommand());
 
     // Intake Note from floor
