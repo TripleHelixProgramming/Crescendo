@@ -14,6 +14,7 @@ public class Arm extends SubsystemBase {
   private ArmState m_armState;
   private final DoubleSolenoid m_armDeployer;
   private final DoubleSolenoid m_armHardStopper;
+  private final DoubleSolenoid m_flapRetracter;
 
   public Arm() {
     m_armDeployer =
@@ -26,6 +27,11 @@ public class Arm extends SubsystemBase {
             PneumaticsModuleType.REVPH,
             ArmConstants.kHardStopperForwardChannel,
             ArmConstants.kHardStopperReverseChannel);
+    m_flapRetracter =
+        new DoubleSolenoid(
+            PneumaticsModuleType.REVPH,
+            ArmConstants.kFlapForwardChannel,
+            ArmConstants.kFlapReverseChannel);
   }
 
   private ArmState getState() {
@@ -70,5 +76,13 @@ public class Arm extends SubsystemBase {
           this.m_armHardStopper.set(Value.kForward);
           this.m_armDeployer.set(Value.kReverse);
         });
+  }
+  
+  public Command createFlapDeployCommand() {
+    return this.runOnce(() -> this.m_flapRetracter.set(Value.kForward));
+  }
+
+  public Command createFlapRetractCommand() {
+    return this.runOnce(() -> this.m_flapRetracter.set(Value.kReverse));
   }
 }

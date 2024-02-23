@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants.ArmState;
 import frc.robot.Constants.AutoConstants;
@@ -327,11 +328,13 @@ public class RobotContainer {
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createDeployCommand());
     
     // Deploy flap
-    // B button
+    new POVButton(m_operator, OIConstants.kUp)
+        .onTrue(m_arm.createFlapDeployCommand());
     // only while arm is raised
 
     // Stow flap
-    // X button
+    new POVButton(m_operator, OIConstants.kDown)
+        .onTrue(m_arm.createFlapRetractCommand());
     // only while arm is raised
 
     // MULTIPLE SUBSYSTEMS
