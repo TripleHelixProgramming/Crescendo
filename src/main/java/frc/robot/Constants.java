@@ -103,7 +103,7 @@ public final class Constants {
     public static final double kDriveD = 0.0; // 2023 Competition Robot
     public static final double kDriveFF = 0.255; // 2023 Competition Robot
 
-    public static final double kTurningP = 1.5;
+    public static final double kTurningP = 10.0; // 1.5;
     public static final double kTurningI = 0.0; // 2023 Competition Robot
     public static final double kTurningD = 0.0; // 2023 Competition Robot
 
@@ -161,6 +161,12 @@ public final class Constants {
     public static int kZorroFUp = 12;
     public static int kZorroDIn = 13;
     public static int kZorroHIn = 14;
+
+    // XBox Controller D-Pad Constants
+    public static int kUp = 0;
+    public static int kRight = 90;
+    public static int kDown = 180;
+    public static int kLeft = 270;
   }
 
   public static final class IntakeConstants {
@@ -176,7 +182,8 @@ public final class Constants {
     public static final double kPositionI = 0.0;
     public static final double kPositionD = 0.0;
 
-    public static final double kRepositionAfterIntaking = 0.24;
+    public static final double kRepositionAfterIntaking = 0.15;
+    public static final double kRepositionAfterIntakingReflect = 0.25;
     public static final double kPositionTolerance = 0.01;
 
     public static final double kRollerDiameter = 0.0508; // 2 inches
@@ -185,8 +192,8 @@ public final class Constants {
     public static final double kPositionConversionFactor = (kRollerDiameter * Math.PI) / kGearRatio;
     public static final double kVelocityConversionFactor = kPositionConversionFactor / 60.0;
 
-    public static final double kMaxVelocity = (0.8 * 5880.0) * kVelocityConversionFactor;
-    public static final double kMaxAcceleration = kMaxVelocity / 0.3;
+    public static final double kMaxVelocity = (1 * 5880.0) * kVelocityConversionFactor;
+    public static final double kMaxAcceleration = kMaxVelocity / 0.1;
 
     public static final TrapezoidProfile.Constraints kConstraints =
         new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
@@ -196,6 +203,12 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
+    public static enum ArmState {
+      STOWED,
+      CARRY,
+      DEPLOYED
+    }
+
     public static final int kDeployerForwardChannel = 0;
     public static final int kDeployerReverseChannel = 1;
 
@@ -204,6 +217,9 @@ public final class Constants {
 
     public static final Translation2d kChassisCentroidToArmCentroid =
         new Translation2d(-0.4572, 0.0);
+    
+    public static final int kFlapForwardChannel = 4;
+    public static final int kFlapReverseChannel = 5;
   }
 
   public static final class ClimberConstants {

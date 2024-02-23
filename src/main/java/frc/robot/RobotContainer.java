@@ -20,7 +20,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.ArmConstants.ArmState;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.OIConstants;
@@ -88,20 +90,27 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     updateSelectedAutonomous();
-    return m_autonomous.getPathPlannerAuto();
+    if (m_autonomous != null) return m_autonomous.getPathPlannerAuto();
+    else return null;
   }
 
+  // spotless:off
   public void teleopInit() {
-    m_arm.createHardStopRetractCommand().schedule();
-    m_arm.createLowerArmCommand().schedule();
-    m_LEDs.createTeleopCommand(m_intake.eitherSensorSupplier()).schedule();
+    m_arm.createStowCommand().schedule();
+    m_LEDs.createEnabledCommand(
+    m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
+  }
+
+  public void autonomousInit() {
+    m_LEDs.createEnabledCommand(
+      m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
   }
 
   public void disabledInit() {
-    m_LEDs
-        .createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector())
-        .schedule();
+    m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector()).schedule();
   }
+
+    // spotless:on
 
   public void periodic() {
     m_loop.poll();
@@ -138,32 +147,25 @@ public class RobotContainer {
   /** Updates the autonomous based on the physical selector switch */
   private void updateSelectedAutonomous() {
     switch (getAutonomousModeSwitchIndex()) {
-      case 0:
-        m_autonomous =
-            m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-driveFwd2m")
-                : new Autonomous("B-driveFwd2m");
-        break;
-
       case 1:
-        m_autonomous =
-            m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-driveFwd2m")
-                : new Autonomous("B_SpinForward");
-        break;
-
-      case 2:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? new Autonomous("R-TheOnePiece")
                 : new Autonomous("B-TheOnePiece");
         break;
 
-      case 3:
-        m_autonomous = 
+      case 2:
+        m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? null 
-                : new Autonomous("B-TheTwoPiece");
+                ? null
+                : new Autonomous("B-TheTwoPieceNear");
+        break;
+
+      case 3:
+        m_autonomous =
+            m_swerve.redAllianceSupplier().getAsBoolean()
+                ? null
+                : new Autonomous("B-TwoPieceFar1");
         break;
 
       case 4:
@@ -171,6 +173,14 @@ public class RobotContainer {
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? null 
                 : null;
+        break;
+
+      case 5:
+        m_autonomous = 
+            m_swerve.redAllianceSupplier().getAsBoolean()
+                ? null 
+                : new Autonomous("B-ThreePieceAutoKachow");
+            break;
 
       default:
         m_autonomous = null;
@@ -184,10 +194,10 @@ public class RobotContainer {
   private int getAutonomousModeSwitchIndex() {
     for (int port = 0; port < autonomousModes.length; port++) {
       if (!autonomousModes[port].get()) {
-        return port;
+        return port + 1;
       }
     }
-    return -1; // failure of the physical switch
+    return 0; // failure of the physical switch
   }
 
   private IntSupplier autonomousModeSelector() {
@@ -209,22 +219,21 @@ public class RobotContainer {
   private void createNamedCommands() {
 
     NamedCommands.registerCommand("raiseArmAndWait", 
-      m_arm.createHardStopRetractCommand()
-        .andThen(m_arm.createRaiseArmCommand())
-        .andThen(new WaitCommand(1.2)));
+
+      m_arm.createDeployCommand()
+        .andThen(new WaitCommand(1.4)));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
-      m_arm.createHardStopRetractCommand()
-        .andThen(m_arm.createLowerArmCommand())
+      m_arm.createStowCommand()
         .alongWith(m_intake.createStopIntakeCommand()));
     
     NamedCommands.registerCommand("outtakeAndWait", 
       m_intake.createSetVoltageCommand(12)
-        .withTimeout(0.5));
+        .withTimeout(0.7));
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
       createIntakeCommandSequence()
-        .andThen(m_arm.createHardStopRetractCommand())
+        .andThen(m_arm.createCarryCommand())
         .andThen(new WaitCommand(1.9)));
     
     NamedCommands.registerCommand("stopIntake", 
@@ -236,7 +245,6 @@ public class RobotContainer {
     m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_arm, m_driver));
     m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
     m_climber.setDefaultCommand(m_climber.createStopCommand());
-    m_LEDs.setDefaultCommand(m_LEDs.createDefaultLEDCommand());
   }
 
   // spotless:off
@@ -249,13 +257,14 @@ public class RobotContainer {
 
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
     .whileTrue(m_intake.createSetVoltageCommand(12.0)
-    .onlyIf(m_arm.isArmRaised()));
+    .onlyIf(m_arm.stateChecker(ArmState.DEPLOYED)));
   }
   // spotless:on
 
   // spotless:off
   private void configureOperatorButtonBindings() {
 
+    // CLIMBER
     // Calibrate upper limit of climber actuators
     new JoystickButton(m_operator, Button.kStart.value).onTrue(new CalibrateCommand(m_climber)
         .andThen(new DriveToPositionCommand(m_climber, ClimberConstants.kHomePosition)));
@@ -266,63 +275,77 @@ public class RobotContainer {
     climbTrigger.onTrue(new DriveToPositionCommand(m_climber, ClimberConstants.kDeployPosition)
         .andThen(m_climber.createArcadeDriveCommand(m_operator)));
 
-    Trigger intaketriigger = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
-    intaketriigger.whileTrue(m_intake.createIntakeJoystickControlCommand(m_operator));
-
-    
-    
-    
-    //Run climber drive while B button down
+    // Move climber to home position
     // new JoystickButton(m_operator,Button.kB.value)
-    // .whileTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));
-    // .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
+    //     .onTrue(m_climber.createDriveToCommand(ClimberConstants.kHomePosition));
     
+    // Run climber drive while B button down
     // new JoystickButton(m_operator,Button.kB.value)
     //     .whileTrue(m_climber.createArcadeDriveCommand(m_operator));
 
-    // Raise and lower arm
-    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createHardStopRetractCommand()
-        .andThen(m_arm.createLowerArmCommand()));
-    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createHardStopRetractCommand()
-        .andThen(m_arm.createRaiseArmCommand()));
+    // INTAKE
+    // Control position of Note in intake
+    Trigger intakeTrigger = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
+    intakeTrigger.whileTrue(m_intake.createIntakeJoystickControlCommand(m_operator));
 
     // Intake Note from floor
     new JoystickButton(m_operator, Button.kRightBumper.value)
         .whileTrue(createIntakeCommandSequence());
 
-    // Shift Note further into Intake
-    new JoystickButton(m_operator, Button.kX.value)
-        .onTrue(m_intake.createSetPositionCommand(0.05));
-
-    // Shoot Note into Amp
-    new JoystickButton(m_operator, Button.kLeftBumper.value)
-        .whileTrue(m_intake.createSetVoltageCommand(12.0)
-        .onlyIf(m_arm.isArmRaised()));
-
-    // Reverses intake
-    new JoystickButton(m_operator, Button.kB.value)
+    JoystickButton leftBumper = new JoystickButton(m_operator, Button.kLeftBumper.value);
+    Trigger deployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
+    
+    // Reverse intake to outake or reject intaking Note
+    leftBumper.and(deployed.negate())
         .whileTrue(m_intake.createSetVoltageCommand(-12.0));
+    
+    // Shoot Note into Amp
+    leftBumper.and(deployed)
+        .whileTrue(m_intake.createSetVoltageCommand(12.0));
 
-    // Moves note back in order to place in trap
+
+    
+    // Shift Note further into Intake
+    // new JoystickButton(m_operator, Button.kX.value)
+    //     .onTrue(m_intake.createSetPositionCommand(0.05));
+
+
+    // Move Note back in order to place in trap
     // new JoystickButton(m_operator, Button.kB.value)
     //     .whileTrue(m_intake.createSetPositionCommand(-0.27));
 
-    // Gives note to teammates
+    // ARM
+    // Raise and lower arm
+    new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createStowCommand());
+    new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createDeployCommand());
+    
+    // Deploy flap
+    new POVButton(m_operator, OIConstants.kUp)
+        .onTrue(m_arm.createFlapDeployCommand());
+    // only while arm is raised
+
+    // Stow flap
+    new POVButton(m_operator, OIConstants.kDown)
+        .onTrue(m_arm.createFlapRetractCommand());
+    // only while arm is raised
+
+    // MULTIPLE SUBSYSTEMS
+    // Give Note to teammates
     new JoystickButton(m_operator, Button.kBack.value)
-        .onTrue(m_arm.createRaiseArmCommand()
+        .onTrue(m_arm.createDeployCommand()
           .alongWith(new WaitCommand(0.8))
         .andThen(m_intake.createSetVoltageCommand(-12)
           .raceWith(new WaitCommand(0.8)))
         .andThen(m_intake.createStopIntakeCommand()
-          .alongWith(m_arm.createLowerArmCommand())));
+          .alongWith(m_arm.createStowCommand())));
   }
   // spotless:on
 
   public Command createIntakeCommandSequence() {
     return new SequentialCommandGroup(
+        m_arm.createStowCommand(),
         m_intake.createSetVoltageCommand(12).until(m_intake.eitherSensorSupplier()),
-        m_arm.createHardStopDeployCommand(),
-        m_arm.createRaiseArmCommand(),
+        m_arm.createCarryCommand(),
         m_intake
             .createAdvanceAfterIntakingCommand()
             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
