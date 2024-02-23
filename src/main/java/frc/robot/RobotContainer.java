@@ -100,7 +100,7 @@ public class RobotContainer {
   }
   
   public void autonomousInit() {
-    m_LEDs.createEnabledCommand(m_intake.eitherSensorSupplier(), m_arm.isArmRaised()).schedule();
+    m_LEDs.createEnabledCommand(m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
   }
 
   public void disabledInit() {
@@ -303,7 +303,7 @@ public class RobotContainer {
         .whileTrue(m_intake.createSetVoltageCommand(12.0)
         .onlyIf(m_arm.stateChecker(ArmState.DEPLOYED)));
 
-       
+
     
     // Shift Note further into Intake
     // new JoystickButton(m_operator, Button.kX.value)
