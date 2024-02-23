@@ -36,6 +36,7 @@ import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
 import java.util.function.IntSupplier;
 
+
 public class RobotContainer {
 
   private static RobotContainer INSTANCE = null;
@@ -293,10 +294,10 @@ public class RobotContainer {
     new JoystickButton(m_operator, Button.kRightBumper.value)
         .whileTrue(createIntakeCommandSequence());
 
-    // Reverse intake to reject intaking Note
+    // Reverse intake to outake or reject intaking Note
     new JoystickButton(m_operator, Button.kLeftBumper.value)
         .whileTrue(m_intake.createSetVoltageCommand(-12.0)
-        .onlyIf(m_arm.stateChecker(ArmState.STOWED)));
+        .unless(m_arm.stateChecker(ArmState.DEPLOYED)));
     
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kLeftBumper.value)
