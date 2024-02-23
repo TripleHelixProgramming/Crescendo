@@ -36,7 +36,6 @@ import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
 import java.util.function.IntSupplier;
 
-
 public class RobotContainer {
 
   private static RobotContainer INSTANCE = null;
@@ -97,11 +96,17 @@ public class RobotContainer {
 
   public void teleopInit() {
     m_arm.createStowCommand().schedule();
-    m_LEDs.createEnabledCommand(m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
+    m_LEDs
+        .createEnabledCommand(
+            m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED))
+        .schedule();
   }
-  
+
   public void autonomousInit() {
-    m_LEDs.createEnabledCommand(m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
+    m_LEDs
+        .createEnabledCommand(
+            m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED))
+        .schedule();
   }
 
   public void disabledInit() {
@@ -122,8 +127,6 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("PDHVoltage", m_PowerDistribution.getVoltage());
     SmartDashboard.putNumber("PDHTotalCurrent", m_PowerDistribution.getTotalCurrent());
-    
-
   }
 
   private class Autonomous {
@@ -296,13 +299,15 @@ public class RobotContainer {
     new JoystickButton(m_operator, Button.kRightBumper.value)
         .whileTrue(createIntakeCommandSequence());
 
+    JoystickButton leftBumper = new JoystickButton(m_operator, Button.kLeftBumper.value);
+
     // Reverse intake to outake or reject intaking Note
-    new JoystickButton(m_operator, Button.kLeftBumper.value)
+    leftBumper
         .whileTrue(m_intake.createSetVoltageCommand(-12.0)
         .unless(m_arm.stateChecker(ArmState.DEPLOYED)));
     
     // Shoot Note into Amp
-    new JoystickButton(m_operator, Button.kLeftBumper.value)
+    leftBumper
         .whileTrue(m_intake.createSetVoltageCommand(12.0)
         .onlyIf(m_arm.stateChecker(ArmState.DEPLOYED)));
 
@@ -345,7 +350,6 @@ public class RobotContainer {
   public Command createIntakeCommandSequence() {
     return new SequentialCommandGroup(
         m_arm.createStowCommand(),
-
         m_intake.createSetVoltageCommand(12).until(m_intake.eitherSensorSupplier()),
         m_arm.createCarryCommand(),
         m_intake

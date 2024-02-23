@@ -34,8 +34,7 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putString("Arm State", m_armState.name());
-    
+    if (m_armState != null) SmartDashboard.putString("Arm State", m_armState.name());
   }
 
   public BooleanSupplier stateChecker(ArmState state) {
