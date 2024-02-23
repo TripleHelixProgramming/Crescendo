@@ -122,6 +122,8 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("PDHVoltage", m_PowerDistribution.getVoltage());
     SmartDashboard.putNumber("PDHTotalCurrent", m_PowerDistribution.getTotalCurrent());
+    
+
   }
 
   private class Autonomous {
