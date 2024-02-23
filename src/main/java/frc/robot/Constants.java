@@ -168,6 +168,12 @@ public final class Constants {
     public static int kZorroFUp = 12;
     public static int kZorroDIn = 13;
     public static int kZorroHIn = 14;
+
+    // XBox Controller D-Pad Constants
+    public static int kUp = 0;
+    public static int kRight = 90;
+    public static int kDown = 180;
+    public static int kLeft = 270;
   }
 
   public static final class IntakeConstants {
@@ -204,11 +210,20 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
+    public static enum ArmState {
+      STOWED,
+      CARRY,
+      DEPLOYED
+    }
+
     public static final int kDeployerForwardChannel = 0;
     public static final int kDeployerReverseChannel = 1;
 
     public static final int kHardStopperForwardChannel = 3;
     public static final int kHardStopperReverseChannel = 2;
+
+    public static final int kFlapForwardChannel = 4;
+    public static final int kFlapReverseChannel = 5;
   }
 
   public static final class ClimberConstants {
