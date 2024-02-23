@@ -177,6 +177,7 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
+
     public static final int kMotorID = 16;
 
     public static final int kCurrentLimit = 15;

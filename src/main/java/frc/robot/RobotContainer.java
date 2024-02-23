@@ -290,19 +290,19 @@ public class RobotContainer {
 
     // INTAKE
     // Control position of Note in intake
-    Trigger intakeTrigger = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
-    intakeTrigger.whileTrue(m_intake.createIntakeJoystickControlCommand(m_operator));
+    Trigger trapControllTrigger = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
+    trapControllTrigger.whileTrue(m_intake.createIntakeJoystickControlCommand(m_operator));
 
+    
+    
+    
+    
     // Intake Note from floor
-    JoystickButton intakeButton = new JoystickButton(m_operator, Button.kRightBumper.value);
-    intakeButton
-        // .whileTrue(createIntakeCommandSequence());
-        .onTrue(m_arm.createStowCommand()
-        .andThen(m_intake.createIntakeCommand().until(intakeButton.negate())));
+    Trigger intakeButtonTrigger = new Trigger(m_operator.rightBumper(m_loop));
 
-    intakeButton
-        .onFalse(m_intake.createStopIntakeCommand());
-
+    intakeButtonTrigger.onTrue(m_arm.createStowCommand().andThen(m_intake.createIntakeCommand().andThen(m_intake.createAdvanceAfterIntakingCommand().withInterruptBehavior(InterruptionBehavior.kCancelIncoming))));
+    intakeButtonTrigger.onFalse(m_intake.createStopIntakeCommand().unless(m_intake.getPieceMotion()));
+    
     JoystickButton leftBumper = new JoystickButton(m_operator, Button.kLeftBumper.value);
     Trigger deployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
     

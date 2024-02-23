@@ -22,6 +22,8 @@ public class Intake extends SubsystemBase {
 
   private double xboxSpeed;
 
+  private  boolean pieceIsMoving; 
+
   private final CANSparkMax m_intakeMotor;
 
   private final RelativeEncoder m_relativeEncoder;
@@ -45,6 +47,8 @@ public class Intake extends SubsystemBase {
       new BooleanEvent(m_loop, retroReflectiveSensorSupplier());
 
   public Intake() {
+
+    pieceIsMoving = false;
 
     m_intakeMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
 
@@ -112,6 +116,14 @@ public class Intake extends SubsystemBase {
         this);
   }
 
+  private void setpieceIsMoving(boolean piecestate){
+    this.pieceIsMoving = piecestate;
+  }
+
+  public BooleanSupplier getPieceMotion(){
+    return () -> this.pieceIsMoving;
+  }
+
   public Command createOuttakeToAmpCommand() {
     return this.run(() -> this.setVoltage(12.0));
 
@@ -124,11 +136,17 @@ public class Intake extends SubsystemBase {
   public Command createAdvanceAfterIntakingCommand() {
     return new FunctionalCommand(
         // initialize
-        () -> this.configurePositionController(IntakeConstants.kRepositionAfterIntaking),
-        // execute
+        
+        () ->{ 
+        this.configurePositionController(IntakeConstants.kRepositionAfterIntaking);
+        this.setpieceIsMoving(true);
+        },
+          // execute
         () -> this.advanceAfterIntaking(IntakeConstants.kRepositionAfterIntakingReflect),
         // end
-        interrupted -> {},
+        interrupted -> {
+          this.setpieceIsMoving(false);
+        },
         // isFinished
         this.atGoalSupplier(),
         // requirements
