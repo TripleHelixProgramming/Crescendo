@@ -300,16 +300,15 @@ public class RobotContainer {
         .whileTrue(createIntakeCommandSequence());
 
     JoystickButton leftBumper = new JoystickButton(m_operator, Button.kLeftBumper.value);
-
+    Trigger deployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
+    
     // Reverse intake to outake or reject intaking Note
-    leftBumper
-        .whileTrue(m_intake.createSetVoltageCommand(-12.0)
-        .unless(m_arm.stateChecker(ArmState.DEPLOYED)));
+    leftBumper.and(deployed.negate())
+        .whileTrue(m_intake.createSetVoltageCommand(-12.0));
     
     // Shoot Note into Amp
-    leftBumper
-        .whileTrue(m_intake.createSetVoltageCommand(12.0)
-        .onlyIf(m_arm.stateChecker(ArmState.DEPLOYED)));
+    leftBumper.and(deployed)
+        .whileTrue(m_intake.createSetVoltageCommand(12.0));
 
 
     
