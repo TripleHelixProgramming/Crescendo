@@ -98,10 +98,32 @@ public class Intake extends SubsystemBase {
     m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
   }
 
+  public Command createIntakeCommand() {
+    return new FunctionalCommand(
+        // initialize
+        () -> {},
+        // execute
+        () -> this.setVoltage(12.0),
+        // end
+        interrupted -> {},
+        // isFinished
+        this.eitherSensorSupplier(),
+        // requirements
+        this);
+  }
+
+  public Command createOuttakeToAmpCommand() {
+    return this.run(() -> this.setVoltage(12.0));
+
+  }
+
+  public Command createOuttakeToFloorCommand() {
+    return this.run(() -> this.setVoltage(-12.0));
+  }
+
   public Command createAdvanceAfterIntakingCommand() {
     return new FunctionalCommand(
         // initialize
-
         () -> this.configurePositionController(IntakeConstants.kRepositionAfterIntaking),
         // execute
         () -> this.advanceAfterIntaking(IntakeConstants.kRepositionAfterIntakingReflect),
@@ -139,11 +161,6 @@ public class Intake extends SubsystemBase {
     m_velocityController.setReference(targetVoltage, ControlType.kVoltage);
   }
 
-  public Command createSetVoltageCommand(double targetVoltage) {
-    // /return this.startEnd(() -> this.setVoltage(targetVoltage), () -> {});
-    return this.run(() -> this.setVoltage(targetVoltage));
-  }
-
   public BooleanSupplier eitherSensorSupplier() {
     return () -> (!m_noteSensorRetroReflective.get() || !m_noteSensorBeamBreak.get());
   }
@@ -156,7 +173,7 @@ public class Intake extends SubsystemBase {
     return () -> m_positionController.atGoal();
   }
 
-  public void intakeJoystickControl(XboxController m_controller) {
+  private void intakeJoystickControl(XboxController m_controller) {
     this.xboxSpeed = m_controller.getLeftY();
     m_intakeMotor.set(xboxSpeed / 16);
   }

@@ -225,7 +225,7 @@ public class RobotContainer {
         .alongWith(m_intake.createStopIntakeCommand()));
     
     NamedCommands.registerCommand("outtakeAndWait", 
-      m_intake.createSetVoltageCommand(12)
+      m_intake.createOuttakeToAmpCommand()
         .withTimeout(0.7));
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
@@ -257,7 +257,7 @@ public class RobotContainer {
     .whileTrue((new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematicsDriveFromArm, m_driver)));
 
     new JoystickButton(m_driver, OIConstants.kZorroDIn)
-    .whileTrue(m_intake.createSetVoltageCommand(12.0)
+    .whileTrue(m_intake.createOuttakeToAmpCommand()
     .onlyIf(m_arm.isArmRaised()));
   }
   // spotless:on
@@ -290,17 +290,24 @@ public class RobotContainer {
     intakeTrigger.whileTrue(m_intake.createIntakeJoystickControlCommand(m_operator));
 
     // Intake Note from floor
-    new JoystickButton(m_operator, Button.kRightBumper.value)
-        .whileTrue(createIntakeCommandSequence());
+    JoystickButton intakeButton = new JoystickButton(m_operator, Button.kRightBumper.value);
+    intakeButton
+        // .whileTrue(createIntakeCommandSequence());
+        .onTrue(m_arm.createHardStopRetractCommand()
+        .andThen(m_arm.createLowerArmCommand()
+        .andThen(m_intake.createIntakeCommand().until(intakeButton.negate()))));
+
+    intakeButton
+        .onFalse(m_intake.createStopIntakeCommand());
 
     // Reverse intake to reject intaking Note
     new JoystickButton(m_operator, Button.kLeftBumper.value)
-        .whileTrue(m_intake.createSetVoltageCommand(-12.0)
+        .whileTrue(m_intake.createOuttakeToFloorCommand()
         .onlyIf(m_arm.isArmLowered()));
     
     // Shoot Note into Amp
     new JoystickButton(m_operator, Button.kLeftBumper.value)
-        .whileTrue(m_intake.createSetVoltageCommand(12.0)
+        .whileTrue(m_intake.createOuttakeToAmpCommand()
         .onlyIf(m_arm.isArmRaised()));
     
     // Shift Note further into Intake
@@ -331,7 +338,7 @@ public class RobotContainer {
     new JoystickButton(m_operator, Button.kBack.value)
         .onTrue(m_arm.createRaiseArmCommand()
           .alongWith(new WaitCommand(0.8))
-        .andThen(m_intake.createSetVoltageCommand(-12)
+        .andThen(m_intake.createOuttakeToFloorCommand()
           .raceWith(new WaitCommand(0.8)))
         .andThen(m_intake.createStopIntakeCommand()
           .alongWith(m_arm.createLowerArmCommand())));
@@ -342,11 +349,10 @@ public class RobotContainer {
     return new SequentialCommandGroup(
         m_arm.createHardStopRetractCommand(),
         m_arm.createLowerArmCommand(),
-        m_intake.createSetVoltageCommand(12).until(m_intake.eitherSensorSupplier()),
+        m_intake.createIntakeCommand(),
         m_arm.createHardStopDeployCommand(),
         m_arm.createRaiseArmCommand(),
-        m_intake
-            .createAdvanceAfterIntakingCommand()
+        m_intake.createAdvanceAfterIntakingCommand()
             .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
   }
 }
