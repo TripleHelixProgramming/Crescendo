@@ -74,7 +74,7 @@ public class Arm extends SubsystemBase {
         () -> {
           this.setState(ArmState.CARRY);
           this.m_armHardStopper.set(Value.kForward);
-          this.m_armDeployer.set(Value.kReverse);
+          this.m_armDeployer.set(Value.kForward);
         });
   }
   
