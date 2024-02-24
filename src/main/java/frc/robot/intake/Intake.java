@@ -1,6 +1,5 @@
 package frc.robot.intake;
 
-import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -102,16 +101,11 @@ public class Intake extends SubsystemBase {
   }
   // spotless:on
 
-  private void driveToPosition() {
-    setState(IntakeState.PROCESSING);
-    m_motor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
-  }
-
   public Command createIntakeCommand() {
     return this.run(
         () -> {
           setState(IntakeState.INTAKING);
-          this.setVoltage(12.0);
+          m_motor.set(1.0);
         });
   }
 
@@ -119,7 +113,7 @@ public class Intake extends SubsystemBase {
     return this.run(
         () -> {
           setState(IntakeState.OUTTAKING);
-          this.setVoltage(12.0);
+          m_motor.set(1.0);
         });
   }
 
@@ -127,7 +121,7 @@ public class Intake extends SubsystemBase {
     return this.run(
         () -> {
           setState(IntakeState.OUTTAKING);
-          this.setVoltage(-12.0);
+          m_motor.set(-1.0);
         });
   }
 
@@ -143,32 +137,6 @@ public class Intake extends SubsystemBase {
         this.atGoalSupplier(),
         // requirements
         this);
-  }
-
-  public Command createSetPositionCommand(double targetPosition) {
-    return new FunctionalCommand(
-        // initialize
-        () -> this.configurePositionController(targetPosition),
-        // execute
-        () -> this.driveToPosition(),
-        // end
-        interrupted -> {},
-        // isFinished
-        this.atGoalSupplier(),
-        // requirements
-        this);
-  }
-
-  private void setVelocity(double targetVelocity) {
-    m_velocityController.setReference(targetVelocity, ControlType.kVelocity);
-  }
-
-  public Command createSetVelocityCommand(double targetVelocity) {
-    return this.startEnd(() -> this.setVelocity(targetVelocity), () -> {});
-  }
-
-  private void setVoltage(double targetVoltage) {
-    m_velocityController.setReference(targetVoltage, ControlType.kVoltage);
   }
 
   public BooleanSupplier eitherSensorSupplier() {
