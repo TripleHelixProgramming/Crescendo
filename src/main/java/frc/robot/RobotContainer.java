@@ -298,7 +298,7 @@ public class RobotContainer {
     //While arm is down
     leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickControlCommand(m_operator, 1));
     //While arm is up
-    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, 0.5));
+    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, 0.8));
 
     // Intake Note from floor
     rightBumper.and(hasNote.negate())
