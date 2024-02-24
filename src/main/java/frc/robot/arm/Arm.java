@@ -34,7 +34,6 @@ public class Arm extends SubsystemBase {
             ArmConstants.kFlapReverseChannel);
   }
 
-
   @Override
   public void periodic() {
     if (m_armState != null) SmartDashboard.putString("Arm State", m_armState.name());
@@ -42,7 +41,7 @@ public class Arm extends SubsystemBase {
 
   public BooleanSupplier stateChecker(ArmState state) {
     return () -> {
-      if(this.m_armState != null) return this.m_armState.equals(state);
+      if (this.m_armState != null) return this.m_armState.equals(state);
       else return false;
     };
   }
