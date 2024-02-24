@@ -232,10 +232,10 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
       m_intake.createIntakeCommand().until(m_intake.eitherSensorSupplier())
-        .andThen(m_arm.createCarryCommand())
-        .andThen(m_intake.createAdvanceAfterIntakingCommand())
-        .andThen(m_arm.createDeployCommand())
-        .andThen(new WaitCommand(1.9)));
+        .andThen(m_arm.createCarryCommand()
+        .andThen(m_intake.createAdvanceAfterIntakingCommand()
+        .andThen(m_arm.createDeployCommand()
+        .andThen(new WaitCommand(1.9))))));
     
     NamedCommands.registerCommand("stopIntake", 
       m_intake.createStopIntakeCommand());
