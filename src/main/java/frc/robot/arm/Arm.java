@@ -34,17 +34,16 @@ public class Arm extends SubsystemBase {
             ArmConstants.kFlapReverseChannel);
   }
 
-  private ArmState getState() {
-    return this.m_armState;
-  }
-
   @Override
   public void periodic() {
     if (m_armState != null) SmartDashboard.putString("Arm State", m_armState.name());
   }
 
   public BooleanSupplier stateChecker(ArmState state) {
-    return () -> this.getState().equals(state);
+    return () -> {
+      if (this.m_armState != null) return this.m_armState.equals(state);
+      else return false;
+    };
   }
 
   private void setState(ArmState state) {

@@ -16,13 +16,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.IntakeConstants.IntakeState;
 import java.util.function.BooleanSupplier;
 
 public class Intake extends SubsystemBase {
 
-  private double xboxSpeed;
+  private IntakeState m_state;
 
-  private final CANSparkMax m_intakeMotor;
+  private final CANSparkMax m_motor;
 
   private final RelativeEncoder m_relativeEncoder;
 
@@ -41,40 +42,49 @@ public class Intake extends SubsystemBase {
       new DigitalInput(IntakeConstants.kRetroReflectiveSensorDIOPort);
 
   private final EventLoop m_loop = new EventLoop();
-  private final BooleanEvent m_RRsensorTriggered =
-      new BooleanEvent(m_loop, retroReflectiveSensorSupplier());
+  private final BooleanEvent m_secondSensorTriggered =
+      new BooleanEvent(m_loop, secondSensorSupplier());
 
   public Intake() {
 
-    m_intakeMotor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
+    m_state = IntakeState.IDLE;
 
-    m_intakeMotor.restoreFactoryDefaults();
+    m_motor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
+    m_motor.restoreFactoryDefaults();
+    m_motor.setIdleMode(IdleMode.kBrake);
+    m_motor.setSmartCurrentLimit(IntakeConstants.kCurrentLimit);
+    m_motor.setInverted(false);
 
-    m_intakeMotor.setIdleMode(IdleMode.kBrake);
-
-    m_intakeMotor.setSmartCurrentLimit(IntakeConstants.kCurrentLimit);
-
-    m_intakeMotor.setInverted(false);
-
-    m_velocityController = m_intakeMotor.getPIDController();
+    m_velocityController = m_motor.getPIDController();
     m_velocityController.setP(IntakeConstants.kVelocityP);
     m_velocityController.setI(IntakeConstants.kVelocityI);
     m_velocityController.setD(IntakeConstants.kVelocityD);
 
     m_positionController.setTolerance(IntakeConstants.kPositionTolerance);
 
-    m_relativeEncoder = m_intakeMotor.getEncoder();
+    m_relativeEncoder = m_motor.getEncoder();
     m_relativeEncoder.setPosition(0.0);
     m_relativeEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
     m_relativeEncoder.setVelocityConversionFactor(IntakeConstants.kVelocityConversionFactor);
   }
 
-  private void stopIntake() {
-    m_intakeMotor.set(0.0);
+  public BooleanSupplier stateChecker(IntakeState state) {
+    return () -> {
+      if (this.m_state != null) return this.m_state.equals(state);
+      else return false;
+    };
+  }
+
+  private void setState(IntakeState state) {
+    this.m_state = state;
   }
 
   public Command createStopIntakeCommand() {
-    return this.runOnce(() -> this.stopIntake());
+    return this.runOnce(
+        () -> {
+          setState(IntakeState.IDLE);
+          m_motor.set(0.0);
+        });
   }
 
   private void configurePositionController(double targetPosition) {
@@ -82,29 +92,49 @@ public class Intake extends SubsystemBase {
     m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
   }
 
+  // spotless:off
   private void advanceAfterIntaking(double targetPosition) {
-    m_RRsensorTriggered
-        .rising()
-        .ifHigh(
+    m_secondSensorTriggered.rising().ifHigh(
             () -> {
               m_positionController.reset(
                   m_relativeEncoder.getPosition(), m_relativeEncoder.getVelocity());
               m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
             });
-    m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
+    setState(IntakeState.PROCESSING);
+    m_motor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
+  }
+  // spotless:on
+
+  public Command createIntakeCommand() {
+    return this.run(
+        () -> {
+          setState(IntakeState.INTAKING);
+          m_motor.set(1.0);
+        });
   }
 
-  private void driveToPosition() {
-    m_intakeMotor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
+  public Command createOuttakeToAmpCommand() {
+    return this.run(
+        () -> {
+          setState(IntakeState.OUTTAKING);
+          m_motor.set(1.0);
+        });
+  }
+
+  public Command createOuttakeToFloorCommand() {
+    return this.run(
+        () -> {
+          setState(IntakeState.OUTTAKING);
+          m_motor.set(-1.0);
+        });
   }
 
   public Command createAdvanceAfterIntakingCommand() {
     return new FunctionalCommand(
         // initialize
-
-        () -> this.configurePositionController(IntakeConstants.kRepositionAfterIntaking),
+        () -> this.configurePositionController(IntakeConstants.kFirstRepositionDistance),
         // execute
-        () -> this.advanceAfterIntaking(IntakeConstants.kRepositionAfterIntakingReflect),
+        () -> this.advanceAfterIntaking(IntakeConstants.kSecondRepositionDistance),
         // end
         interrupted -> {},
         // isFinished
@@ -113,18 +143,16 @@ public class Intake extends SubsystemBase {
         this);
   }
 
-  public Command createSetPositionCommand(double targetPosition) {
-    return new FunctionalCommand(
-        // initialize
-        () -> this.configurePositionController(targetPosition),
-        // execute
-        () -> this.driveToPosition(),
-        // end
-        interrupted -> {},
-        // isFinished
-        this.atGoalSupplier(),
-        // requirements
-        this);
+  public BooleanSupplier eitherSensorSupplier() {
+    return () -> (!m_noteSensorRetroReflective.get() || !m_noteSensorBeamBreak.get());
+  }
+
+  public BooleanSupplier secondSensorSupplier() {
+    return () -> !m_noteSensorRetroReflective.get();
+  }
+
+  public BooleanSupplier atGoalSupplier() {
+    return () -> m_positionController.atGoal();
   }
 
   private void setVelocity(double targetVelocity) {
@@ -135,46 +163,25 @@ public class Intake extends SubsystemBase {
     return this.startEnd(() -> this.setVelocity(targetVelocity), () -> {});
   }
 
-  private void setVoltage(double targetVoltage) {
-    m_velocityController.setReference(targetVoltage, ControlType.kVoltage);
-  }
-
-  public Command createSetVoltageCommand(double targetVoltage) {
-    // /return this.startEnd(() -> this.setVoltage(targetVoltage), () -> {});
-    return this.run(() -> this.setVoltage(targetVoltage));
-  }
-
-  public BooleanSupplier eitherSensorSupplier() {
-    return () -> (!m_noteSensorRetroReflective.get() || !m_noteSensorBeamBreak.get());
-  }
-
-  public BooleanSupplier retroReflectiveSensorSupplier() {
-    return () -> !m_noteSensorRetroReflective.get();
-  }
-
-  public BooleanSupplier atGoalSupplier() {
-    return () -> m_positionController.atGoal();
-  }
-
-  public void intakeJoystickControl(XboxController m_controller) {
-    this.xboxSpeed = m_controller.getLeftY();
-    m_intakeMotor.set(xboxSpeed / 16);
-  }
-
-  public Command createIntakeJoystickControlCommand(XboxController m_controller) {
-    return this.run(() -> this.intakeJoystickControl(m_controller));
+  public Command createJoystickControlCommand(XboxController m_controller, double factor) {
+    return this.run(
+        () -> {
+          setState(IntakeState.MANUALLY_REPOSITIONING);
+          this.setVelocity(m_controller.getLeftY() * factor);
+        });
   }
 
   @Override
   public void periodic() {
     m_loop.poll();
 
-    SmartDashboard.putNumber("OutputCurrent", m_intakeMotor.getOutputCurrent());
+    SmartDashboard.putNumber("OutputCurrent", m_motor.getOutputCurrent());
     SmartDashboard.putNumber("IntakePosition", m_relativeEncoder.getPosition());
     SmartDashboard.putNumber("IntakeGoal", m_positionController.getGoal().position);
     SmartDashboard.putNumber(
         "IntakeSensorRetroReflective", !m_noteSensorRetroReflective.get() ? 1d : 0d);
     SmartDashboard.putNumber("IntakeSensorBeamBreak", !m_noteSensorBeamBreak.get() ? 1d : 0d);
-    SmartDashboard.putNumber("Speed", xboxSpeed);
+
+    if (m_state != null) SmartDashboard.putString("Intake State", m_state.name());
   }
 }
