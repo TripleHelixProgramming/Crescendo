@@ -359,6 +359,6 @@ public class RobotContainer {
         m_arm.createCarryCommand(),
         m_intake.createAdvanceAfterIntakingCommand(),
         m_arm.createDeployCommand(),
-        m_intake.createSetVelocityCommand(0));
+        m_intake.createStopIntakeCommand());
   }
 }

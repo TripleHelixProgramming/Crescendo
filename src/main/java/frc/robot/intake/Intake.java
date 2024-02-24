@@ -83,7 +83,7 @@ public class Intake extends SubsystemBase {
     return this.runOnce(
         () -> {
           setState(IntakeState.IDLE);
-          m_motor.set(0.0);
+          m_velocityController.setReference(0.0, ControlType.kVelocity);
         });
   }
 
