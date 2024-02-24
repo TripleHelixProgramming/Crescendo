@@ -303,7 +303,7 @@ public class RobotContainer {
       .whileTrue(m_arm.createStowCommand()
       .andThen(m_intake.createIntakeCommand()));
     
-    rightBumper.and(hasNote).and(m_intake.stateChecker(IntakeState.INTAKING))
+    hasNote.and(m_intake.stateChecker(IntakeState.INTAKING))
       .onTrue(m_arm.createCarryCommand()
       .andThen(m_intake.createAdvanceAfterIntakingCommand()));
     
