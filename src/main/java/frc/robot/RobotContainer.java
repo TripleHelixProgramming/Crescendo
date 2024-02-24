@@ -26,6 +26,7 @@ import frc.robot.Constants.ArmConstants.ArmState;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeState;
 import frc.robot.Constants.OIConstants;
 import frc.robot.LEDs.LEDs;
@@ -100,19 +101,25 @@ public class RobotContainer {
   public void teleopInit() {
     m_arm.createStowCommand().schedule();
     m_LEDs.createEnabledCommand(
-    m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
+      m_intake.eitherSensorSupplier(), 
+      m_arm.stateChecker(ArmState.DEPLOYED))
+      .schedule();
   }
 
   public void autonomousInit() {
     m_LEDs.createEnabledCommand(
-      m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
+      m_intake.eitherSensorSupplier(), 
+      m_arm.stateChecker(ArmState.DEPLOYED))
+      .schedule();
   }
 
   public void disabledInit() {
-    m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector()).schedule();
+    m_LEDs.createDisabledCommand(
+      m_swerve.redAllianceSupplier(), 
+      autonomousModeSelector())
+      .schedule();
   }
-
-    // spotless:on
+  // spotless:on
 
   public void periodic() {
     m_loop.poll();
@@ -233,7 +240,7 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
       createAutoIntakeCommandSequence()
-      );
+        .andThen(new WaitCommand(1.9)));
     
     NamedCommands.registerCommand("stopIntake", 
       m_intake.createStopIntakeCommand());
@@ -243,7 +250,7 @@ public class RobotContainer {
   private void setDefaultCommands() {
     m_swerve.setDefaultCommand(
         new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematics, m_driver));
-    m_intake.setDefaultCommand(m_intake.createSetVelocityCommand(0));
+    m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
     m_climber.setDefaultCommand(m_climber.createStopCommand());
   }
 
@@ -294,10 +301,12 @@ public class RobotContainer {
     // INTAKE
     // Control position of Note in intake
     Trigger leftStick = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
-    //While arm is down
-    leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickVelocityControlCommand(m_operator, 0.75));
-    //While arm is up
-    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickVelocityControlCommand(m_operator, 0.5));
+    leftStick.and(armDeployed.negate())
+      .whileTrue(m_intake.createJoystickVelocityControlCommand(m_operator,
+        IntakeConstants.kNoteRepositioningSpeed_ArmDown));
+    leftStick.and(armDeployed)
+      .whileTrue(m_intake.createJoystickVelocityControlCommand(m_operator,
+        IntakeConstants.kNoteRepositioningSpeed_ArmUp));
 
     // Intake Note from floor
     rightBumper.and(hasNote.negate())
@@ -357,7 +366,6 @@ public class RobotContainer {
         m_intake.createIntakeCommand().until(m_intake.eitherSensorSupplier()),
         m_arm.createCarryCommand(),
         m_intake.createAdvanceAfterIntakingCommand(),
-        m_arm.createDeployCommand(),
-        new WaitCommand(1.9));
+        m_arm.createDeployCommand());
   }
 }

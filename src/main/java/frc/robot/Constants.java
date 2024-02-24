@@ -216,6 +216,9 @@ public final class Constants {
 
     public static final int kRetroReflectiveSensorDIOPort = 1;
     public static final int kBeamBreakSensorDIOPort = 0;
+
+    public static final double kNoteRepositioningSpeed_ArmDown = 0.64;
+    public static final double kNoteRepositioningSpeed_ArmUp = 0.51;
   }
 
   public static final class ArmConstants {

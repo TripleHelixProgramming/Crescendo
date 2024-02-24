@@ -161,10 +161,11 @@ public class Intake extends SubsystemBase {
   }
 
   public Command createSetVelocityPercentCommand(double targetVelocityPercent) {
-    return this.runOnce(() -> {
-      setState(IntakeState.MANUALLY_REPOSITIONING);
-      this.setVelocityPercent(targetVelocityPercent);
-    });
+    return this.runOnce(
+        () -> {
+          setState(IntakeState.MANUALLY_REPOSITIONING);
+          this.setVelocityPercent(targetVelocityPercent);
+        });
   }
 
   public Command createJoystickVelocityControlCommand(
