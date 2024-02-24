@@ -156,14 +156,19 @@ public class Intake extends SubsystemBase {
   }
 
   private void setVelocityPercent(double targetVelocityPercent) {
-    m_velocityController.setReference(targetVelocityPercent * IntakeConstants.kMaxVelocity, ControlType.kVelocity);
+    m_velocityController.setReference(
+        targetVelocityPercent * IntakeConstants.kMaxVelocity, ControlType.kVelocity);
   }
 
-  public Command createSetVelocityCommand(double targetVelocityPercent) {
-    return this.runOnce(() -> setVelocityPercent(targetVelocityPercent));
+  public Command createSetVelocityPercentCommand(double targetVelocityPercent) {
+    return this.runOnce(() -> {
+      setState(IntakeState.MANUALLY_REPOSITIONING);
+      this.setVelocityPercent(targetVelocityPercent);
+    });
   }
 
-  public Command createJoystickControlCommand(XboxController m_controller, double targetVelocityPercent) {
+  public Command createJoystickVelocityControlCommand(
+      XboxController m_controller, double targetVelocityPercent) {
     return this.run(
         () -> {
           setState(IntakeState.MANUALLY_REPOSITIONING);

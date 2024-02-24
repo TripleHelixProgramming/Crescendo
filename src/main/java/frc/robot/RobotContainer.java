@@ -296,9 +296,9 @@ public class RobotContainer {
     // Control position of Note in intake
     Trigger leftStick = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
     //While arm is down
-    leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickControlCommand(m_operator, 1));
+    leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickVelocityControlCommand(m_operator, 0.75));
     //While arm is up
-    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, 0.8));
+    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickVelocityControlCommand(m_operator, 0.5));
 
     // Intake Note from floor
     rightBumper.and(hasNote.negate())
