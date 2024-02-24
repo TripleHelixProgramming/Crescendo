@@ -217,7 +217,7 @@ public final class Constants {
 
     public static final Translation2d kChassisCentroidToArmCentroid =
         new Translation2d(-0.4572, 0.0);
-    
+
     public static final int kFlapForwardChannel = 4;
     public static final int kFlapReverseChannel = 5;
   }

@@ -6,6 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.Constants.ArmConstants;
+// import frc.robot.Constants.ArmConstants.ArmState;
 import frc.robot.Constants.OIConstants;
 import frc.robot.arm.Arm;
 import frc.robot.drivetrain.Drivetrain;
@@ -44,7 +45,7 @@ public class ZorroDriveCommand extends DriveCommand {
   @Override
   public Translation2d getSteeringCenter() {
     // offset steering angle whenever arm is raised
-    // return m_arm.isArmRaised().getAsBoolean()
+    // return m_arm.stateChecker(ArmState.DEPLOYED).getAsBoolean()
     //   ? ArmConstants.kChassisCentroidToArmCentroid
     //   : null;
 
