@@ -69,7 +69,8 @@ public class Actuator {
         ClimberConstants.kVelocityConversionFactor);
 
     Preferences.initDouble(climberName + "position", ClimberConstants.kHomePosition);
-    m_climberRelativeEncoder.setPosition(Preferences.getDouble(climberName + "position", ClimberConstants.kHomePosition));
+    m_climberRelativeEncoder.setPosition(
+        Preferences.getDouble(climberName + "position", ClimberConstants.kHomePosition));
   }
 
   public void configurePositionController(
