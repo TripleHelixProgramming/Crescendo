@@ -15,7 +15,9 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -217,7 +219,6 @@ public class RobotContainer {
 
   // spotless:off
   private void createNamedCommands() {
-
     NamedCommands.registerCommand("raiseArmAndWait", 
       m_arm.createDeployCommand()
         .andThen(new WaitCommand(1.4)));
@@ -231,11 +232,9 @@ public class RobotContainer {
         .withTimeout(0.7));
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
-      m_intake.createIntakeCommand().until(m_intake.eitherSensorSupplier())
-        .andThen(m_arm.createCarryCommand()
-        .andThen(m_intake.createAdvanceAfterIntakingCommand()
+      createAutoIntakeCommandSequence() 
         .andThen(m_arm.createDeployCommand()
-        .andThen(new WaitCommand(1.9))))));
+        .andThen(new WaitCommand(1.9))));
     
     NamedCommands.registerCommand("stopIntake", 
       m_intake.createStopIntakeCommand());
@@ -352,4 +351,12 @@ public class RobotContainer {
           .alongWith(m_arm.createStowCommand())));
   }
   // spotless:on
+  
+  public Command createAutoIntakeCommandSequence() {
+    return new SequentialCommandGroup(
+        m_arm.createStowCommand(),
+        m_intake.createIntakeCommand().until(m_intake.eitherSensorSupplier()),
+        m_arm.createCarryCommand(),
+        m_intake.createAdvanceAfterIntakingCommand());
+  }
 }
