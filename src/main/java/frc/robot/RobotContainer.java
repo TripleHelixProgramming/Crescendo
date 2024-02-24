@@ -2,11 +2,15 @@
 
 package frc.robot;
 
+import java.util.function.IntSupplier;
+
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
@@ -15,10 +19,10 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -36,7 +40,6 @@ import frc.robot.climber.commands.DriveToPositionCommand;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
-import java.util.function.IntSupplier;
 
 public class RobotContainer {
 
@@ -233,8 +236,8 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
       createAutoIntakeCommandSequence() 
-        .andThen(m_arm.createDeployCommand()
-        .andThen(new WaitCommand(1.9))));
+        
+        .andThen(new WaitCommand(1.9)));
     
     NamedCommands.registerCommand("stopIntake", 
       m_intake.createStopIntakeCommand());
@@ -305,7 +308,7 @@ public class RobotContainer {
       .whileTrue(m_arm.createStowCommand()
       .andThen(m_intake.createIntakeCommand()));
     
-    hasNote.and(m_intake.stateChecker(IntakeState.INTAKING))
+    hasNote.and(m_intake.stateChecker(IntakeState.INTAKING)).and(() -> RobotState.isTeleop())
       .onTrue(m_arm.createCarryCommand()
       .andThen(m_intake.createAdvanceAfterIntakingCommand()));
     
@@ -351,12 +354,14 @@ public class RobotContainer {
           .alongWith(m_arm.createStowCommand())));
   }
   // spotless:on
-  
+
   public Command createAutoIntakeCommandSequence() {
     return new SequentialCommandGroup(
         m_arm.createStowCommand(),
         m_intake.createIntakeCommand().until(m_intake.eitherSensorSupplier()),
         m_arm.createCarryCommand(),
-        m_intake.createAdvanceAfterIntakingCommand());
+        m_intake.createAdvanceAfterIntakingCommand(),
+        m_arm.createDeployCommand(),
+        m_intake.createSetVelocityCommand(0));
   }
 }
