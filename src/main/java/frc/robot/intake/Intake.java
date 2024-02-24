@@ -1,5 +1,6 @@
 package frc.robot.intake;
 
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -17,7 +18,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeState;
 import java.util.function.BooleanSupplier;
-import com.revrobotics.CANSparkBase.ControlType;
 
 public class Intake extends SubsystemBase {
 
@@ -163,12 +163,11 @@ public class Intake extends SubsystemBase {
     return this.startEnd(() -> this.setVelocity(targetVelocity), () -> {});
   }
 
-
   public Command createJoystickControlCommand(XboxController m_controller, double factor) {
     return this.run(
         () -> {
           setState(IntakeState.MANUALLY_REPOSITIONING);
-          this.setVelocity(m_controller.getLeftY()*factor);
+          this.setVelocity(m_controller.getLeftY() * factor);
         });
   }
 
