@@ -190,7 +190,7 @@ public final class Constants {
 
     public static final int kCurrentLimit = 15;
 
-    public static final double kVelocityP = 1.0;
+    public static final double kVelocityP = 0.1;
     public static final double kVelocityI = 0.0;
     public static final double kVelocityD = 0.0;
 

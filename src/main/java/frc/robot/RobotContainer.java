@@ -232,9 +232,8 @@ public class RobotContainer {
         .withTimeout(0.7));
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
-      createAutoIntakeCommandSequence() 
-        
-        .andThen(new WaitCommand(1.9)));
+      createAutoIntakeCommandSequence()
+      );
     
     NamedCommands.registerCommand("stopIntake", 
       m_intake.createStopIntakeCommand());
@@ -244,7 +243,7 @@ public class RobotContainer {
   private void setDefaultCommands() {
     m_swerve.setDefaultCommand(
         new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematics, m_driver));
-    m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
+    m_intake.setDefaultCommand(m_intake.createSetVelocityCommand(0));
     m_climber.setDefaultCommand(m_climber.createStopCommand());
   }
 
@@ -359,6 +358,6 @@ public class RobotContainer {
         m_arm.createCarryCommand(),
         m_intake.createAdvanceAfterIntakingCommand(),
         m_arm.createDeployCommand(),
-        m_intake.createSetVelocityCommand(0));
+        new WaitCommand(1.9));
   }
 }
