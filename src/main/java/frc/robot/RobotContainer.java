@@ -15,9 +15,7 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -26,6 +24,7 @@ import frc.robot.Constants.ArmConstants.ArmState;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IntakeConstants.IntakeState;
 import frc.robot.Constants.OIConstants;
 import frc.robot.LEDs.LEDs;
 import frc.robot.arm.Arm;
@@ -220,7 +219,6 @@ public class RobotContainer {
   private void createNamedCommands() {
 
     NamedCommands.registerCommand("raiseArmAndWait", 
-
       m_arm.createDeployCommand()
         .andThen(new WaitCommand(1.4)));
     
@@ -233,8 +231,10 @@ public class RobotContainer {
         .withTimeout(0.7));
     
     NamedCommands.registerCommand("intakePieceAndRaise", 
-      createIntakeCommandSequence()
+      m_intake.createIntakeCommand().until(m_intake.eitherSensorSupplier())
         .andThen(m_arm.createCarryCommand())
+        .andThen(m_intake.createAdvanceAfterIntakingCommand())
+        .andThen(m_arm.createDeployCommand())
         .andThen(new WaitCommand(1.9)));
     
     NamedCommands.registerCommand("stopIntake", 
@@ -268,6 +268,11 @@ public class RobotContainer {
 
   // spotless:off
   private void configureOperatorButtonBindings() {
+    JoystickButton rightBumper = new JoystickButton(m_operator, Button.kRightBumper.value);
+    JoystickButton leftBumper = new JoystickButton(m_operator, Button.kLeftBumper.value);
+
+    Trigger hasNote = new Trigger(m_intake.eitherSensorSupplier());
+    Trigger armDeployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
 
     // CLIMBER
     // Calibrate upper limit of climber actuators
@@ -291,35 +296,28 @@ public class RobotContainer {
     // INTAKE
     // Control position of Note in intake
     Trigger trapControllTrigger = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
-    trapControllTrigger.whileTrue(m_intake.createIntakeJoystickControlCommand(m_operator));
-
-    
-    
-    
+    trapControllTrigger.whileTrue(m_intake.createJoystickControlCommand(m_operator));
     
     // Intake Note from floor
-    Trigger intakeButtonTrigger = new Trigger(m_operator.rightBumper(m_loop));
-
-    intakeButtonTrigger.onTrue(m_arm.createStowCommand().andThen(m_intake.createIntakeCommand().andThen(m_intake.createAdvanceAfterIntakingCommand().withInterruptBehavior(InterruptionBehavior.kCancelIncoming))));
-    intakeButtonTrigger.onFalse(m_intake.createStopIntakeCommand().unless(m_intake.getPieceMotion()));
+    rightBumper.and(hasNote.negate())
+      .whileTrue(m_arm.createStowCommand()
+      .andThen(m_intake.createIntakeCommand()));
     
-    JoystickButton leftBumper = new JoystickButton(m_operator, Button.kLeftBumper.value);
-    Trigger deployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
+    rightBumper.and(hasNote).and(m_intake.stateChecker(IntakeState.INTAKING))
+      .onTrue(m_arm.createCarryCommand()
+      .andThen(m_intake.createAdvanceAfterIntakingCommand()));
     
     // Reverse intake to outake or reject intaking Note
-    leftBumper.and(deployed.negate())
+    leftBumper.and(armDeployed.negate())
         .whileTrue(m_intake.createOuttakeToFloorCommand());
     
     // Shoot Note into Amp
-    leftBumper.and(deployed)
+    leftBumper.and(armDeployed)
         .whileTrue(m_intake.createOuttakeToAmpCommand());
 
-
-    
     // Shift Note further into Intake
     // new JoystickButton(m_operator, Button.kX.value)
     //     .onTrue(m_intake.createSetPositionCommand(0.05));
-
 
     // Move Note back in order to place in trap
     // new JoystickButton(m_operator, Button.kB.value)
@@ -351,14 +349,4 @@ public class RobotContainer {
           .alongWith(m_arm.createStowCommand())));
   }
   // spotless:on
-
-  public Command createIntakeCommandSequence() {
-    return new SequentialCommandGroup(
-        m_arm.createStowCommand(),
-        m_intake.createIntakeCommand().until(m_intake.eitherSensorSupplier()),
-        m_arm.createCarryCommand(),
-        m_intake
-            .createAdvanceAfterIntakingCommand()
-            .withInterruptBehavior(InterruptionBehavior.kCancelIncoming));
-  }
 }
