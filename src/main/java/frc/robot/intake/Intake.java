@@ -69,7 +69,10 @@ public class Intake extends SubsystemBase {
   }
 
   public BooleanSupplier stateChecker(IntakeState state) {
-    return () -> this.m_state.equals(state);
+    return () -> {
+      if (this.m_state != null) return this.m_state.equals(state);
+      else return false;
+    };
   }
 
   private void setState(IntakeState state) {
