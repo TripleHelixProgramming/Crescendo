@@ -35,7 +35,7 @@ public class Climber extends SubsystemBase {
     return this.run(
         () ->
             this.m_differentialDrive.arcadeDrive(
-                -xboxController.getRightY(), -xboxController.getRightX()));
+                -xboxController.getRightY(), 0));
   }
 
   @Override
