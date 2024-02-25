@@ -26,6 +26,7 @@ import frc.robot.Constants.ArmConstants.ArmState;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeState;
 import frc.robot.Constants.OIConstants;
 import frc.robot.LEDs.LEDs;
@@ -97,20 +98,23 @@ public class RobotContainer {
   }
 
   // spotless:off
-  public void teleopInit() {
-    m_arm.createStowCommand().schedule();
-    m_LEDs.createEnabledCommand(
-    m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
-    m_arm.createFlapDeployCommand().schedule();
+  public Command createTeleopInitSequence() {
+    return new SequentialCommandGroup(
+      m_arm.createStowCommand(),
+      m_arm.createFlapDeployCommand(),
+      m_LEDs.createEnabledCommand(
+        m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)));
   }
 
-  public void autonomousInit() {
-    m_LEDs.createEnabledCommand(
-      m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
+  public Command createAutonomousInitSequence() {
+    return new SequentialCommandGroup(
+      m_arm.createFlapDeployCommand(),
+      m_LEDs.createEnabledCommand(
+        m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)));
   }
 
-  public void disabledInit() {
-    m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector()).schedule();
+  public Command createDisabledInitSequence() {
+    return m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector());
   }
 
     // spotless:on
@@ -296,9 +300,9 @@ public class RobotContainer {
     // Control position of Note in intake
     Trigger leftStick = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
     //While arm is down
-    leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickControlCommand(m_operator, 1));
+    leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmDown));
     //While arm is up
-    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, 1.0));
+    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmUp));
 
     // Intake Note from floor
     rightBumper.and(hasNote.negate())
