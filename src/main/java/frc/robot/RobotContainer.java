@@ -101,6 +101,7 @@ public class RobotContainer {
     m_arm.createStowCommand().schedule();
     m_LEDs.createEnabledCommand(
     m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
+    m_arm.createFlapDeployCommand().schedule();
   }
 
   public void autonomousInit() {
@@ -297,7 +298,7 @@ public class RobotContainer {
     //While arm is down
     leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickControlCommand(m_operator, 1));
     //While arm is up
-    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, 0.8));
+    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, 1.0));
 
     // Intake Note from floor
     rightBumper.and(hasNote.negate())
