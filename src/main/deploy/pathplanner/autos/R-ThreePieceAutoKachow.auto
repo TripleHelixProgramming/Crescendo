@@ -62,6 +62,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "raiseArmAndWait"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 0.8
@@ -90,9 +96,22 @@
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "intakePieceAndRaise"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakePieceAndRaise"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "raiseArmAndWait"
+                      }
+                    }
+                  ]
                 }
               }
             ]

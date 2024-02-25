@@ -222,7 +222,7 @@ public class RobotContainer {
   private void createNamedCommands() {
     NamedCommands.registerCommand("raiseArmAndWait", 
       m_arm.createDeployCommand()
-        .andThen(new WaitCommand(1.4)));
+        .andThen(new WaitCommand(1.8)));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
       m_arm.createStowCommand()
@@ -357,8 +357,6 @@ public class RobotContainer {
         m_arm.createStowCommand(),
         m_intake.createIntakeCommand().until(m_intake.eitherSensorSupplier()),
         m_arm.createCarryCommand(),
-        m_intake.createAdvanceAfterIntakingCommand(),
-        m_arm.createDeployCommand(),
-        new WaitCommand(1.9));
+        m_intake.createAdvanceAfterIntakingCommand());
   }
 }
