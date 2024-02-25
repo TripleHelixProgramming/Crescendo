@@ -343,9 +343,9 @@ public class RobotContainer {
     // Give Note to teammates
     new JoystickButton(m_operator, Button.kBack.value)
         .onTrue(m_arm.createDeployCommand()
-          .alongWith(new WaitCommand(0.8))
+          .alongWith(new WaitCommand(0.5))
         .andThen(m_intake.createOuttakeToFloorCommand()
-          .raceWith(new WaitCommand(0.8)))
+          .raceWith(new WaitCommand(0.5)))
         .andThen(m_intake.createStopIntakeCommand()
           .alongWith(m_arm.createStowCommand())));
   }
