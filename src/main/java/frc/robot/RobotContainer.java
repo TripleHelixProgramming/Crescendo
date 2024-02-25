@@ -97,20 +97,23 @@ public class RobotContainer {
   }
 
   // spotless:off
-  public void teleopInit() {
-    m_arm.createStowCommand().schedule();
-    m_LEDs.createEnabledCommand(
-    m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
-    m_arm.createFlapDeployCommand().schedule();
+  public Command createTeleopInitSequence() {
+    return new SequentialCommandGroup(
+      m_arm.createStowCommand(),
+      m_arm.createFlapDeployCommand(),
+      m_LEDs.createEnabledCommand(
+        m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)));
   }
 
-  public void autonomousInit() {
-    m_LEDs.createEnabledCommand(
-      m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
+  public Command createAutonomousInitSequence() {
+    return new SequentialCommandGroup(
+      m_arm.createFlapDeployCommand(),
+      m_LEDs.createEnabledCommand(
+        m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)));
   }
 
-  public void disabledInit() {
-    m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector()).schedule();
+  public Command createDisabledInitSequence() {
+    return m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector());
   }
 
     // spotless:on
