@@ -159,14 +159,14 @@ public class RobotContainer {
       case 2:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? null
+                ? new Autonomous("R-TheTwoPieceNear")
                 : new Autonomous("B-TheTwoPieceNear");
         break;
 
       case 3:
         m_autonomous =
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? null
+                ? new Autonomous("R-TwoPieceFar1")
                 : new Autonomous("B-TwoPieceFar1");
         break;
 
@@ -180,7 +180,7 @@ public class RobotContainer {
       case 5:
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? null 
+                ? new Autonomous("R-ThreePieceAutoKachow")
                 : new Autonomous("B-ThreePieceAutoKachow");
             break;
 
