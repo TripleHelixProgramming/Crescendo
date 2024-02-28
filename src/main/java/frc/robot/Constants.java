@@ -208,7 +208,7 @@ public final class Constants {
     public static final double kPositionConversionFactor = (kRollerDiameter * Math.PI) / kGearRatio;
     public static final double kVelocityConversionFactor = kPositionConversionFactor / 60.0;
 
-    public static final double kMaxVelocity = (1 * 5880.0) * kVelocityConversionFactor;
+    public static final double kMaxVelocity = (0.5 * 11710.0) * kVelocityConversionFactor;
     public static final double kMaxAcceleration = kMaxVelocity / 0.1;
 
     public static final TrapezoidProfile.Constraints kConstraints =
@@ -216,6 +216,9 @@ public final class Constants {
 
     public static final int kRetroReflectiveSensorDIOPort = 1;
     public static final int kBeamBreakSensorDIOPort = 0;
+
+    public static final double kRepositionSpeedArmDown = 1.0;
+    public static final double kRepositionSpeedArmUp = 1.0;
   }
 
   public static final class ArmConstants {

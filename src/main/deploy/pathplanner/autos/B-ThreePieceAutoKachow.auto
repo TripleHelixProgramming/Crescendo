@@ -55,10 +55,16 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "intakePieceAndRaise"
+                  "name": "intakePiece"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "raiseArmAndWait"
           }
         },
         {
@@ -90,9 +96,22 @@
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "intakePieceAndRaise"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakePiece"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "raiseArmAndWait"
+                      }
+                    }
+                  ]
                 }
               }
             ]

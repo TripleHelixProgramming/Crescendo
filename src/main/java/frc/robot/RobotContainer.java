@@ -26,6 +26,7 @@ import frc.robot.Constants.ArmConstants.ArmState;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeState;
 import frc.robot.Constants.OIConstants;
 import frc.robot.LEDs.LEDs;
@@ -97,19 +98,23 @@ public class RobotContainer {
   }
 
   // spotless:off
-  public void teleopInit() {
-    m_arm.createStowCommand().schedule();
-    m_LEDs.createEnabledCommand(
-    m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
+  public Command createTeleopInitSequence() {
+    return new SequentialCommandGroup(
+      m_arm.createStowCommand(),
+      m_arm.createFlapDeployCommand(),
+      m_LEDs.createEnabledCommand(
+        m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)));
   }
 
-  public void autonomousInit() {
-    m_LEDs.createEnabledCommand(
-      m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)).schedule();
+  public Command createAutonomousInitSequence() {
+    return new SequentialCommandGroup(
+      m_arm.createFlapDeployCommand(),
+      m_LEDs.createEnabledCommand(
+        m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)));
   }
 
-  public void disabledInit() {
-    m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector()).schedule();
+  public Command createDisabledInitSequence() {
+    return m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector());
   }
 
     // spotless:on
@@ -221,7 +226,7 @@ public class RobotContainer {
   private void createNamedCommands() {
     NamedCommands.registerCommand("raiseArmAndWait", 
       m_arm.createDeployCommand()
-        .andThen(new WaitCommand(1.4)));
+        .andThen(new WaitCommand(1.8)));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
       m_arm.createStowCommand()
@@ -231,7 +236,7 @@ public class RobotContainer {
       m_intake.createOuttakeToAmpCommand()
         .withTimeout(0.7));
     
-    NamedCommands.registerCommand("intakePieceAndRaise", 
+    NamedCommands.registerCommand("intakePiece", 
       createAutoIntakeCommandSequence()
       );
     
@@ -295,9 +300,9 @@ public class RobotContainer {
     // Control position of Note in intake
     Trigger leftStick = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
     //While arm is down
-    leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickControlCommand(m_operator, 1));
+    leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmDown));
     //While arm is up
-    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, 0.8));
+    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmUp));
 
     // Intake Note from floor
     rightBumper.and(hasNote.negate())
@@ -356,8 +361,6 @@ public class RobotContainer {
         m_arm.createStowCommand(),
         m_intake.createIntakeCommand().until(m_intake.eitherSensorSupplier()),
         m_arm.createCarryCommand(),
-        m_intake.createAdvanceAfterIntakingCommand(),
-        m_arm.createDeployCommand(),
-        new WaitCommand(1.9));
+        m_intake.createAdvanceAfterIntakingCommand());
   }
 }
