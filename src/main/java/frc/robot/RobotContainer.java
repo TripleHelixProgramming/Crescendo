@@ -236,7 +236,7 @@ public class RobotContainer {
       m_intake.createOuttakeToAmpCommand()
         .withTimeout(0.7));
     
-    NamedCommands.registerCommand("intakePieceAndRaise", 
+    NamedCommands.registerCommand("intakePiece", 
       createAutoIntakeCommandSequence()
       );
     
