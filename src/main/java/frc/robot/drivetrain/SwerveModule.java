@@ -2,6 +2,8 @@
 
 package frc.robot.drivetrain;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
@@ -59,10 +61,10 @@ public class SwerveModule {
     m_driveMotor.setIdleMode(IdleMode.kCoast);
     m_turningMotor.setIdleMode(IdleMode.kBrake);
 
-    m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDriveMotorCurrentLimit);
-    m_turningMotor.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
-    m_driveMotor.enableVoltageCompensation(RobotConstants.kNominalVoltage);
-    m_turningMotor.enableVoltageCompensation(RobotConstants.kNominalVoltage);
+    m_driveMotor.setSmartCurrentLimit((int) ModuleConstants.kDriveMotorCurrentLimit.in(Amps));
+    m_turningMotor.setSmartCurrentLimit((int) ModuleConstants.kTurningMotorCurrentLimit.in(Amps));
+    m_driveMotor.enableVoltageCompensation(RobotConstants.kNominalVoltage.in(Volts));
+    m_turningMotor.enableVoltageCompensation(RobotConstants.kNominalVoltage.in(Volts));
 
     m_driveMotor.setInverted(false);
     m_turningMotor.setInverted(false);
@@ -104,8 +106,10 @@ public class SwerveModule {
     m_driveEncoder = m_driveMotor.getEncoder();
     m_turningRelativeEncoder = m_turningMotor.getEncoder();
 
-    m_driveEncoder.setPositionConversionFactor(ModuleConstants.kDrivePositionConversionFactor);
-    m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveVelocityConversionFactor);
+    m_driveEncoder.setPositionConversionFactor(
+        ModuleConstants.kDrivePositionConversionFactor.in(Meters));
+    m_driveEncoder.setVelocityConversionFactor(
+        ModuleConstants.kDriveVelocityConversionFactor.in(MetersPerSecond));
 
     m_turningRelativeEncoder.setPositionConversionFactor(
         ModuleConstants.kTurnPositionConversionFactor);

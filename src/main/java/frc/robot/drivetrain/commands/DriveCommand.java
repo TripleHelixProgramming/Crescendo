@@ -5,6 +5,10 @@ package frc.robot.drivetrain.commands;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Velocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
@@ -12,9 +16,9 @@ import frc.robot.drivetrain.Drivetrain;
 
 public abstract class DriveCommand extends Command {
 
-  private double xDot;
-  private double yDot;
-  private double thetaDot;
+  private Measure<Velocity<Distance>> xDot;
+  private Measure<Velocity<Distance>> yDot;
+  private Measure<Velocity<Angle>> thetaDot;
 
   // used to swap control locations
   SwerveDriveKinematics kinematicsType;
@@ -34,9 +38,9 @@ public abstract class DriveCommand extends Command {
 
   @Override
   public void execute() {
-    xDot = getX() * DriveConstants.kMaxTranslationalVelocity;
-    yDot = getY() * DriveConstants.kMaxTranslationalVelocity;
-    thetaDot = getTheta() * DriveConstants.kMaxRotationalVelocity;
+    xDot = DriveConstants.kMaxTranslationalVelocity.times(getX());
+    yDot = DriveConstants.kMaxTranslationalVelocity.times(getY());
+    thetaDot = DriveConstants.kMaxRotationalVelocity.times(getTheta());
 
     SmartDashboard.putBoolean("fieldRelative", fieldRelative());
     SmartDashboard.putBoolean("rotateField", drivetrain.fieldRotatedSupplier().getAsBoolean());

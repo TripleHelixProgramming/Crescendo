@@ -2,6 +2,8 @@
 
 package frc.robot.drivetrain;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -17,7 +19,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
@@ -25,8 +26,6 @@ import java.util.function.BooleanSupplier;
 
 /** Constructs a swerve drive style drivetrain. */
 public class Drivetrain extends SubsystemBase {
-  static double kMaxSpeed = Constants.DriveConstants.kMaxTranslationalVelocity;
-  static double kMaxAngularSpeed = Constants.DriveConstants.kMaxRotationalVelocity;
 
   private final SwerveDriveKinematics m_kinematics = DriveConstants.kDriveKinematics;
 
@@ -122,7 +121,8 @@ public class Drivetrain extends SubsystemBase {
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        swerveModuleStates, DriveConstants.kMaxTranslationalVelocity);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -134,7 +134,8 @@ public class Drivetrain extends SubsystemBase {
     var swerveModuleStates =
         kinematicsType.toSwerveModuleStates(
             ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        swerveModuleStates, DriveConstants.kMaxTranslationalVelocity);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -240,8 +241,8 @@ public class Drivetrain extends SubsystemBase {
         new HolonomicPathFollowerConfig(
             AutoConstants.kTranslationControllerGains, // Translation PID constants
             AutoConstants.kRotationControllerGains, // Rotation PID constants
-            DriveConstants.kMaxTranslationalVelocity, // Max module speed, in m/s
-            DriveConstants.kRadius, // Drive base radius in meters
+            DriveConstants.kMaxTranslationalVelocity.in(MetersPerSecond), // Max module speed
+            DriveConstants.kRadius.in(Meters), // Drive base radius
             new ReplanningConfig() // Default path replanning config
             ),
         
