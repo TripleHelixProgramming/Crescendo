@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ArmConstants.ArmState;
 import java.util.function.BooleanSupplier;
@@ -38,6 +39,8 @@ public class Arm extends SubsystemBase {
   public void periodic() {
     if (m_armState != null) SmartDashboard.putString("Arm State", m_armState.name());
   }
+
+  public final Trigger deployed = new Trigger(this.stateChecker(ArmState.DEPLOYED));
 
   public BooleanSupplier stateChecker(ArmState state) {
     return () -> {
