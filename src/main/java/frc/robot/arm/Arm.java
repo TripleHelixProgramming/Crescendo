@@ -1,76 +1,87 @@
 package frc.robot.arm;
 
-import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ArmConstants.ArmState;
 import java.util.function.BooleanSupplier;
 
 public class Arm extends SubsystemBase {
-  private final DoubleSolenoid m_armMoverLeft;
-  private final DoubleSolenoid m_armMoverRight;
+  private ArmState m_armState;
+  private final DoubleSolenoid m_armDeployer;
+  private final DoubleSolenoid m_armHardStopper;
+  private final DoubleSolenoid m_flapRetracter;
 
   public Arm() {
-    m_armMoverLeft =
+    m_armDeployer =
         new DoubleSolenoid(
             PneumaticsModuleType.REVPH,
-            ArmConstants.kArmMoverLeftForwardChannel,
-            ArmConstants.kArmMoverLeftReverseChannel);
-    m_armMoverRight =
+            ArmConstants.kDeployerForwardChannel,
+            ArmConstants.kDeployerReverseChannel);
+    m_armHardStopper =
         new DoubleSolenoid(
             PneumaticsModuleType.REVPH,
-            ArmConstants.kArmMoverRightForwardChannel,
-            ArmConstants.kArmMoverRightReverseChannel);
+            ArmConstants.kHardStopperForwardChannel,
+            ArmConstants.kHardStopperReverseChannel);
+    m_flapRetracter =
+        new DoubleSolenoid(
+            PneumaticsModuleType.REVPH,
+            ArmConstants.kFlapForwardChannel,
+            ArmConstants.kFlapReverseChannel);
   }
 
   @Override
-  public void initSendable(SendableBuilder builder) {
-    super.initSendable(builder);
-    // Publish the arm state to telemetry.
-    builder.addBooleanProperty(
-        "ArmRaised",
-        () -> (m_armMoverLeft.get() == Value.kForward) && (m_armMoverRight.get() == Value.kForward),
-        null);
+  public void periodic() {
+    if (m_armState != null) SmartDashboard.putString("Arm State", m_armState.name());
   }
 
-  private void pneumaticDeploy() {
-    m_armMoverLeft.set(Value.kForward);
-    m_armMoverRight.set(Value.kForward);
+  public BooleanSupplier stateChecker(ArmState state) {
+    return () -> {
+      if (this.m_armState != null) return this.m_armState.equals(state);
+      else return false;
+    };
   }
 
-  private void pneumaticRetract() {
-    m_armMoverLeft.set(Value.kReverse);
-    m_armMoverRight.set(Value.kReverse);
+  private void setState(ArmState state) {
+    this.m_armState = state;
   }
 
-  // Command Factory methods
-  // See
-  // https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#instance-command-factory-methods
-
-  public Command createLowerArmCommand() {
-    return this.runOnce(() -> this.pneumaticRetract());
+  public Command createStowCommand() {
+    return this.runOnce(
+        () -> {
+          this.setState(ArmState.STOWED);
+          this.m_armHardStopper.set(Value.kReverse);
+          this.m_armDeployer.set(Value.kReverse);
+        });
   }
 
-  public Command createRaiseArmCommand() {
-    return this.runOnce(() -> this.pneumaticDeploy());
+  public Command createDeployCommand() {
+    return this.runOnce(
+        () -> {
+          this.setState(ArmState.DEPLOYED);
+          this.m_armHardStopper.set(Value.kReverse);
+          this.m_armDeployer.set(Value.kForward);
+        });
   }
 
-  public BooleanSupplier isArmRaised() {
-    BooleanSupplier ArmRaised =
-        () ->
-            m_armMoverLeft.get().equals(Value.kForward)
-                & m_armMoverRight.get().equals(Value.kForward);
-    return ArmRaised;
+  public Command createCarryCommand() {
+    return this.runOnce(
+        () -> {
+          this.setState(ArmState.CARRY);
+          this.m_armHardStopper.set(Value.kForward);
+          this.m_armDeployer.set(Value.kForward);
+        });
   }
 
-  public BooleanSupplier isArmLowered() {
-    BooleanSupplier ArmLowered =
-        () ->
-            m_armMoverLeft.get().equals(Value.kReverse)
-                & m_armMoverRight.get().equals(Value.kReverse);
-    return ArmLowered;
+  public Command createFlapDeployCommand() {
+    return this.runOnce(() -> this.m_flapRetracter.set(Value.kForward));
+  }
+
+  public Command createFlapRetractCommand() {
+    return this.runOnce(() -> this.m_flapRetracter.set(Value.kReverse));
   }
 }
