@@ -57,10 +57,13 @@ public final class Constants {
 
     // Units are meters.
     // Distance between centers of right and left wheels on robot
-    public static final double kTrackWidth = 0.572; // 2023 Competion Robot
+    public static final double kTrackWidth = 0.6096; // 2024 Competion Robot 24 inches
 
     // Distance between front and rear wheels on robot
-    public static final double kWheelBase = 0.622; // 2023 Competion Robot
+    public static final double kWheelBase = 0.5715; // 2024 Competion Robot 22.5 inches
+
+    // public static final double kTrackWidth = 0.572; // 2023 Competion Robot
+    // public static final double kWheelBase = 0.622; // 2023 Competion Robot
 
     // Robot Radius
     public static final double kRadius = 0.423;
@@ -82,6 +85,13 @@ public final class Constants {
             new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0) // rear right
             );
 
+    public static final SwerveDriveKinematics kDriveKinematicsDriveFromArm =
+        new SwerveDriveKinematics(
+            new Translation2d(kWheelBase, kTrackWidth / 2.0), // front left
+            new Translation2d(kWheelBase, -kTrackWidth / 2.0), // front right
+            new Translation2d(0.0, kTrackWidth / 2.0), // rear left
+            new Translation2d(0.0, -kTrackWidth / 2.0) // rear right
+            );
     // public static final boolean kGyroReversed = false;
 
     // public static final double ksVolts = 1.0;
@@ -99,7 +109,7 @@ public final class Constants {
     public static final double kDriveD = 0.0; // 2023 Competition Robot
     public static final double kDriveFF = 0.255; // 2023 Competition Robot
 
-    public static final double kTurningP = 1.5;
+    public static final double kTurningP = 10.0; // 1.5;
     public static final double kTurningI = 0.0; // 2023 Competition Robot
     public static final double kTurningD = 0.0; // 2023 Competition Robot
 
@@ -111,8 +121,7 @@ public final class Constants {
     // public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254,
     // 0.137);
 
-    public static final double kWheelDiameterMeters =
-        0.10; // little less that 4 in; 2024 Competion Robot and test bot
+    public static final double kWheelDiameterMeters = 0.10; // 3.7 in; 2023 Competion Robot
 
     // By default, the drive encoder in position mode measures rotations at the drive motor
     // Convert to meters at the wheel
@@ -160,36 +169,8 @@ public final class Constants {
     public static int kZorroHIn = 14;
   }
 
-  public static final class ArmConstants {
-    public static final int k_intakeMotorPort = 16;
-
-    public static final int k_intakeMotorCurrentLimit = 15;
-
-    public static final double kIntakeVelocityP = 1.0;
-    public static final double kIntakeVelocityI = 0.0;
-    public static final double kIntakeVelocityD = 0.0;
-
-    public static final double kIntakePositionP = 10.0;
-    public static final double kIntakePositionI = 0.0;
-    public static final double kIntakePositionD = 0.0;
-
-    public static final double kIntakeRollerDiameterMeters = 0.0508; // 2 inches
-    public static final double kIntakeGearRatio = 10.0;
-
-    public static final double kIntakePositionConversionFactor =
-        (kIntakeRollerDiameterMeters * Math.PI) / kIntakeGearRatio;
-    public static final double kIntakeVelocityConversionFactor =
-        kIntakePositionConversionFactor / 60.0;
-
-    public static final int kArmMoverLeftForwardChannel = 0;
-    public static final int kArmMoverLeftReverseChannel = 1;
-    public static final int kArmMoverRightForwardChannel = 2;
-    public static final int kArmMoverRightReverseChannel = 3;
-
-    public static final int kNoteSensorDIOPort = 1;
-  }
-
   public static final class AutoConstants {
+
     public static final int kAllianceColorSelectorPort = 10;
 
     // length is 8
@@ -200,8 +181,8 @@ public final class Constants {
     // public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
     // public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
-    public static final PIDConstants kTranslationControllerGains = new PIDConstants(3.0, 0.0, 0.0);
-    public static final PIDConstants kRotationControllerGains = new PIDConstants(10.0, 0.0, 0.0);
+    public static final PIDConstants kTranslationControllerGains = new PIDConstants(1.0, 0.0, 0.0);
+    public static final PIDConstants kRotationControllerGains = new PIDConstants(7.0, 0.0, 0.0);
 
     // Constraint for the motion profilied robot angle controller
     // public static final TrapezoidProfile.Constraints kThetaControllerConstraints =

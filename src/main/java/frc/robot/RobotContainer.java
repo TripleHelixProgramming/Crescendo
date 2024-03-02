@@ -2,32 +2,38 @@
 
 package frc.robot;
 
-// spotless:off
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
-// import edu.wpi.first.wpilibj.XboxController;
-// import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-// import frc.robot.arm.Arm;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
-// import frc.robot.intake.Intake;
-// spotless:on
 
 public class RobotContainer {
 
+  private static RobotContainer INSTANCE = null;
+
+  public static RobotContainer getRobotContainer() {
+    if (INSTANCE == null) {
+      INSTANCE = new RobotContainer();
+    }
+    return INSTANCE;
+  }
+
+  private final PowerDistribution m_PowerDistribution = new PowerDistribution(1, ModuleType.kRev);
+
   private final Drivetrain m_swerve = new Drivetrain();
-  // private final Arm m_arm = new Arm();
-  // private final Intake m_intake = new Intake();
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
-  // private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
 
   // digital inputs for autonomous selection
   private final DigitalInput[] autonomousModes =
@@ -35,76 +41,59 @@ public class RobotContainer {
 
   private Autonomous m_autonomous;
 
-  // spotless:off
   public RobotContainer() {
 
     for (int i = 0; i < AutoConstants.kAutonomousModeSelectorPorts.length; i++) {
       autonomousModes[i] = new DigitalInput(AutoConstants.kAutonomousModeSelectorPorts[i]);
     }
 
-    m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_driver));
+    setDefaultCommands();
+
     m_swerve.configurePathPlanner();
 
-    // m_intake.setDefaultCommand(m_intake.createStopIntakeCommand());
-
     // Create a button on Smart Dashboard to reset the encoders.
-    SmartDashboard.putData("Align Encoders",
-        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets())
-          .ignoringDisable(true));
+    SmartDashboard.putData(
+        "Align Encoders",
+        new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets()).ignoringDisable(true));
 
-    // Driver controller buttons
-    new JoystickButton(m_driver, OIConstants.kZorroDIn)
-        .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
-          .ignoringDisable(true));
-    
-    // Command lowerArmCommand = m_arm.createLowerArmCommand();
-    // Command raiseArmCommmand = m_arm.createRaiseArmCommand();
-    
-    // // Operator controller buttons
-    // new JoystickButton(m_operator, Button.kA.value).onTrue(lowerArmCommand);
-    // new JoystickButton(m_operator, Button.kY.value).onTrue(raiseArmCommmand);
-
-    // // Intake Note from floor
-    // new JoystickButton(m_operator, Button.kRightBumper.value)
-    //     .whileTrue(m_intake.createSetVoltageCommand(12.0)
-    //     .until(m_intake::hasGamePiece)
-    //     .andThen(m_intake.createSetPositionCommand(0.2))
-    //     .onlyIf(m_arm.isArmLowered()));
-
-    // // Shift Note further into Intake
-    // new JoystickButton(m_operator, Button.kX.value)
-    //     .whileTrue(m_intake.createSetPositionCommand(0.05));
-
-    // // Shoot Note into Amp
-    // new JoystickButton(m_operator, Button.kLeftBumper.value)
-    //     .whileTrue(m_intake.createSetVoltageCommand(12.0)
-    //     .onlyIf(m_arm.isArmRaised()));
-
-    // // Reverses intake
-    // new JoystickButton(m_operator, Button.kB.value)
-    //     .whileTrue(m_intake.createSetVoltageCommand(-12.0));
+    configureDriverButtonBindings();
   }
-  // spotless:on
 
   /**
    * @return The Command that runs the selected autonomous mode
    */
   public Command getAutonomousCommand() {
     updateSelectedAutonomous();
-    return m_autonomous.getPathPlannerAuto();
+    if (m_autonomous != null) return m_autonomous.getPathPlannerAuto();
+    else return null;
   }
 
-  public void teleopInit() {
-    // m_arm.createLowerArmCommand().schedule();
+  // spotless:off
+  public Command createTeleopInitSequence() {
+    return new SequentialCommandGroup();
   }
+
+  public Command createAutonomousInitSequence() {
+    return new SequentialCommandGroup();
+  }
+
+  public Command createDisabledInitSequence() {
+    return new SequentialCommandGroup();
+  }
+
+    // spotless:on
 
   public void periodic() {
     updateSelectedAutonomous();
+
     if (m_autonomous != null) {
       SmartDashboard.putString("Auto", m_autonomous.getFilename());
     } else {
       SmartDashboard.putString("Auto", "Null");
     }
+
+    SmartDashboard.putNumber("PDHVoltage", m_PowerDistribution.getVoltage());
+    SmartDashboard.putNumber("PDHTotalCurrent", m_PowerDistribution.getTotalCurrent());
   }
 
   private class Autonomous {
@@ -124,49 +113,61 @@ public class RobotContainer {
     }
   }
 
+  // spotless:off
   /** Updates the autonomous based on the physical selector switch */
   private void updateSelectedAutonomous() {
-    switch (getSelectedAutonomousMode()) {
-      case 0:
-        m_autonomous =
-            m_swerve.getRedAlliance()
-                ? new Autonomous("R-driveFwd2m")
-                : new Autonomous("B-driveFwd2m");
-        break;
-
+    switch (getAutonomousModeSwitchIndex()) {
       case 1:
         m_autonomous =
-            m_swerve.getRedAlliance()
+            m_swerve.redAllianceSupplier().getAsBoolean()
                 ? new Autonomous("R-driveFwd2m")
-                : new Autonomous("B_SpinForward");
+                : new Autonomous("B-driveFwd3m");
         break;
 
-      case 2:
-
-      case 3:
-
-      case 4:
-
-      case 5:
-
-      case 6:
-
-      case 7:
-
       default:
-        m_autonomous = new Autonomous("B-driveFwd3m");
+        m_autonomous = null;
     }
   }
+  // spotless:on
 
   /**
    * @return Index in array of Digital Inputs corresponding to selected auto mode
    */
-  private int getSelectedAutonomousMode() {
+  private int getAutonomousModeSwitchIndex() {
     for (int port = 0; port < autonomousModes.length; port++) {
       if (!autonomousModes[port].get()) {
-        return port;
+        return port + 1;
       }
     }
-    return -1; // failure of the physical switch
+    return 0; // failure of the physical switch
   }
+
+  /**
+   * Gets the current drawn from the Power Distribution Hub by a CAN motor controller, assuming that
+   * (PDH port number + 10) = CAN ID
+   *
+   * @param CANBusPort The CAN ID of the motor controller
+   * @return Current in Amps on the PDH channel corresponding to the motor channel
+   */
+  public double getPDHCurrent(int CANBusPort) {
+    return m_PowerDistribution.getCurrent(CANBusPort - 10);
+  }
+
+  private void setDefaultCommands() {
+    m_swerve.setDefaultCommand(
+        new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematics, m_driver));
+  }
+
+  // spotless:off
+  private void configureDriverButtonBindings() {
+
+    // Reset heading
+    new JoystickButton(m_driver, OIConstants.kZorroHIn)
+        .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
+        .ignoringDisable(true));
+
+    new JoystickButton(m_driver,OIConstants.kZorroAIn)
+    .whileTrue((new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematicsDriveFromArm, m_driver)));
+  }
+  // spotless:on
 }

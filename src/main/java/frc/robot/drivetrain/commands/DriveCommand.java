@@ -4,6 +4,7 @@ package frc.robot.drivetrain.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
@@ -15,12 +16,17 @@ public abstract class DriveCommand extends Command {
   private double yDot;
   private double thetaDot;
 
+  // used to swap control locations
+  SwerveDriveKinematics kinematicsType;
+
   // The subsystem the command runs on
   public final Drivetrain drivetrain;
 
-  public DriveCommand(Drivetrain subsystem) {
+  public DriveCommand(Drivetrain subsystem, SwerveDriveKinematics kinematicsType) {
     drivetrain = subsystem;
     addRequirements(drivetrain);
+
+    this.kinematicsType = kinematicsType;
   }
 
   @Override
@@ -33,10 +39,11 @@ public abstract class DriveCommand extends Command {
     thetaDot = getTheta() * DriveConstants.kMaxRotationalVelocity;
 
     SmartDashboard.putBoolean("fieldRelative", fieldRelative());
-    SmartDashboard.putBoolean("rotateField", drivetrain.getFieldRotated());
+    SmartDashboard.putBoolean("rotateField", drivetrain.fieldRotatedSupplier().getAsBoolean());
 
     drivetrain.setChassisSpeeds(
-        fieldRelative() ? getFieldRelativeChassisSpeeds() : getRobotRelativeChassisSpeeds());
+        fieldRelative() ? getFieldRelativeChassisSpeeds() : getRobotRelativeChassisSpeeds(),
+        kinematicsType);
   }
 
   private ChassisSpeeds getRobotRelativeChassisSpeeds() {
@@ -45,7 +52,7 @@ public abstract class DriveCommand extends Command {
 
   // spotless:off
   private ChassisSpeeds getFieldRelativeChassisSpeeds() {
-    return drivetrain.getFieldRotated()
+    return drivetrain.fieldRotatedSupplier().getAsBoolean()
         ? ChassisSpeeds.fromFieldRelativeSpeeds(
             xDot, yDot, thetaDot, drivetrain.getHeading().rotateBy(new Rotation2d(Math.PI)))
         : ChassisSpeeds.fromFieldRelativeSpeeds(

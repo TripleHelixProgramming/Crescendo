@@ -21,6 +21,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
+import java.util.function.BooleanSupplier;
 
 /** Constructs a swerve drive style drivetrain. */
 public class Drivetrain extends SubsystemBase {
@@ -132,6 +133,18 @@ public class Drivetrain extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
+  // uses kinematics type to determine robot center
+  public void setChassisSpeeds(ChassisSpeeds chassisSpeeds, SwerveDriveKinematics kinematicsType) {
+    var swerveModuleStates =
+        kinematicsType.toSwerveModuleStates(
+            ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
+
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
     m_odometry.update(
@@ -191,8 +204,7 @@ public class Drivetrain extends SubsystemBase {
             ? new Pose2d(getPose().getTranslation(), new Rotation2d(Math.PI))
             : new Pose2d(getPose().getTranslation(), new Rotation2d());
 
-    m_odometry.resetPosition( // m_gyro.getRotation2d()
-        GetGyroHeading(), getSwerveModulePositions(), pose);
+    m_odometry.resetPosition(m_gyro.getRotation2d(), getSwerveModulePositions(), pose);
   }
 
   /**
@@ -256,11 +268,15 @@ public class Drivetrain extends SubsystemBase {
   }
   // spotless:on
 
-  public boolean getFieldRotated() {
+  public BooleanSupplier fieldRotatedSupplier() {
+    return () -> allianceSelectionSwitch.get();
+  }
+
+  private boolean getRedAlliance() {
     return allianceSelectionSwitch.get();
   }
 
-  public boolean getRedAlliance() {
-    return allianceSelectionSwitch.get();
+  public BooleanSupplier redAllianceSupplier() {
+    return () -> allianceSelectionSwitch.get();
   }
 }
