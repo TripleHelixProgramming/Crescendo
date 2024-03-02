@@ -4,9 +4,7 @@ package frc.robot.drivetrain;
 
 import java.util.function.BooleanSupplier;
 
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-
+import java.util.Optional;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -33,6 +31,15 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.visionConstants;
+
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 
 
@@ -95,7 +102,21 @@ public class Drivetrain extends SubsystemBase {
       new DigitalInput(AutoConstants.kAllianceColorSelectorPort);
 
   PhotonCamera cam = new PhotonCamera(visionConstants.kCameraName1);
+  //Forward Camera
+  //Change valsu
+  Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,180)); 
+  //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+// Construct PhotonPoseEstimator
+  PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(visionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam, robotToCam);
   
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+    photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+    return photonPoseEstimator.update();
+}
+
+public void updateSwerveDrivePoseEstimator(){
+    m_PoseEstimator.
+}
 
 
 
@@ -110,14 +131,6 @@ public class Drivetrain extends SubsystemBase {
       module.initializeAbsoluteTurningEncoder();
       module.initializeRelativeTurningEncoder();
     }
-
-  //Forward Camera
-  
-  //Change vals
-  Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,180)); 
-  //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-// Construct PhotonPoseEstimator
-  PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(visionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam, robotToCam);
   }
 
   @Override
