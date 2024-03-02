@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
-    getRobotContainer().createDisabledInitSequence().schedule();
+    getRobotContainer().disabledInit();
   }
 
   @Override
@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    getRobotContainer().createAutonomousInitSequence().schedule();
+    getRobotContainer().autonomousInit();
     m_autonomousCommand = getRobotContainer().getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    getRobotContainer().createTeleopInitSequence().schedule();
+    getRobotContainer().teleopInit();
   }
 
   @Override
