@@ -4,13 +4,16 @@ package frc.robot.drivetrain;
 
 import java.util.function.BooleanSupplier;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+
+
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -29,6 +32,9 @@ import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.visionConstants;
+
+
 
 /** Constructs a swerve drive style drivetrain. */
 public class Drivetrain extends SubsystemBase {
@@ -80,20 +86,16 @@ public class Drivetrain extends SubsystemBase {
             m_rearRight.getPosition()
           });
 
+  private final SwerveDrivePoseEstimator m_PoseEstimator = 
+          new SwerveDrivePoseEstimator(m_kinematics, m_gyro.getRotation2d(), getSwerveModulePositions(), getPose());
+
   private final Field2d m_field = new Field2d();
 
   private final DigitalInput allianceSelectionSwitch =
       new DigitalInput(AutoConstants.kAllianceColorSelectorPort);
 
+  PhotonCamera cam = new PhotonCamera(visionConstants.kCameraName1);
   
-
-  AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
-  //Forward Camera
-  cam = new PhotonCamera("testCamera");
-  Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-
-// Construct PhotonPoseEstimator
-
 
 
 
@@ -108,7 +110,14 @@ public class Drivetrain extends SubsystemBase {
       module.initializeAbsoluteTurningEncoder();
       module.initializeRelativeTurningEncoder();
     }
-    PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam, robotToCam);
+
+  //Forward Camera
+  
+  //Change vals
+  Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,180)); 
+  //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+// Construct PhotonPoseEstimator
+  PhotonPoseEstimator photonPoseEstimator = new PhotonPoseEstimator(visionConstants.aprilTagFieldLayout, PhotonPoseEstimator.PoseStrategy.CLOSEST_TO_REFERENCE_POSE, cam, robotToCam);
   }
 
   @Override

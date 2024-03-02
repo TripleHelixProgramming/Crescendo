@@ -3,6 +3,9 @@
 package frc.robot;
 
 import com.pathplanner.lib.util.PIDConstants;
+
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -140,7 +143,10 @@ public final class Constants {
     public static final double kTurnPositionConversionFactor = 1.0 / kTurnGearRatio;
   }
 
-  public static final class cameraConstants{
+  public static final class visionConstants{
+    public static final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+    public static final String kCameraName1 = "rear"; 
+    public static final int a = 0;
     
   }
 
