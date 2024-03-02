@@ -263,9 +263,16 @@ public class RobotContainer {
     new JoystickButton(m_driver,OIConstants.kZorroAIn)
     .whileTrue((new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematicsDriveFromArm, m_driver)));
 
-    new JoystickButton(m_driver, OIConstants.kZorroDIn)
-    .whileTrue(m_intake.createOuttakeToAmpCommand()
-    .onlyIf(m_arm.stateChecker(ArmState.DEPLOYED)));
+
+    Trigger armDeployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
+    JoystickButton D_Button = new JoystickButton(m_driver, OIConstants.kZorroDIn);
+    
+    // Reverse intake to outake or reject intaking Note
+    D_Button.and(armDeployed.negate())
+            .whileTrue(m_intake.createOuttakeToFloorCommand());
+        // Shoot Note into Amp
+    D_Button.and(armDeployed)
+            .whileTrue(m_intake.createOuttakeToAmpCommand());
   }
   // spotless:on
 
