@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeState;
 import java.util.function.BooleanSupplier;
@@ -43,7 +44,7 @@ public class Intake extends SubsystemBase {
 
   private final EventLoop m_loop = new EventLoop();
   private final BooleanEvent m_secondSensorTriggered =
-      new BooleanEvent(m_loop, secondSensorSupplier());
+      new BooleanEvent(m_loop, m_noteSensorRetroReflective::get).negate().rising();
 
   public Intake() {
 
@@ -94,7 +95,7 @@ public class Intake extends SubsystemBase {
 
   // spotless:off
   private void advanceAfterIntaking(double targetPosition) {
-    m_secondSensorTriggered.rising().ifHigh(
+    m_secondSensorTriggered.ifHigh(
             () -> {
               m_positionController.reset(
                   m_relativeEncoder.getPosition(), m_relativeEncoder.getVelocity());
@@ -138,22 +139,13 @@ public class Intake extends SubsystemBase {
         // end
         interrupted -> {},
         // isFinished
-        this.atGoalSupplier(),
+        m_positionController::atGoal,
         // requirements
         this);
   }
 
-  public BooleanSupplier eitherSensorSupplier() {
-    return () -> (!m_noteSensorRetroReflective.get() || !m_noteSensorBeamBreak.get());
-  }
-
-  public BooleanSupplier secondSensorSupplier() {
-    return () -> !m_noteSensorRetroReflective.get();
-  }
-
-  public BooleanSupplier atGoalSupplier() {
-    return () -> m_positionController.atGoal();
-  }
+  public final Trigger hasNote =
+      new Trigger(() -> (!m_noteSensorRetroReflective.get() || !m_noteSensorBeamBreak.get()));
 
   private void setVelocity(double targetVelocity) {
     m_velocityController.setReference(targetVelocity, ControlType.kVelocity);
