@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -34,7 +33,6 @@ public class RobotContainer {
 
   private final Drivetrain m_swerve = new Drivetrain();
 
-  private final EventLoop m_loop = new EventLoop();
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
 
   // digital inputs for autonomous selection
@@ -49,7 +47,6 @@ public class RobotContainer {
       autonomousModes[i] = new DigitalInput(AutoConstants.kAutonomousModeSelectorPorts[i]);
     }
 
-    createNamedCommands();
     setDefaultCommands();
 
     m_swerve.configurePathPlanner();
@@ -87,7 +84,6 @@ public class RobotContainer {
     // spotless:on
 
   public void periodic() {
-    m_loop.poll();
     updateSelectedAutonomous();
 
     if (m_autonomous != null) {
@@ -155,9 +151,6 @@ public class RobotContainer {
    */
   public double getPDHCurrent(int CANBusPort) {
     return m_PowerDistribution.getCurrent(CANBusPort - 10);
-  }
-
-  private void createNamedCommands() {
   }
 
   private void setDefaultCommands() {

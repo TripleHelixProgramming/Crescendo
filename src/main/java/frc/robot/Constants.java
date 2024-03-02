@@ -167,12 +167,6 @@ public final class Constants {
     public static int kZorroFUp = 12;
     public static int kZorroDIn = 13;
     public static int kZorroHIn = 14;
-
-    // XBox Controller D-Pad Constants
-    public static int kUp = 0;
-    public static int kRight = 90;
-    public static int kDown = 180;
-    public static int kLeft = 270;
   }
 
   public static final class AutoConstants {
@@ -180,7 +174,7 @@ public final class Constants {
     public static final int kAllianceColorSelectorPort = 10;
 
     // length is 8
-    public static final int[] kAutonomousModeSelectorPorts = {11, 12, 13, 18, 19};
+    public static final int[] kAutonomousModeSelectorPorts = {11, 12, 13, 18, 19, 20, 21, 22};
 
     // public static final double kMaxSpeedMetersPerSecond = 3.0;
     // public static final double kMaxAccelerationMetersPerSecondSquared = 3.0;
