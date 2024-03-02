@@ -140,6 +140,10 @@ public final class Constants {
     public static final double kTurnPositionConversionFactor = 1.0 / kTurnGearRatio;
   }
 
+  public static final class cameraConstants{
+    
+  }
+
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
