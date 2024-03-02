@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -98,23 +99,21 @@ public class RobotContainer {
   }
 
   // spotless:off
-  public Command createTeleopInitSequence() {
-    return new SequentialCommandGroup(
-      m_arm.createStowCommand(),
-      m_arm.createFlapDeployCommand(),
-      m_LEDs.createEnabledCommand(
+  public void teleopInit() {
+    CommandScheduler.getInstance().schedule(m_arm.createStowCommand());
+    CommandScheduler.getInstance().schedule(m_arm.createFlapDeployCommand());
+    CommandScheduler.getInstance().schedule(m_LEDs.createEnabledCommand(
         m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)));
   }
 
-  public Command createAutonomousInitSequence() {
-    return new SequentialCommandGroup(
-      m_arm.createFlapDeployCommand(),
-      m_LEDs.createEnabledCommand(
+  public void autonomousInit() {
+    CommandScheduler.getInstance().schedule(m_arm.createFlapDeployCommand());
+    CommandScheduler.getInstance().schedule(m_LEDs.createEnabledCommand(
         m_intake.eitherSensorSupplier(), m_arm.stateChecker(ArmState.DEPLOYED)));
   }
 
-  public Command createDisabledInitSequence() {
-    return m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector());
+  public void disabledInit() {
+    CommandScheduler.getInstance().schedule(m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector()));
   }
 
     // spotless:on
