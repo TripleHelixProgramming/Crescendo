@@ -2,6 +2,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -247,7 +249,7 @@ public class RobotContainer {
   private void setDefaultCommands() {
     m_swerve.setDefaultCommand(
         new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematics, m_driver));
-    m_intake.setDefaultCommand(m_intake.createSetVelocityCommand(0));
+    m_intake.setDefaultCommand(m_intake.createSetVelocityCommand(MetersPerSecond.zero()));
     m_climber.setDefaultCommand(m_climber.createStopCommand());
   }
 

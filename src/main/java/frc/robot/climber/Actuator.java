@@ -1,5 +1,6 @@
 package frc.robot.climber;
 
+import static edu.wpi.first.units.Units.*;
 import static frc.robot.RobotContainer.getRobotContainer;
 
 import com.revrobotics.CANSparkBase;
@@ -12,6 +13,8 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ClimberConstants;
@@ -51,15 +54,15 @@ public class Actuator {
     m_climberMover.enableSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, true);
 
     m_climberMover.setSoftLimit(
-        CANSparkMax.SoftLimitDirection.kForward, ClimberConstants.kUpperLimit);
+        CANSparkMax.SoftLimitDirection.kForward, (float) ClimberConstants.kUpperLimit.in(Inches));
     m_climberMover.setSoftLimit(
-        CANSparkMax.SoftLimitDirection.kReverse, ClimberConstants.kLowerLimit);
+        CANSparkMax.SoftLimitDirection.kReverse, (float) ClimberConstants.kLowerLimit.in(Inches));
 
     m_climberMover.setIdleMode(IdleMode.kBrake);
-    m_climberMover.setSmartCurrentLimit(ClimberConstants.kMotorCurrentLimit);
+    m_climberMover.setSmartCurrentLimit((int) ClimberConstants.kMotorCurrentLimit.in(Amps));
     m_climberMover.setInverted(false);
 
-    m_climberPIDController.setTolerance(ClimberConstants.kAllowablePositionError);
+    m_climberPIDController.setTolerance(ClimberConstants.kAllowablePositionError.in(Inches));
 
     m_climberRelativeEncoder = m_climberMover.getEncoder();
 
@@ -68,15 +71,15 @@ public class Actuator {
     m_climberRelativeEncoder.setVelocityConversionFactor(
         ClimberConstants.kVelocityConversionFactor);
 
-    Preferences.initDouble(climberName + "position", ClimberConstants.kHomePosition);
+    Preferences.initDouble(climberName + "position", ClimberConstants.kHomePosition.in(Inches));
     m_climberRelativeEncoder.setPosition(
-        Preferences.getDouble(climberName + "position", ClimberConstants.kHomePosition));
+        Preferences.getDouble(climberName + "position", ClimberConstants.kHomePosition.in(Inches)));
   }
 
   public void configurePositionController(
-      TrapezoidProfile.Constraints constraints, double targetPosition) {
+      TrapezoidProfile.Constraints constraints, Measure<Distance> targetPosition) {
     m_climberPIDController.setConstraints(constraints);
-    m_climberPIDController.setGoal(targetPosition);
+    m_climberPIDController.setGoal(targetPosition.in(Inches));
     m_climberPIDController.reset(m_climberRelativeEncoder.getPosition());
   }
 
@@ -104,7 +107,8 @@ public class Actuator {
   }
 
   public boolean getCurrentSenseState() {
-    return m_debouncer.calculate(getOutputCurrent() > ClimberConstants.kMotorCurrentHardStop);
+    return m_debouncer.calculate(
+        getOutputCurrent() > ClimberConstants.kMotorCurrentHardStop.in(Amps));
   }
 
   private boolean getUpperSoftLimitSwtichState() {

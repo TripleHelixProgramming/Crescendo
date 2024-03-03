@@ -1,5 +1,7 @@
 package frc.robot.intake;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -7,6 +9,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Velocity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
@@ -52,7 +57,7 @@ public class Intake extends SubsystemBase {
     m_motor = new CANSparkMax(IntakeConstants.kMotorID, MotorType.kBrushless);
     m_motor.restoreFactoryDefaults();
     m_motor.setIdleMode(IdleMode.kBrake);
-    m_motor.setSmartCurrentLimit(IntakeConstants.kCurrentLimit);
+    m_motor.setSmartCurrentLimit((int) IntakeConstants.kCurrentLimit.in(Amps));
     m_motor.setInverted(false);
 
     m_velocityController = m_motor.getPIDController();
@@ -60,12 +65,14 @@ public class Intake extends SubsystemBase {
     m_velocityController.setI(IntakeConstants.kVelocityI);
     m_velocityController.setD(IntakeConstants.kVelocityD);
 
-    m_positionController.setTolerance(IntakeConstants.kPositionTolerance);
+    m_positionController.setTolerance(IntakeConstants.kPositionTolerance.in(Meters));
 
     m_relativeEncoder = m_motor.getEncoder();
     m_relativeEncoder.setPosition(0.0);
-    m_relativeEncoder.setPositionConversionFactor(IntakeConstants.kPositionConversionFactor);
-    m_relativeEncoder.setVelocityConversionFactor(IntakeConstants.kVelocityConversionFactor);
+    m_relativeEncoder.setPositionConversionFactor(
+        IntakeConstants.kPositionConversionFactor.in(Meters));
+    m_relativeEncoder.setVelocityConversionFactor(
+        IntakeConstants.kVelocityConversionFactor.in(MetersPerSecond));
   }
 
   public BooleanSupplier stateChecker(IntakeState state) {
@@ -87,18 +94,18 @@ public class Intake extends SubsystemBase {
         });
   }
 
-  private void configurePositionController(double targetPosition) {
+  private void configurePositionController(Measure<Distance> targetPosition) {
     m_positionController.reset(m_relativeEncoder.getPosition(), m_relativeEncoder.getVelocity());
-    m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
+    m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition.in(Meters));
   }
 
   // spotless:off
-  private void advanceAfterIntaking(double targetPosition) {
+  private void advanceAfterIntaking(Measure<Distance> targetPosition) {
     m_secondSensorTriggered.rising().ifHigh(
             () -> {
               m_positionController.reset(
                   m_relativeEncoder.getPosition(), m_relativeEncoder.getVelocity());
-              m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
+              m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition.in(Meters));
             });
     setState(IntakeState.PROCESSING);
     m_motor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
@@ -155,19 +162,20 @@ public class Intake extends SubsystemBase {
     return () -> m_positionController.atGoal();
   }
 
-  private void setVelocity(double targetVelocity) {
-    m_velocityController.setReference(targetVelocity, ControlType.kVelocity);
+  private void setVelocity(Measure<Velocity<Distance>> targetVelocity) {
+    m_velocityController.setReference(targetVelocity.in(MetersPerSecond), ControlType.kVelocity);
   }
 
-  public Command createSetVelocityCommand(double targetVelocity) {
+  public Command createSetVelocityCommand(Measure<Velocity<Distance>> targetVelocity) {
     return this.startEnd(() -> this.setVelocity(targetVelocity), () -> {});
   }
 
-  public Command createJoystickControlCommand(XboxController m_controller, double factor) {
+  public Command createJoystickControlCommand(
+      XboxController m_controller, Measure<Velocity<Distance>> factor) {
     return this.run(
         () -> {
           setState(IntakeState.MANUALLY_REPOSITIONING);
-          this.setVelocity(m_controller.getLeftY() * factor);
+          this.setVelocity(factor.times(m_controller.getLeftY()));
         });
   }
 

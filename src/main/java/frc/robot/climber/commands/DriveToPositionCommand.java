@@ -2,6 +2,8 @@
 
 package frc.robot.climber.commands;
 
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.climber.Actuator;
@@ -11,9 +13,9 @@ public class DriveToPositionCommand extends Command {
 
   private final Climber m_climber;
   private final Actuator[] m_actuators;
-  private final double m_targetPosition;
+  private final Measure<Distance> m_targetPosition;
 
-  public DriveToPositionCommand(Climber subsystem, double targetPosition) {
+  public DriveToPositionCommand(Climber subsystem, Measure<Distance> targetPosition) {
     m_climber = subsystem;
     addRequirements(m_climber);
     m_actuators = m_climber.getClimberSides();

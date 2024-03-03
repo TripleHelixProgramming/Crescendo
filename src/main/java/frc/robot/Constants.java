@@ -2,16 +2,24 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Current;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.TimedRobot;
 
 public final class Constants {
 
   public static final class RobotConstants {
-    public static final double kNominalVoltage = 12.0;
+    public static final Measure<Voltage> kNominalVoltage = Volts.of(12);
     public static final double kPeriod = TimedRobot.kDefaultPeriod;
   }
 
@@ -41,7 +49,6 @@ public final class Constants {
       public static final int kRearLeftTurningEncoderPort = 45;
 
       public static final String kAbsEncoderMagnetOffsetKey = "AbsEncoderMagnetOffsetKey";
-      public static final double kDefaultAbsEncoderMagnetOffset = 0.0;
     }
 
     /**
@@ -56,42 +63,40 @@ public final class Constants {
      * kRearRightTurningEncoderReversed = true;
      */
 
-    // Units are meters.
     // Distance between centers of right and left wheels on robot
-    public static final double kTrackWidth = 0.6096; // 2024 Competion Robot 24 inches
+    public static final Measure<Distance> kTrackWidth = Inches.of(24); // 2024 Competion Robot
 
     // Distance between front and rear wheels on robot
-    public static final double kWheelBase = 0.5715; // 2024 Competion Robot 22.5 inches
-
-    // public static final double kTrackWidth = 0.572; // 2023 Competion Robot
-    // public static final double kWheelBase = 0.622; // 2023 Competion Robot
+    public static final Measure<Distance> kWheelBase = Inches.of(22.5); // 2024 Competion Robot
 
     // Robot Radius
-    public static final double kRadius = 0.423;
+    public static final Measure<Distance> kRadius = Inches.of(16.449);
 
     // Units are meters per second
-    public static final double kMaxTranslationalVelocity = 4.0; // 2023 Competion Robot // max 4.5
+    public static final Measure<Velocity<Distance>> kMaxTranslationalVelocity =
+        MetersPerSecond.of(4.0); // 2023 Competion Robot // max 4.5
 
     // Units are radians per second
-    public static final double kMaxRotationalVelocity = 5.0; // 2023 Competion Robot // max 5.0
+    public static final Measure<Velocity<Angle>> kMaxRotationalVelocity =
+        RadiansPerSecond.of(5.0); // 2023 Competion Robot // max 5.0
 
     // The locations for the modules must be relative to the center of the robot.
     // Positive x values represent moving toward the front of the robot
     // Positive y values represent moving toward the left of the robot.
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
-            new Translation2d(kWheelBase / 2.0, kTrackWidth / 2.0), // front left
-            new Translation2d(kWheelBase / 2.0, -kTrackWidth / 2.0), // front right
-            new Translation2d(-kWheelBase / 2.0, kTrackWidth / 2.0), // rear left
-            new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0) // rear right
+            new Translation2d(kWheelBase.times(0.5), kTrackWidth.times(0.5)), // front left
+            new Translation2d(kWheelBase.times(0.5), kTrackWidth.times(-0.5)), // front right
+            new Translation2d(kWheelBase.times(-0.5), kTrackWidth.times(0.5)), // rear left
+            new Translation2d(kWheelBase.times(-0.5), kTrackWidth.times(-0.5)) // rear right
             );
 
     public static final SwerveDriveKinematics kDriveKinematicsDriveFromArm =
         new SwerveDriveKinematics(
-            new Translation2d(kWheelBase, kTrackWidth / 2.0), // front left
-            new Translation2d(kWheelBase, -kTrackWidth / 2.0), // front right
-            new Translation2d(0.0, kTrackWidth / 2.0), // rear left
-            new Translation2d(0.0, -kTrackWidth / 2.0) // rear right
+            new Translation2d(kWheelBase, kTrackWidth.times(0.5)), // front left
+            new Translation2d(kWheelBase, kTrackWidth.times(-0.5)), // front right
+            new Translation2d(Inches.zero(), kTrackWidth.times(0.5)), // rear left
+            new Translation2d(Inches.zero(), kTrackWidth.times(-0.5)) // rear right
             );
     // public static final boolean kGyroReversed = false;
 
@@ -102,8 +107,8 @@ public final class Constants {
 
   public static final class ModuleConstants {
 
-    public static final int kDriveMotorCurrentLimit = 80;
-    public static final int kTurningMotorCurrentLimit = 80;
+    public static final Measure<Current> kDriveMotorCurrentLimit = Amps.of(80);
+    public static final Measure<Current> kTurningMotorCurrentLimit = Amps.of(80);
 
     public static final double kDriveP = 0.1; // 2023 Competition Robot
     public static final double kDriveI = 0.0; // 2023 Competition Robot
@@ -122,18 +127,19 @@ public final class Constants {
     // public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(0.254,
     // 0.137);
 
-    public static final double kWheelDiameterMeters = 0.10; // 3.7 in; 2023 Competion Robot
+    public static final Measure<Distance> kWheelDiameter =
+        Inches.of(3.937); // 3.7 in; 2023 Competion Robot
 
     // By default, the drive encoder in position mode measures rotations at the drive motor
     // Convert to meters at the wheel
     public static final double kDriveGearRatio = 6.75; // 2023 Competion Robot
-    public static final double kDrivePositionConversionFactor =
-        (kWheelDiameterMeters * Math.PI) / kDriveGearRatio;
+    public static final Measure<Distance> kDrivePositionConversionFactor =
+        kWheelDiameter.times(Math.PI).divide(kDriveGearRatio);
 
     // By default, the drive encoder in velocity mode measures RPM at the drive motor
     // Convert to meters per second at the wheel
-    public static final double kDriveVelocityConversionFactor =
-        kDrivePositionConversionFactor / 60.0;
+    public static final Measure<Velocity<Distance>> kDriveVelocityConversionFactor =
+        kDrivePositionConversionFactor.per(Minute);
 
     // By default, the turn encoder in position mode measures rotations at the turning motor
     // Convert to rotations at the module azimuth
@@ -188,7 +194,7 @@ public final class Constants {
 
     public static final int kMotorID = 16;
 
-    public static final int kCurrentLimit = 15;
+    public static final Measure<Current> kCurrentLimit = Amps.of(15);
 
     public static final double kVelocityP = 0.1;
     public static final double kVelocityI = 0.0;
@@ -198,18 +204,22 @@ public final class Constants {
     public static final double kPositionI = 0.0;
     public static final double kPositionD = 0.0;
 
-    public static final double kFirstRepositionDistance = 0.15;
-    public static final double kSecondRepositionDistance = 0.23;
-    public static final double kPositionTolerance = 0.01;
+    public static final Measure<Distance> kFirstRepositionDistance = Meters.of(0.15);
+    public static final Measure<Distance> kSecondRepositionDistance = Meters.of(0.23);
+    public static final Measure<Distance> kPositionTolerance = Meters.of(0.01);
 
-    public static final double kRollerDiameter = 0.0508; // 2 inches
+    public static final Measure<Distance> kRollerDiameter = Inches.of(2);
     public static final double kGearRatio = 10.0;
 
-    public static final double kPositionConversionFactor = (kRollerDiameter * Math.PI) / kGearRatio;
-    public static final double kVelocityConversionFactor = kPositionConversionFactor / 60.0;
+    public static final Measure<Distance> kPositionConversionFactor =
+        kRollerDiameter.times(Math.PI).divide(kGearRatio);
+    public static final Measure<Velocity<Distance>> kVelocityConversionFactor =
+        kPositionConversionFactor.per(Minute);
 
-    public static final double kMaxVelocity = (0.5 * 11710.0) * kVelocityConversionFactor;
-    public static final double kMaxAcceleration = kMaxVelocity / 0.1;
+    public static final Measure<Velocity<Distance>> kMaxVelocity =
+        kVelocityConversionFactor.times(0.5).times(11710);
+    public static final Measure<Velocity<Velocity<Distance>>> kMaxAcceleration =
+        kMaxVelocity.per(Seconds.of(0.1));
 
     public static final TrapezoidProfile.Constraints kConstraints =
         new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
@@ -217,8 +227,9 @@ public final class Constants {
     public static final int kRetroReflectiveSensorDIOPort = 1;
     public static final int kBeamBreakSensorDIOPort = 0;
 
-    public static final double kRepositionSpeedArmDown = 1.0;
-    public static final double kRepositionSpeedArmUp = 1.0;
+    public static final Measure<Velocity<Distance>> kRepositionSpeedArmDown =
+        MetersPerSecond.of(1.0);
+    public static final Measure<Velocity<Distance>> kRepositionSpeedArmUp = MetersPerSecond.of(1.0);
   }
 
   public static final class ArmConstants {
@@ -242,8 +253,8 @@ public final class Constants {
     public static final int kLeftMotorPort = 24;
     public static final int kRightMotorPort = 23;
 
-    public static final int kMotorCurrentLimit = 60;
-    public static final double kMotorCurrentHardStop = 15.0;
+    public static final Measure<Current> kMotorCurrentLimit = Amps.of(60);
+    public static final Measure<Current> kMotorCurrentHardStop = Amps.of(15);
 
     public static final double kP = 3.0;
     public static final double kI = 0.0;
@@ -267,14 +278,14 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints slowConstraints =
         new TrapezoidProfile.Constraints(kSlowMaxVelocity, kSlowMaxAcceleration);
 
-    public static final float kUpperLimit = -0.25f;
-    public static final float kLowerLimit = -16.0f;
+    public static final Measure<Distance> kUpperLimit = Inches.of(-0.25);
+    public static final Measure<Distance> kLowerLimit = Inches.of(-16.0);
 
-    public static final double kSeekPosition = 25.0;
-    public static final double kHomePosition = -3.2;
-    public static final double kDeployPosition = -0.25;
+    public static final Measure<Distance> kSeekPosition = Inches.of(25);
+    public static final Measure<Distance> kHomePosition = Inches.of(-3.2);
+    public static final Measure<Distance> kDeployPosition = Inches.of(-0.25);
 
-    public static final double kAllowablePositionError = 0.01;
+    public static final Measure<Distance> kAllowablePositionError = Inches.of(0.01);
 
     public static enum CalibrationState {
       UNCALIBRATED,
