@@ -21,16 +21,25 @@ public class LEDs extends SubsystemBase {
     m_LED.start();
   }
 
-  private void setColor(Color color) {
-    for (var i = 0; i < m_LEDBuffer.getLength(); i++) {
+  private void setInsideColor(Color color) {
+    for (var i = 2; i < 15; i++) {
       m_LEDBuffer.setLED(i, color);
     }
     m_LED.setData(m_LEDBuffer);
   }
 
-  private void turnOffLEDs() {
-    clearBuffer();
-    m_LED.setData(m_LEDBuffer);
+  private void setOutsideColor(BooleanSupplier isArmRaised) {
+    if (isArmRaised.getAsBoolean()) {
+      m_LEDBuffer.setLED(0, Color.kYellow);
+      m_LEDBuffer.setLED(1, Color.kYellow);
+      m_LEDBuffer.setLED(15, Color.kYellow);
+      m_LEDBuffer.setLED(16, Color.kYellow);
+    } else {
+      m_LEDBuffer.setLED(0, Color.kLightGoldenrodYellow);
+      m_LEDBuffer.setLED(1, Color.kLightGoldenrodYellow);
+      m_LEDBuffer.setLED(15, Color.kLightGoldenrodYellow);
+      m_LEDBuffer.setLED(16, Color.kLightGoldenrodYellow);
+    }
   }
 
   private void clearBuffer() {
@@ -42,12 +51,18 @@ public class LEDs extends SubsystemBase {
   private void autoColor(boolean isRed, int autoMode) {
     clearBuffer();
     int block = LEDConstants.kLEDsPerBlock + LEDConstants.kLEDsBetweenBlocks;
-    for (var mode = 0; mode < autoMode; mode++) {
-      for (var i = 0; i < LEDConstants.kLEDsPerBlock; i++) {
-        if (isRed) {
-          m_LEDBuffer.setLED(i + (mode * block), Color.kRed);
-        } else {
-          m_LEDBuffer.setLED(i + (mode * block), Color.kBlue);
+    if (1 > autoMode) { // 0 indicates no auto selected.
+      for (var led = 0; led < LEDConstants.kLEDsPerBlock; led++) {
+        m_LEDBuffer.setLED(led, Color.kYellow);
+      }
+    } else {
+      for (var mode = 0; mode < autoMode; mode++) {
+        for (var i = 0; i < LEDConstants.kLEDsPerBlock; i++) {
+          if (isRed) {
+            m_LEDBuffer.setLED(i + (mode * block), Color.kRed);
+          } else {
+            m_LEDBuffer.setLED(i + (mode * block), Color.kBlue);
+          }
         }
       }
     }
@@ -55,13 +70,17 @@ public class LEDs extends SubsystemBase {
   }
 
   private void displayGamePieceDetected(boolean hasGamePiece) {
-    if (hasGamePiece) setColor(Color.kGreen);
-    else turnOffLEDs();
+    if (hasGamePiece) setInsideColor(Color.kGreen);
+    else setInsideColor(Color.kPurple);
   }
 
-  public Command createTeleopCommand(BooleanSupplier gamePieceSensor) {
-    return this.run(() -> this.displayGamePieceDetected(gamePieceSensor.getAsBoolean()))
-        .ignoringDisable(true);
+  public Command createEnabledCommand(
+      BooleanSupplier gamePieceSensor, BooleanSupplier isArmRaised) {
+    return this.run(
+        () -> {
+          this.displayGamePieceDetected(gamePieceSensor.getAsBoolean());
+          this.setOutsideColor(isArmRaised);
+        });
   }
 
   public Command createDisabledCommand(

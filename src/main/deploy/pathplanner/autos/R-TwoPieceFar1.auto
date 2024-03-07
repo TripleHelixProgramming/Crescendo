@@ -26,14 +26,51 @@
                 "data": {
                   "name": "raiseArmAndWait"
                 }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outtakeAndWait"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "resetArmAndIntake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "R_PickUpFarPiece1"
+                }
               },
               {
-                "type": "wait",
+                "type": "named",
                 "data": {
-                  "waitTime": 2.0
+                  "name": "intakePiece"
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "raiseArmAndWait"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {

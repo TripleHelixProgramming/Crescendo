@@ -49,13 +49,26 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B_TwoPiece "
+                  "pathName": "B_PickUpNearPiece"
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "intakePieceAndRaise"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakePiece"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "raiseArmAndWait"
+                      }
+                    }
+                  ]
                 }
               }
             ]
@@ -65,6 +78,12 @@
           "type": "named",
           "data": {
             "name": "outtakeAndWait"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "resetArmAndIntake"
           }
         }
       ]

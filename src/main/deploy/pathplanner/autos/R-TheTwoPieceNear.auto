@@ -26,11 +26,49 @@
                 "data": {
                   "name": "raiseArmAndWait"
                 }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "outtakeAndWait"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "resetArmAndIntake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "R_PickUpNearPiece"
+                }
               },
               {
-                "type": "wait",
+                "type": "sequential",
                 "data": {
-                  "waitTime": 2.0
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakePiece"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "raiseArmAndWait"
+                      }
+                    }
+                  ]
                 }
               }
             ]

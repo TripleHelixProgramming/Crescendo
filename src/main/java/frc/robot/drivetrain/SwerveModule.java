@@ -60,7 +60,7 @@ public class SwerveModule {
     m_turningMotor.setIdleMode(IdleMode.kBrake);
 
     m_driveMotor.setSmartCurrentLimit(ModuleConstants.kDriveMotorCurrentLimit);
-    m_turningMotor.setSmartCurrentLimit(ModuleConstants.kDriveMotorCurrentLimit);
+    m_turningMotor.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
     m_driveMotor.enableVoltageCompensation(RobotConstants.kNominalVoltage);
     m_turningMotor.enableVoltageCompensation(RobotConstants.kNominalVoltage);
 

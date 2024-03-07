@@ -58,10 +58,13 @@ public final class Constants {
 
     // Units are meters.
     // Distance between centers of right and left wheels on robot
-    public static final double kTrackWidth = 0.572; // 2023 Competion Robot
+    public static final double kTrackWidth = 0.6096; // 2024 Competion Robot 24 inches
 
     // Distance between front and rear wheels on robot
-    public static final double kWheelBase = 0.622; // 2023 Competion Robot
+    public static final double kWheelBase = 0.5715; // 2024 Competion Robot 22.5 inches
+
+    // public static final double kTrackWidth = 0.572; // 2023 Competion Robot
+    // public static final double kWheelBase = 0.622; // 2023 Competion Robot
 
     // Robot Radius
     public static final double kRadius = 0.423;
@@ -83,6 +86,13 @@ public final class Constants {
             new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0) // rear right
             );
 
+    public static final SwerveDriveKinematics kDriveKinematicsDriveFromArm =
+        new SwerveDriveKinematics(
+            new Translation2d(kWheelBase, kTrackWidth / 2.0), // front left
+            new Translation2d(kWheelBase, -kTrackWidth / 2.0), // front right
+            new Translation2d(0.0, kTrackWidth / 2.0), // rear left
+            new Translation2d(0.0, -kTrackWidth / 2.0) // rear right
+            );
     // public static final boolean kGyroReversed = false;
 
     // public static final double ksVolts = 1.0;
@@ -100,7 +110,7 @@ public final class Constants {
     public static final double kDriveD = 0.0; // 2023 Competition Robot
     public static final double kDriveFF = 0.255; // 2023 Competition Robot
 
-    public static final double kTurningP = 1.5;
+    public static final double kTurningP = 10.0; // 1.5;
     public static final double kTurningI = 0.0; // 2023 Competition Robot
     public static final double kTurningD = 0.0; // 2023 Competition Robot
 
@@ -168,22 +178,38 @@ public final class Constants {
     public static int kZorroFUp = 12;
     public static int kZorroDIn = 13;
     public static int kZorroHIn = 14;
+
+    // XBox Controller D-Pad Constants
+    public static int kUp = 0;
+    public static int kRight = 90;
+    public static int kDown = 180;
+    public static int kLeft = 270;
   }
 
   public static final class IntakeConstants {
+
+    public static enum IntakeState {
+      INTAKING,
+      PROCESSING,
+      OUTTAKING,
+      MANUALLY_REPOSITIONING,
+      IDLE
+    }
+
     public static final int kMotorID = 16;
 
     public static final int kCurrentLimit = 15;
 
-    public static final double kVelocityP = 1.0;
+    public static final double kVelocityP = 0.1;
     public static final double kVelocityI = 0.0;
     public static final double kVelocityD = 0.0;
 
-    public static final double kPositionP = 4.0;
+    public static final double kPositionP = 8.0;
     public static final double kPositionI = 0.0;
     public static final double kPositionD = 0.0;
 
-    public static final double kRepositionAfterIntaking = 0.2;
+    public static final double kFirstRepositionDistance = 0.15;
+    public static final double kSecondRepositionDistance = 0.23;
     public static final double kPositionTolerance = 0.01;
 
     public static final double kRollerDiameter = 0.0508; // 2 inches
@@ -192,21 +218,34 @@ public final class Constants {
     public static final double kPositionConversionFactor = (kRollerDiameter * Math.PI) / kGearRatio;
     public static final double kVelocityConversionFactor = kPositionConversionFactor / 60.0;
 
-    public static final double kMaxVelocity = (0.8 * 5880.0) * kVelocityConversionFactor;
-    public static final double kMaxAcceleration = kMaxVelocity / 0.3;
+    public static final double kMaxVelocity = (0.5 * 11710.0) * kVelocityConversionFactor;
+    public static final double kMaxAcceleration = kMaxVelocity / 0.1;
 
     public static final TrapezoidProfile.Constraints kConstraints =
         new TrapezoidProfile.Constraints(kMaxVelocity, kMaxAcceleration);
 
     public static final int kRetroReflectiveSensorDIOPort = 1;
     public static final int kBeamBreakSensorDIOPort = 0;
+
+    public static final double kRepositionSpeedArmDown = 1.0;
+    public static final double kRepositionSpeedArmUp = 1.0;
   }
 
   public static final class ArmConstants {
-    public static final int kLeftForwardChannel = 0;
-    public static final int kLeftReverseChannel = 1;
-    public static final int kRightForwardChannel = 2;
-    public static final int kRightReverseChannel = 3;
+    public static enum ArmState {
+      STOWED,
+      CARRY,
+      DEPLOYED
+    }
+
+    public static final int kDeployerForwardChannel = 0;
+    public static final int kDeployerReverseChannel = 1;
+
+    public static final int kHardStopperForwardChannel = 3;
+    public static final int kHardStopperReverseChannel = 2;
+
+    public static final int kFlapForwardChannel = 4;
+    public static final int kFlapReverseChannel = 5;
   }
 
   public static final class ClimberConstants {
@@ -274,7 +313,7 @@ public final class Constants {
     // public static final double kMaxAngularSpeedRadiansPerSecondSquared = Math.PI;
 
     public static final PIDConstants kTranslationControllerGains = new PIDConstants(1.0, 0.0, 0.0);
-    public static final PIDConstants kRotationControllerGains = new PIDConstants(5.0, 0.0, 0.0);
+    public static final PIDConstants kRotationControllerGains = new PIDConstants(7.0, 0.0, 0.0);
 
     // Constraint for the motion profilied robot angle controller
     // public static final TrapezoidProfile.Constraints kThetaControllerConstraints =

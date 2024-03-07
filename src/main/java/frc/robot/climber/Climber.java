@@ -32,10 +32,7 @@ public class Climber extends SubsystemBase {
   }
 
   public Command createArcadeDriveCommand(XboxController xboxController) {
-    return this.run(
-        () ->
-            this.m_differentialDrive.arcadeDrive(
-                -xboxController.getRightY(), -xboxController.getLeftX()));
+    return this.run(() -> this.m_differentialDrive.arcadeDrive(-xboxController.getRightY(), 0));
   }
 
   @Override

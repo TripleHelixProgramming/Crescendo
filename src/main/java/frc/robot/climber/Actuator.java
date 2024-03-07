@@ -12,6 +12,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.ClimberConstants.CalibrationState;
@@ -66,6 +67,10 @@ public class Actuator {
         ClimberConstants.kPositionConversionFactor);
     m_climberRelativeEncoder.setVelocityConversionFactor(
         ClimberConstants.kVelocityConversionFactor);
+
+    Preferences.initDouble(climberName + "position", ClimberConstants.kHomePosition);
+    m_climberRelativeEncoder.setPosition(
+        Preferences.getDouble(climberName + "position", ClimberConstants.kHomePosition));
   }
 
   public void configurePositionController(
@@ -169,6 +174,7 @@ public class Actuator {
     SmartDashboard.putNumber(getName() + "OutputCurrent", addPolarity(getOutputCurrent()));
     SmartDashboard.putNumber(getName() + "InputCurrent", addPolarity(getInputCurrent()));
     SmartDashboard.putString(getName() + "CalibrationState", getCalibrationState().name());
+    Preferences.setDouble(climberName + "position", m_climberRelativeEncoder.getPosition());
   }
 
   private double addPolarity(double value) {
