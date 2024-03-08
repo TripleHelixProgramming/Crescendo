@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.lib.ControllerPatroller;
 import frc.robot.Constants.ArmConstants.ArmState;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
@@ -60,8 +61,8 @@ public class RobotContainer {
   private final LEDs m_LEDs = new LEDs();
 
   private final EventLoop m_loop = new EventLoop();
-  private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
-  private XboxController m_operator = new XboxController(OIConstants.kOperatorControllerPort);
+  private Joystick m_driver;
+  private XboxController m_operator;
 
   // digital inputs for autonomous selection
   private final DigitalInput[] autonomousModes =
@@ -70,6 +71,8 @@ public class RobotContainer {
   private Autonomous m_autonomous;
 
   public RobotContainer() {
+
+    configureButtonBindings();
 
     for (int i = 0; i < AutoConstants.kAutonomousModeSelectorPorts.length; i++) {
       autonomousModes[i] = new DigitalInput(AutoConstants.kAutonomousModeSelectorPorts[i]);
@@ -84,6 +87,19 @@ public class RobotContainer {
     SmartDashboard.putData(
         "Align Encoders",
         new InstantCommand(() -> m_swerve.zeroAbsTurningEncoderOffsets()).ignoringDisable(true));
+  }
+
+  public void configureButtonBindings() {
+
+    // Clear any active buttons.
+    CommandScheduler.getInstance().getActiveButtonLoop().clear();
+
+    ControllerPatroller cp = ControllerPatroller.getInstance();
+
+    // We use two different types of controllers - Joystick & XboxController.
+    // Create objects of the specific types.
+    m_driver = new Joystick(cp.findDriverPort());
+    m_operator = new XboxController(cp.findOperatorPort());
 
     configureDriverButtonBindings();
     configureOperatorButtonBindings();

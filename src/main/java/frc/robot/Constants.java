@@ -142,8 +142,18 @@ public final class Constants {
   }
 
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 0;
-    public static final int kOperatorControllerPort = 1;
+    public static final int kUSBCheckNumLoops = 40;
+
+    public static final String kXbox = "XBOX";
+    public static final String kPS4 = "P";
+    public static final String kRadioMaster = "TX16S";
+    public static final String kZorro = "Zorro";
+
+    public static final String[] kDriverControllerNames = new String[] {kZorro};
+    public static final String[] kOperatorControllerNames = new String[] {kXbox};
+
+    public static final int kDefaultDriverControllerPort = 0;
+    public static final int kDefaultOperatorControllerPort = 1;
 
     // RadioMaster Zorro joystick axis
     public static int kZorroLeftXAxis = 0;
