@@ -177,7 +177,7 @@ public class RobotContainer {
       case 4:
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? null 
+                ? new Autonomous("R-ThreePieceAutoTame") 
                 : new Autonomous("B-ThreePieceAutoTame");
         break;
 
