@@ -49,7 +49,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "R_PickUpFarPiece1nStop "
+                  "pathName": "R_PickUpFarPiece1"
                 }
               },
               {
@@ -64,7 +64,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "R_ReturnFromFarPiece1 "
+            "pathName": "R_ReturnFromFarPiece1"
           }
         },
         {
