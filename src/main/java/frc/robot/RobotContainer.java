@@ -200,8 +200,8 @@ public class RobotContainer {
       case 5:
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? new Autonomous("R-ThreePieceAutoKachow")
-                : new Autonomous("B-ThreePieceAutoKachow");
+                ? null
+                : null;
             break;
 
       default:

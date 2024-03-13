@@ -109,7 +109,7 @@ public class Intake extends SubsystemBase {
     return this.run(
         () -> {
           setState(IntakeState.INTAKING);
-          m_motor.set(1.0);
+          m_motor.set(1);
         });
   }
 

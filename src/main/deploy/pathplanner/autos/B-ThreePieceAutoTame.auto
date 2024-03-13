@@ -99,7 +99,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "B_PickUpFarPiece1nStop"
+                  "pathName": "B_PickUpFarPiece1AfterNear"
                 }
               },
               {
@@ -114,7 +114,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "B_ReturnFromFarPiece1"
+            "pathName": "B_ReturnFromFarPiece1AfterNear"
           }
         }
       ]

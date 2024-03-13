@@ -53,31 +53,30 @@
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "intakePiece"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "raiseArmAndWait"
-                      }
-                    }
-                  ]
+                  "name": "intakePiece"
                 }
               }
             ]
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "B_ReturnFromFarPiece1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "raiseArmAndWait"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 1.0
           }
         },
         {
