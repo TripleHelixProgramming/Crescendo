@@ -93,8 +93,8 @@ public final class Constants {
             new Translation2d(0.0, kTrackWidth / 2.0), // rear left
             new Translation2d(0.0, -kTrackWidth / 2.0) // rear right
             );
-    // public static final boolean kGyroReversed = false;
 
+    // public static final boolean kGyroReversed = false;
     // public static final double ksVolts = 1.0;
     // public static final double kvVoltSecondsPerMeter = 0.8;
     // public static final double kaVoltSecondsSquaredPerMeter = 0.15;
