@@ -20,16 +20,16 @@ public class ZorroDriveCommand extends DriveCommand {
 
   @Override
   public double getX() {
-    return m_controller.getRawButton(OIConstants.kZorroEDown) 
-              ?-MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightYAxis), 0.05) * -1
-              :-MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightYAxis), 0.05);
+    return m_controller.getRawButton(OIConstants.kZorroEDown)
+        ? -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightYAxis), 0.05) * -1
+        : -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightYAxis), 0.05);
   }
 
   @Override
   public double getY() {
     return m_controller.getRawButton(OIConstants.kZorroEDown)
-              ? -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightXAxis), 0.05) * -1
-              : -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightXAxis), 0.05);
+        ? -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightXAxis), 0.05) * -1
+        : -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightXAxis), 0.05);
   }
 
   @Override
