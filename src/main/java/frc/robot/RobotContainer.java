@@ -130,6 +130,7 @@ public class RobotContainer {
 
   public void disabledInit() {
     CommandScheduler.getInstance().schedule(m_LEDs.createDisabledCommand(m_swerve.redAllianceSupplier(), autonomousModeSelector()));
+    m_PowerDistribution.setSwitchableChannel(false);
   }
 
     // spotless:on
@@ -356,6 +357,7 @@ public class RobotContainer {
     // Raise and lower arm
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createStowCommand());
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createDeployCommand());
+
     
     // Deploy flap
     new POVButton(m_operator, OIConstants.kUp)
