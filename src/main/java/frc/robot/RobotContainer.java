@@ -295,6 +295,7 @@ public class RobotContainer {
   private void configureOperatorButtonBindings() {
     JoystickButton rightBumper = new JoystickButton(m_operator, Button.kRightBumper.value);
     JoystickButton leftBumper = new JoystickButton(m_operator, Button.kLeftBumper.value);
+    JoystickButton leftJoystickDown = new JoystickButton(m_operator, Button.kLeftStick.value);
 
     Trigger hasNote = new Trigger(m_intake.eitherSensorSupplier());
     Trigger armDeployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
@@ -340,7 +341,7 @@ public class RobotContainer {
         .whileTrue(m_intake.createOuttakeToFloorCommand());
     
     // Shoot Note into Amp
-    leftBumper.and(armDeployed)
+    leftJoystickDown.and(armDeployed)
         .whileTrue(m_intake.createOuttakeToAmpCommand());
 
     // Shift Note further into Intake
@@ -358,12 +359,14 @@ public class RobotContainer {
     
     // Deploy flap
     new POVButton(m_operator, OIConstants.kUp)
-        .onTrue(m_arm.createFlapDeployCommand());
+        .onTrue(m_arm.createFlapDeployCommand()
+        .andThen(() -> m_PowerDistribution.setSwitchableChannel(false)));
     // only while arm is raised
 
     // Stow flap
     new POVButton(m_operator, OIConstants.kDown)
-        .onTrue(m_arm.createFlapRetractCommand());
+        .onTrue(m_arm.createFlapRetractCommand()
+        .andThen(() -> m_PowerDistribution.setSwitchableChannel(true)));
     // only while arm is raised
 
     // MULTIPLE SUBSYSTEMS
