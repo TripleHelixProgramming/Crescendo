@@ -359,12 +359,14 @@ public class RobotContainer {
     
     // Deploy flap
     new POVButton(m_operator, OIConstants.kUp)
-        .onTrue(m_arm.createFlapDeployCommand());
+        .onTrue(m_arm.createFlapDeployCommand()
+        .andThen(() -> m_PowerDistribution.setSwitchableChannel(false)));
     // only while arm is raised
 
     // Stow flap
     new POVButton(m_operator, OIConstants.kDown)
-        .onTrue(m_arm.createFlapRetractCommand());
+        .onTrue(m_arm.createFlapRetractCommand()
+        .andThen(() -> m_PowerDistribution.setSwitchableChannel(true)));
     // only while arm is raised
 
     // MULTIPLE SUBSYSTEMS
