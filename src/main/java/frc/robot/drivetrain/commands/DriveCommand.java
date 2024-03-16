@@ -42,11 +42,15 @@ public abstract class DriveCommand extends Command {
     SmartDashboard.putBoolean("rotateField", drivetrain.fieldRotatedSupplier().getAsBoolean());
 
     drivetrain.setChassisSpeeds(
-        fieldRelative() ? getFieldRelativeChassisSpeeds() : getRobotRelativeChassisSpeeds(),
+        fieldRelative() ? getFieldRelativeChassisSpeeds() : getRobotRelativeChassisSpeedsReversed(),
         kinematicsType);
   }
 
-  private ChassisSpeeds getRobotRelativeChassisSpeeds() {
+  private ChassisSpeeds getRobotRelativeChassisSpeedsForward() {
+    return new ChassisSpeeds(xDot, yDot, thetaDot);
+  }
+
+  private ChassisSpeeds getRobotRelativeChassisSpeedsReversed() {
     return new ChassisSpeeds(-xDot, -yDot, thetaDot);
   }
 
