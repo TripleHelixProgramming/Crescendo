@@ -47,7 +47,7 @@ public abstract class DriveCommand extends Command {
   }
 
   private ChassisSpeeds getRobotRelativeChassisSpeeds() {
-    return new ChassisSpeeds(xDot, yDot, thetaDot);
+    return new ChassisSpeeds(-xDot, -yDot, thetaDot);
   }
 
   // spotless:off
