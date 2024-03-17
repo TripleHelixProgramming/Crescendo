@@ -3,18 +3,23 @@
 package frc.robot.drivetrain.commands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Constants.ArmConstants;
+// import frc.robot.Constants.ArmConstants.ArmState;
+import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.Constants.OIConstants;
+import frc.robot.arm.Arm;
 import frc.robot.drivetrain.Drivetrain;
 
 public class ZorroDriveCommand extends DriveCommand {
 
+  Arm m_arm;
   Joystick m_controller;
 
-  public ZorroDriveCommand(
-      Drivetrain subsystem, SwerveDriveKinematics kinematicsType, Joystick joysticks) {
-    super(subsystem, kinematicsType);
+  public ZorroDriveCommand(Drivetrain subsystem, Arm arm, Joystick joysticks) {
+    super(subsystem);
+    this.m_arm = arm;
     this.m_controller = joysticks;
   }
 
@@ -34,7 +39,27 @@ public class ZorroDriveCommand extends DriveCommand {
   }
 
   @Override
-  public boolean fieldRelative() {
-    return m_controller.getRawButton(OIConstants.kZorroEUp);
+  public DriveMode getDriveMode() {
+    DriveMode mode;
+
+    if (m_controller.getRawButton(OIConstants.kZorroEUp)) mode = DriveMode.FIELD_CENTRIC;
+    else if (m_controller.getRawButton(OIConstants.kZorroEDown))
+      mode = DriveMode.ROBOT_CENTRIC_AFT_FACING;
+    else mode = DriveMode.FIELD_CENTRIC;
+
+    return mode;
+  }
+
+  @Override
+  public Translation2d getSteeringCenter() {
+    // offset steering angle whenever arm is raised
+    // return m_arm.stateChecker(ArmState.DEPLOYED).getAsBoolean()
+    //   ? ArmConstants.kChassisCentroidToArmCentroid
+    //   : null;
+
+    // offset steering angle when Zorro A button is pressed
+    return m_controller.getRawButton(OIConstants.kZorroAIn)
+        ? ArmConstants.kChassisCentroidToArmCentroid
+        : null;
   }
 }

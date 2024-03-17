@@ -3,12 +3,14 @@
 package frc.robot.drivetrain.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.drivetrain.Drivetrain;
+import java.util.Optional;
 
 public abstract class DriveCommand extends Command {
 
@@ -16,17 +18,12 @@ public abstract class DriveCommand extends Command {
   private double yDot;
   private double thetaDot;
 
-  // used to swap control locations
-  SwerveDriveKinematics kinematicsType;
-
   // The subsystem the command runs on
   public final Drivetrain drivetrain;
 
-  public DriveCommand(Drivetrain subsystem, SwerveDriveKinematics kinematicsType) {
+  public DriveCommand(Drivetrain subsystem) {
     drivetrain = subsystem;
     addRequirements(drivetrain);
-
-    this.kinematicsType = kinematicsType;
   }
 
   @Override
@@ -38,31 +35,29 @@ public abstract class DriveCommand extends Command {
     yDot = getY() * DriveConstants.kMaxTranslationalVelocity;
     thetaDot = getTheta() * DriveConstants.kMaxRotationalVelocity;
 
-    SmartDashboard.putBoolean("fieldRelative", fieldRelative());
+    SmartDashboard.putBoolean("fieldRelative", getDriveMode() == DriveMode.FIELD_CENTRIC);
     SmartDashboard.putBoolean("rotateField", drivetrain.fieldRotatedSupplier().getAsBoolean());
 
-    drivetrain.setChassisSpeeds(
-        fieldRelative() ? getFieldRelativeChassisSpeeds() : getRobotRelativeChassisSpeedsReversed(),
-        kinematicsType);
+    drivetrain.setChassisSpeeds(getChassisSpeeds(), Optional.of(getSteeringCenter()));
   }
 
-  private ChassisSpeeds getRobotRelativeChassisSpeedsForward() {
-    return new ChassisSpeeds(xDot, yDot, thetaDot);
-  }
+  private ChassisSpeeds getChassisSpeeds() {
+    switch (getDriveMode()) {
+      case FIELD_CENTRIC:
+        var robotAngle = drivetrain.getHeading();
+        if (drivetrain.fieldRotatedSupplier().getAsBoolean())
+          robotAngle.rotateBy(new Rotation2d(Math.PI));
+        return ChassisSpeeds.fromFieldRelativeSpeeds(xDot, yDot, thetaDot, robotAngle);
 
-  private ChassisSpeeds getRobotRelativeChassisSpeedsReversed() {
-    return new ChassisSpeeds(-xDot, -yDot, thetaDot);
-  }
+      case ROBOT_CENTRIC_AFT_FACING:
+        var rotated = new Translation2d(xDot, yDot).rotateBy(new Rotation2d(Math.PI));
+        return new ChassisSpeeds(rotated.getX(), rotated.getY(), thetaDot);
 
-  // spotless:off
-  private ChassisSpeeds getFieldRelativeChassisSpeeds() {
-    return drivetrain.fieldRotatedSupplier().getAsBoolean()
-        ? ChassisSpeeds.fromFieldRelativeSpeeds(
-            xDot, yDot, thetaDot, drivetrain.getHeading().rotateBy(new Rotation2d(Math.PI)))
-        : ChassisSpeeds.fromFieldRelativeSpeeds(
-            xDot, yDot, thetaDot, drivetrain.getHeading());
+      case ROBOT_CENTRIC_FORWARD_FACING:
+      default:
+        return new ChassisSpeeds(xDot, yDot, thetaDot);
+    }
   }
-  // spotless:on
 
   /**
    * @return The input to the drive controller in the x axis, range [-1, 1]
@@ -80,7 +75,12 @@ public abstract class DriveCommand extends Command {
   public abstract double getTheta();
 
   /**
-   * @return Boolean representing whether to drive in field-relative mode
+   * @return The desired drive mode
    */
-  public abstract boolean fieldRelative();
+  public abstract DriveMode getDriveMode();
+
+  /**
+   * @return The vector between chassis center and desired steering center
+   */
+  public abstract Translation2d getSteeringCenter();
 }

@@ -16,6 +16,13 @@ public final class Constants {
   }
 
   public static final class DriveConstants {
+
+    public static enum DriveMode {
+      FIELD_CENTRIC,
+      ROBOT_CENTRIC_FORWARD_FACING,
+      ROBOT_CENTRIC_AFT_FACING
+    }
+
     // Define the conventional order of our modules when putting them into arrays
     public static final int FRONT_LEFT = 0;
     public static final int FRONT_RIGHT = 1;
@@ -84,14 +91,6 @@ public final class Constants {
             new Translation2d(kWheelBase / 2.0, -kTrackWidth / 2.0), // front right
             new Translation2d(-kWheelBase / 2.0, kTrackWidth / 2.0), // rear left
             new Translation2d(-kWheelBase / 2.0, -kTrackWidth / 2.0) // rear right
-            );
-
-    public static final SwerveDriveKinematics kDriveKinematicsDriveFromArm =
-        new SwerveDriveKinematics(
-            new Translation2d(kWheelBase, kTrackWidth / 2.0), // front left
-            new Translation2d(kWheelBase, -kTrackWidth / 2.0), // front right
-            new Translation2d(0.0, kTrackWidth / 2.0), // rear left
-            new Translation2d(0.0, -kTrackWidth / 2.0) // rear right
             );
 
     // public static final boolean kGyroReversed = false;
@@ -243,6 +242,9 @@ public final class Constants {
 
     public static final int kHardStopperForwardChannel = 3;
     public static final int kHardStopperReverseChannel = 2;
+
+    public static final Translation2d kChassisCentroidToArmCentroid =
+        new Translation2d(-0.4572, 0.0);
 
     public static final int kFlapForwardChannel = 4;
     public static final int kFlapReverseChannel = 5;
