@@ -80,7 +80,7 @@ public abstract class DriveCommand extends Command {
   public abstract DriveMode getDriveMode();
 
   /**
-   * @return Transform2d representing the vector between chassis center and desired steering center
+   * @return The vector between chassis center and desired steering center
    */
   public abstract Translation2d getSteeringCenter();
 }
