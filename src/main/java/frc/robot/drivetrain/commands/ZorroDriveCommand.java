@@ -5,6 +5,7 @@ package frc.robot.drivetrain.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
 
@@ -34,7 +35,14 @@ public class ZorroDriveCommand extends DriveCommand {
   }
 
   @Override
-  public boolean fieldRelative() {
-    return m_controller.getRawButton(OIConstants.kZorroEUp);
+  public DriveMode getDriveMode() {
+    DriveMode mode;
+
+    if (m_controller.getRawButton(OIConstants.kZorroEUp)) mode = DriveMode.FIELD_CENTRIC;
+    else if (m_controller.getRawButton(OIConstants.kZorroEDown))
+      mode = DriveMode.ROBOT_CENTRIC_AFT_FACING;
+    else mode = DriveMode.FIELD_CENTRIC;
+
+    return mode;
   }
 }

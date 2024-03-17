@@ -16,6 +16,13 @@ public final class Constants {
   }
 
   public static final class DriveConstants {
+
+    public static enum DriveMode {
+      FIELD_CENTRIC,
+      ROBOT_CENTRIC_FORWARD_FACING,
+      ROBOT_CENTRIC_AFT_FACING
+    }
+
     // Define the conventional order of our modules when putting them into arrays
     public static final int FRONT_LEFT = 0;
     public static final int FRONT_RIGHT = 1;

@@ -6,6 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DriveConstants.DriveMode;
 import frc.robot.drivetrain.Drivetrain;
 
 public class XBoxDriveCommand extends DriveCommand {
@@ -38,7 +39,9 @@ public class XBoxDriveCommand extends DriveCommand {
   }
 
   @Override
-  public boolean fieldRelative() {
-    return m_controller.getLeftBumper();
+  public DriveMode getDriveMode() {
+    return m_controller.getLeftBumper()
+        ? DriveMode.FIELD_CENTRIC
+        : DriveMode.ROBOT_CENTRIC_AFT_FACING;
   }
 }
