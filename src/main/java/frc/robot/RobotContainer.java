@@ -27,7 +27,6 @@ import frc.lib.ControllerPatroller;
 import frc.robot.Constants.ArmConstants.ArmState;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeState;
 import frc.robot.Constants.OIConstants;
@@ -262,8 +261,7 @@ public class RobotContainer {
   // spotless:on
 
   private void setDefaultCommands() {
-    m_swerve.setDefaultCommand(
-        new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematics, m_driver));
+    m_swerve.setDefaultCommand(new ZorroDriveCommand(m_swerve, m_arm, m_driver));
     m_intake.setDefaultCommand(m_intake.createSetVelocityCommand(0));
     m_climber.setDefaultCommand(m_climber.createStopCommand());
   }
@@ -275,10 +273,6 @@ public class RobotContainer {
     new JoystickButton(m_driver, OIConstants.kZorroHIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
         .ignoringDisable(true));
-
-    new JoystickButton(m_driver,OIConstants.kZorroAIn)
-    .whileTrue((new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematicsDriveFromArm, m_driver)));
-
 
     Trigger armDeployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
     JoystickButton D_Button = new JoystickButton(m_driver, OIConstants.kZorroDIn);
