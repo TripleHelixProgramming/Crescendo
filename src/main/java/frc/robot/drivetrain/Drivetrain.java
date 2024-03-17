@@ -123,11 +123,19 @@ public class Drivetrain extends SubsystemBase {
    */
   public void setChassisSpeeds(
       ChassisSpeeds chassisSpeeds, Optional<Translation2d> rotationCenter) {
-    Translation2d offset = rotationCenter.isPresent() ? rotationCenter.get() : new Translation2d();
 
-    var swerveModuleStates =
-        DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod), offset);
+    SwerveModuleState[] swerveModuleStates;
+
+    if (rotationCenter.isPresent()) {
+      swerveModuleStates =
+          DriveConstants.kDriveKinematics.toSwerveModuleStates(
+              ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod),
+              rotationCenter.get());
+    } else {
+      swerveModuleStates =
+          DriveConstants.kDriveKinematics.toSwerveModuleStates(
+              ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
+    }
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
