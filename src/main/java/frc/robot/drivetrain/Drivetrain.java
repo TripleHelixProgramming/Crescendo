@@ -122,13 +122,12 @@ public class Drivetrain extends SubsystemBase {
    * @param rotationCenter Vector from the chassis center to the desired center of rotation
    */
   public void setChassisSpeeds(
-      ChassisSpeeds chassisSpeeds, Optional<Translation2d> rotationCenterOptional) {
-    Translation2d rotationCenter =
-        rotationCenterOptional.isPresent() ? rotationCenterOptional.get() : new Translation2d();
+      ChassisSpeeds chassisSpeeds, Optional<Translation2d> rotationCenter) {
+    Translation2d offset = rotationCenter.isPresent() ? rotationCenter.get() : new Translation2d();
 
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod), rotationCenter);
+            ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod), offset);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
@@ -141,14 +140,7 @@ public class Drivetrain extends SubsystemBase {
    * @param chassisSpeeds Robot-relative chassis speeds (x, y, theta)
    */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
-    var swerveModuleStates =
-        DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            ChassisSpeeds.discretize(chassisSpeeds, RobotConstants.kPeriod));
-    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, kMaxSpeed);
-    m_frontLeft.setDesiredState(swerveModuleStates[0]);
-    m_frontRight.setDesiredState(swerveModuleStates[1]);
-    m_rearLeft.setDesiredState(swerveModuleStates[2]);
-    m_rearRight.setDesiredState(swerveModuleStates[3]);
+    setChassisSpeeds(chassisSpeeds, null);
   }
 
   /** Updates the field relative position of the robot. */
