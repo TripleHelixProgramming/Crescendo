@@ -206,10 +206,10 @@ public final class Constants {
 
     public static final double kPositionP = 8.0;
     public static final double kPositionI = 0.0;
-    public static final double kPositionD = 0.0;
+    public static final double kPositionD = 1.0;
 
     public static final double kFirstRepositionDistance = 0.15;
-    public static final double kSecondRepositionDistance = 0.23;
+    public static final double kSecondRepositionDistance = 0.29; // originally 0.23
     public static final double kPositionTolerance = 0.01;
 
     public static final double kRollerDiameter = 0.0508; // 2 inches

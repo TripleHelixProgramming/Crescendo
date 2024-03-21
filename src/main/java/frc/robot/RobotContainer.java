@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -147,6 +148,7 @@ public class RobotContainer {
 
     SmartDashboard.putNumber("PDHVoltage", m_PowerDistribution.getVoltage());
     SmartDashboard.putNumber("PDHTotalCurrent", m_PowerDistribution.getTotalCurrent());
+    SmartDashboard.putNumber("RightBumperXBox", Button.kRightBumper.value);
   }
 
   private class Autonomous {
@@ -335,7 +337,7 @@ public class RobotContainer {
     
     hasNote.and(m_intake.stateChecker(IntakeState.INTAKING)).and(() -> RobotState.isTeleop())
       .onTrue(m_arm.createCarryCommand()
-      .andThen(m_intake.createAdvanceAfterIntakingCommand()));
+      .andThen(m_intake.createAdvanceAfterIntakingCommand().withInterruptBehavior(InterruptionBehavior.kCancelIncoming)));
     
     // Reverse intake to outake or reject intaking Note
     leftBumper.and(armDeployed.negate())
