@@ -177,6 +177,7 @@ public class Intake extends SubsystemBase {
 
     SmartDashboard.putNumber("OutputCurrent", m_motor.getOutputCurrent());
     SmartDashboard.putNumber("IntakePosition", m_relativeEncoder.getPosition());
+    SmartDashboard.putNumber("IntakeSetPoint", m_positionController.getSetpoint().position);
     SmartDashboard.putNumber("IntakeGoal", m_positionController.getGoal().position);
     SmartDashboard.putNumber(
         "IntakeSensorRetroReflective", !m_noteSensorRetroReflective.get() ? 1d : 0d);
