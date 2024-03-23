@@ -5,11 +5,9 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
@@ -25,13 +23,16 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.ControllerPatroller;
+import frc.lib.SendableXBoxController;
+import frc.lib.SendableZorroController;
 import frc.robot.Constants.ArmConstants.ArmState;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeState;
-import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.OIConstants.XBox;
+import frc.robot.Constants.OIConstants.Zorro;
 import frc.robot.LEDs.LEDs;
 import frc.robot.arm.Arm;
 import frc.robot.climber.Climber;
@@ -62,8 +63,8 @@ public class RobotContainer {
   private final LEDs m_LEDs = new LEDs();
 
   private final EventLoop m_loop = new EventLoop();
-  private Joystick m_driver;
-  private XboxController m_operator;
+  private SendableZorroController m_driver;
+  private SendableXBoxController m_operator;
 
   // digital inputs for autonomous selection
   private final DigitalInput[] autonomousModes =
@@ -99,8 +100,8 @@ public class RobotContainer {
 
     // We use two different types of controllers - Joystick & XboxController.
     // Create objects of the specific types.
-    m_driver = new Joystick(cp.findDriverPort());
-    m_operator = new XboxController(cp.findOperatorPort());
+    m_driver = new SendableZorroController(cp.findDriverPort());
+    m_operator = new SendableXBoxController(cp.findOperatorPort());
 
     configureDriverButtonBindings();
     configureOperatorButtonBindings();
@@ -146,9 +147,9 @@ public class RobotContainer {
       SmartDashboard.putString("Auto", "Null");
     }
 
-    SmartDashboard.putNumber("PDHVoltage", m_PowerDistribution.getVoltage());
-    SmartDashboard.putNumber("PDHTotalCurrent", m_PowerDistribution.getTotalCurrent());
-    SmartDashboard.putNumber("RightBumperXBox", Button.kRightBumper.value);
+    SmartDashboard.putData(m_driver);
+    SmartDashboard.putData(m_operator);
+    SmartDashboard.putData(m_PowerDistribution);
   }
 
   private class Autonomous {
@@ -274,16 +275,16 @@ public class RobotContainer {
   private void configureDriverButtonBindings() {
 
     // Reset heading
-    new JoystickButton(m_driver, OIConstants.kZorroHIn)
+    new JoystickButton(m_driver, Zorro.kHIn)
         .onTrue(new InstantCommand(() -> m_swerve.resetHeading())
         .ignoringDisable(true));
 
-    new JoystickButton(m_driver,OIConstants.kZorroAIn)
+    new JoystickButton(m_driver, Zorro.kAIn)
     .whileTrue((new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematicsDriveFromArm, m_driver)));
 
 
     Trigger armDeployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
-    JoystickButton D_Button = new JoystickButton(m_driver, OIConstants.kZorroDIn);
+    JoystickButton D_Button = new JoystickButton(m_driver, Zorro.kDIn);
     
     // Reverse intake to outake or reject intaking Note
     D_Button.and(armDeployed.negate())
@@ -359,16 +360,15 @@ public class RobotContainer {
     // Raise and lower arm
     new JoystickButton(m_operator, Button.kA.value).onTrue(m_arm.createStowCommand());
     new JoystickButton(m_operator, Button.kY.value).onTrue(m_arm.createDeployCommand());
-
     
     // Deploy flap
-    new POVButton(m_operator, OIConstants.kUp)
+    new POVButton(m_operator, XBox.kUp)
         .onTrue(m_arm.createFlapDeployCommand()
         .andThen(() -> m_PowerDistribution.setSwitchableChannel(false)));
     // only while arm is raised
 
     // Stow flap
-    new POVButton(m_operator, OIConstants.kDown)
+    new POVButton(m_operator, XBox.kDown)
         .onTrue(m_arm.createFlapRetractCommand()
         .andThen(() -> m_PowerDistribution.setSwitchableChannel(true)));
     // only while arm is raised
