@@ -5,7 +5,7 @@ package frc.robot.drivetrain.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.OIConstants.Zorro;
 import frc.robot.drivetrain.Drivetrain;
 
 public class ZorroDriveCommand extends DriveCommand {
@@ -20,21 +20,21 @@ public class ZorroDriveCommand extends DriveCommand {
 
   @Override
   public double getX() {
-    return -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightYAxis), 0.05);
+    return -MathUtil.applyDeadband(m_controller.getRawAxis(Zorro.kRightYAxis), 0.05);
   }
 
   @Override
   public double getY() {
-    return -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroRightXAxis), 0.05);
+    return -MathUtil.applyDeadband(m_controller.getRawAxis(Zorro.kRightXAxis), 0.05);
   }
 
   @Override
   public double getTheta() {
-    return -MathUtil.applyDeadband(m_controller.getRawAxis(OIConstants.kZorroLeftXAxis), 0.05);
+    return -MathUtil.applyDeadband(m_controller.getRawAxis(Zorro.kLeftXAxis), 0.05);
   }
 
   @Override
   public boolean fieldRelative() {
-    return m_controller.getRawButton(OIConstants.kZorroEUp);
+    return m_controller.getRawButton(Zorro.kEUp);
   }
 }
