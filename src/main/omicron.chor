@@ -8772,6 +8772,868 @@
             "defaultControlIntervalCount": 40,
             "usesDefaultFieldObstacles": true,
             "circleObstacles": []
+        },
+        "R_hideFrom1731": {
+            "waypoints": [
+                {
+                    "x": 14.6,
+                    "y": 7.9,
+                    "heading": -1.5707963267948966,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": true,
+                    "controlIntervalCount": 11
+                },
+                {
+                    "x": 14.7,
+                    "y": 7.85,
+                    "heading": 0,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": false,
+                    "controlIntervalCount": 6
+                },
+                {
+                    "x": 15.4,
+                    "y": 7.85,
+                    "heading": 0,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": false,
+                    "controlIntervalCount": 40
+                }
+            ],
+            "trajectory": [
+                {
+                    "x": 14.6,
+                    "y": 7.9,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 4.9658501657419785e-24,
+                    "velocityX": -4.6319033900594245e-18,
+                    "velocityY": 2.315997365081846e-18,
+                    "timestamp": 0
+                },
+                {
+                    "x": 14.60333333455796,
+                    "y": 7.89833333272102,
+                    "heading": -1.570796326794925,
+                    "angularVelocity": -1.3023659281635683e-12,
+                    "velocityX": 0.1537121196199017,
+                    "velocityY": -0.07685605980995443,
+                    "timestamp": 0.021685567580506788
+                },
+                {
+                    "x": 14.610000003250391,
+                    "y": 7.894999998374804,
+                    "heading": -1.5707963267949885,
+                    "angularVelocity": -2.9377715539118086e-12,
+                    "velocityX": 0.30742421971120665,
+                    "velocityY": -0.15371210985560826,
+                    "timestamp": 0.043371135161013576
+                },
+                {
+                    "x": 14.620000005365677,
+                    "y": 7.889999997317161,
+                    "heading": -1.5707963267951,
+                    "angularVelocity": -5.134456391736112e-12,
+                    "velocityX": 0.4611362869872147,
+                    "velocityY": -0.23056814349361363,
+                    "timestamp": 0.06505670274152037
+                },
+                {
+                    "x": 14.633333339438572,
+                    "y": 7.883333330280713,
+                    "heading": -1.5707963267952838,
+                    "angularVelocity": -8.477401965000885e-12,
+                    "velocityX": 0.614848286695444,
+                    "velocityY": -0.30742414334772966,
+                    "timestamp": 0.08674227032202715
+                },
+                {
+                    "x": 14.649999999999999,
+                    "y": 7.874999999999999,
+                    "heading": -1.5707963267956184,
+                    "angularVelocity": -1.5436011234531167e-11,
+                    "velocityX": 0.7685600342046092,
+                    "velocityY": -0.3842800171023136,
+                    "timestamp": 0.10842783790253394
+                },
+                {
+                    "x": 14.666666660561425,
+                    "y": 7.866666669719287,
+                    "heading": -1.5707963267930576,
+                    "angularVelocity": 1.1809436972568512e-10,
+                    "velocityX": 0.7685600342046096,
+                    "velocityY": -0.38428001710231385,
+                    "timestamp": 0.13011340548304073
+                },
+                {
+                    "x": 14.67999999463432,
+                    "y": 7.860000002682839,
+                    "heading": -1.5707963267906473,
+                    "angularVelocity": 1.1113605606003451e-10,
+                    "velocityX": 0.6148482866954439,
+                    "velocityY": -0.3074241433477296,
+                    "timestamp": 0.15179897306354753
+                },
+                {
+                    "x": 14.689999996749606,
+                    "y": 7.855000001625196,
+                    "heading": -1.5707963267883098,
+                    "angularVelocity": 1.0779328233778046e-10,
+                    "velocityX": 0.4611362869872145,
+                    "velocityY": -0.23056814349361357,
+                    "timestamp": 0.17348454064405433
+                },
+                {
+                    "x": 14.696666665442038,
+                    "y": 7.851666667278979,
+                    "heading": -1.57079632678602,
+                    "angularVelocity": 1.0559665318687e-10,
+                    "velocityX": 0.3074242197112065,
+                    "velocityY": -0.15371210985560818,
+                    "timestamp": 0.19517010822456113
+                },
+                {
+                    "x": 14.7,
+                    "y": 7.849999999999999,
+                    "heading": -1.5707963267837655,
+                    "angularVelocity": 1.0396131094338997e-10,
+                    "velocityX": 0.15371211961990153,
+                    "velocityY": -0.07685605980995434,
+                    "timestamp": 0.21685567580506793
+                },
+                {
+                    "x": 14.7,
+                    "y": 7.85,
+                    "heading": -1.5707963267815392,
+                    "angularVelocity": 1.026589822368547e-10,
+                    "velocityX": -4.090515190068828e-16,
+                    "velocityY": -4.0184879435243614e-16,
+                    "timestamp": 0.23854124338557472
+                },
+                {
+                    "x": 14.777777784078838,
+                    "y": 7.85,
+                    "heading": -1.5707963267720242,
+                    "angularVelocity": 9.604591431639291e-11,
+                    "velocityX": 0.7850982844173267,
+                    "velocityY": -8.335783081965274e-17,
+                    "timestamp": 0.3376088195382372
+                },
+                {
+                    "x": 14.933333345940284,
+                    "y": 7.85,
+                    "heading": -1.5707963267636045,
+                    "angularVelocity": 8.499063369107821e-11,
+                    "velocityX": 1.570196505279745,
+                    "velocityY": -8.335783172228632e-17,
+                    "timestamp": 0.43667639569089967
+                },
+                {
+                    "x": 15.166666654059716,
+                    "y": 7.85,
+                    "heading": -1.5707963267585192,
+                    "angularVelocity": 5.1330286303040024e-11,
+                    "velocityX": 2.355294407928851,
+                    "velocityY": -8.335783173056621e-17,
+                    "timestamp": 0.5357439718435622
+                },
+                {
+                    "x": 15.322222215921164,
+                    "y": 7.85,
+                    "heading": -1.5707963267567688,
+                    "angularVelocity": 1.7669781479174748e-11,
+                    "velocityX": 1.5701965052797455,
+                    "velocityY": -8.3357831731374e-17,
+                    "timestamp": 0.6348115479962246
+                },
+                {
+                    "x": 15.4,
+                    "y": 7.85,
+                    "heading": -1.5707963267561136,
+                    "angularVelocity": 6.6134619285189195e-12,
+                    "velocityX": 0.7850982844173271,
+                    "velocityY": -8.335783345351416e-17,
+                    "timestamp": 0.7338791241488871
+                },
+                {
+                    "x": 15.4,
+                    "y": 7.85,
+                    "heading": -1.5707963267561136,
+                    "angularVelocity": -4.934861952254687e-24,
+                    "velocityX": -3.6127815315142493e-19,
+                    "velocityY": -2.77859435395924e-17,
+                    "timestamp": 0.8329467003015496
+                }
+            ],
+            "constraints": [
+                {
+                    "scope": [
+                        "first"
+                    ],
+                    "type": "StopPoint"
+                },
+                {
+                    "scope": [
+                        "last"
+                    ],
+                    "type": "StopPoint"
+                },
+                {
+                    "scope": [
+                        0,
+                        2
+                    ],
+                    "type": "StraightLine"
+                }
+            ],
+            "usesControlIntervalGuessing": true,
+            "defaultControlIntervalCount": 40,
+            "usesDefaultFieldObstacles": true,
+            "circleObstacles": []
+        },
+        "R_comeOut": {
+            "waypoints": [
+                {
+                    "x": 15.4,
+                    "y": 7.85,
+                    "heading": -1.5707963267948966,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": true,
+                    "controlIntervalCount": 17
+                },
+                {
+                    "x": 13.8,
+                    "y": 7.9,
+                    "heading": 0,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": false,
+                    "controlIntervalCount": 40
+                }
+            ],
+            "trajectory": [
+                {
+                    "x": 15.4,
+                    "y": 7.85,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 5.550694130442648e-29,
+                    "velocityX": 1.1510740587000024e-19,
+                    "velocityY": -3.597106494064492e-21,
+                    "timestamp": 0
+                },
+                {
+                    "x": 15.377777776669175,
+                    "y": 7.850694444479088,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -1.3309895483335663e-16,
+                    "velocityX": -0.4195502969436542,
+                    "velocityY": 0.013110946779489376,
+                    "timestamp": 0.05296676821041381
+                },
+                {
+                    "x": 15.333333330238293,
+                    "y": 7.852083333430053,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -1.3049821521081507e-16,
+                    "velocityX": -0.8391005895304521,
+                    "velocityY": 0.026221893422826992,
+                    "timestamp": 0.10593353642082762
+                },
+                {
+                    "x": 15.266666661015048,
+                    "y": 7.8541666668432795,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -3.014554669964563e-16,
+                    "velocityX": -1.2586508763081001,
+                    "velocityY": 0.03933283988462868,
+                    "timestamp": 0.15890030463124144
+                },
+                {
+                    "x": 15.177777769430218,
+                    "y": 7.856944444705306,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -4.579813735619096e-16,
+                    "velocityX": -1.6782011549527476,
+                    "velocityY": 0.05244378609227409,
+                    "timestamp": 0.21186707284165524
+                },
+                {
+                    "x": 15.06666665613016,
+                    "y": 7.860416666995933,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -7.778605577392614e-16,
+                    "velocityX": -2.0977514213943143,
+                    "velocityY": 0.06555473191857324,
+                    "timestamp": 0.26483384105206903
+                },
+                {
+                    "x": 14.933333322194484,
+                    "y": 7.864583333681423,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -9.27338732313551e-16,
+                    "velocityX": -2.5173016674530686,
+                    "velocityY": 0.0786656771079095,
+                    "timestamp": 0.3178006092624828
+                },
+                {
+                    "x": 14.777777769778758,
+                    "y": 7.869444444694414,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -1.196371600058552e-15,
+                    "velocityX": -2.93685187281525,
+                    "velocityY": 0.09177662102547787,
+                    "timestamp": 0.3707673774728966
+                },
+                {
+                    "x": 14.6,
+                    "y": 7.875,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -1.6991801504304279e-15,
+                    "velocityX": -3.356402057088407,
+                    "velocityY": 0.10488756428401419,
+                    "timestamp": 0.4237341456833104
+                },
+                {
+                    "x": 14.422222230221243,
+                    "y": 7.880555555305586,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 4.471363118302855e-16,
+                    "velocityX": -3.356402057088407,
+                    "velocityY": 0.10488756428401419,
+                    "timestamp": 0.4767009138937242
+                },
+                {
+                    "x": 14.266666677805517,
+                    "y": 7.885416666318577,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 1.1638590582481377e-15,
+                    "velocityX": -2.9368518728152497,
+                    "velocityY": 0.09177662102547786,
+                    "timestamp": 0.5296676821041381
+                },
+                {
+                    "x": 14.133333343869841,
+                    "y": 7.889583333004068,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 7.496548946091567e-16,
+                    "velocityX": -2.517301667453068,
+                    "velocityY": 0.07866567710790948,
+                    "timestamp": 0.5826344503145519
+                },
+                {
+                    "x": 14.022222230569783,
+                    "y": 7.893055555294694,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 5.923824823103258e-16,
+                    "velocityX": -2.097751421394314,
+                    "velocityY": 0.06555473191857322,
+                    "timestamp": 0.6356012185249656
+                },
+                {
+                    "x": 13.933333338984953,
+                    "y": 7.8958333331567205,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 4.546446183942603e-16,
+                    "velocityX": -1.6782011549527471,
+                    "velocityY": 0.05244378609227408,
+                    "timestamp": 0.6885679867353794
+                },
+                {
+                    "x": 13.866666669761708,
+                    "y": 7.897916666569947,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 2.9385600147404866e-16,
+                    "velocityX": -1.2586508763081001,
+                    "velocityY": 0.03933283988462868,
+                    "timestamp": 0.7415347549457932
+                },
+                {
+                    "x": 13.822222223330826,
+                    "y": 7.899305555520912,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 1.2252023511399309e-16,
+                    "velocityX": -0.8391005895304521,
+                    "velocityY": 0.026221893422826992,
+                    "timestamp": 0.794501523156207
+                },
+                {
+                    "x": 13.8,
+                    "y": 7.9,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 1.2687399928406936e-16,
+                    "velocityX": -0.4195502969436542,
+                    "velocityY": 0.013110946779489376,
+                    "timestamp": 0.8474682913666208
+                },
+                {
+                    "x": 13.8,
+                    "y": 7.9,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -5.569962507659317e-29,
+                    "velocityX": 8.307517054320017e-20,
+                    "velocityY": -1.4939021821401302e-18,
+                    "timestamp": 0.9004350595770346
+                }
+            ],
+            "constraints": [
+                {
+                    "scope": [
+                        "first"
+                    ],
+                    "type": "StopPoint"
+                },
+                {
+                    "scope": [
+                        "last"
+                    ],
+                    "type": "StopPoint"
+                },
+                {
+                    "scope": [
+                        0,
+                        1
+                    ],
+                    "type": "StraightLine"
+                }
+            ],
+            "usesControlIntervalGuessing": true,
+            "defaultControlIntervalCount": 40,
+            "usesDefaultFieldObstacles": true,
+            "circleObstacles": []
+        },
+        "B_hideFrom1731": {
+            "waypoints": [
+                {
+                    "x": 1.9,
+                    "y": 7.9,
+                    "heading": -1.5707963267948966,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": true,
+                    "controlIntervalCount": 12
+                },
+                {
+                    "x": 1.585616111755371,
+                    "y": 7.85,
+                    "heading": 0,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": false,
+                    "controlIntervalCount": 5
+                },
+                {
+                    "x": 1.14,
+                    "y": 7.85,
+                    "heading": 0,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": false,
+                    "controlIntervalCount": 40
+                }
+            ],
+            "trajectory": [
+                {
+                    "x": 1.9,
+                    "y": 7.9,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 3.7110422020768247e-31,
+                    "velocityX": -8.185812333566592e-19,
+                    "velocityY": -1.3018816748419747e-19,
+                    "timestamp": 0
+                },
+                {
+                    "x": 1.891267112515637,
+                    "y": 7.898611110840775,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 2.086462074202908e-19,
+                    "velocityX": -0.261434598806768,
+                    "velocityY": -0.04157887992710109,
+                    "timestamp": 0.033403717504191424
+                },
+                {
+                    "x": 1.873801337777377,
+                    "y": 7.8958333325589765,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -2.8773345841967994e-17,
+                    "velocityX": -0.5228691907141342,
+                    "velocityY": -0.08315775875691285,
+                    "timestamp": 0.06680743500838285
+                },
+                {
+                    "x": 1.8476026761473803,
+                    "y": 7.891666665212205,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -2.98437211553264e-17,
+                    "velocityX": -0.784303771779584,
+                    "velocityY": -0.12473663586241289,
+                    "timestamp": 0.10021115251257427
+                },
+                {
+                    "x": 1.8126711282775352,
+                    "y": 7.886111108904138,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -1.3016972907236361e-17,
+                    "velocityX": -1.045738333329582,
+                    "velocityY": -0.1663155098641515,
+                    "timestamp": 0.1336148700167657
+                },
+                {
+                    "x": 1.7690066956889106,
+                    "y": 7.879166663876687,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -6.519036841634122e-18,
+                    "velocityX": -1.3071728493436645,
+                    "velocityY": -0.2078943766238021,
+                    "timestamp": 0.1670185875209571
+                },
+                {
+                    "x": 1.7166094160664607,
+                    "y": 7.870833336123313,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 4.533429930928666e-18,
+                    "velocityX": -1.568606237191195,
+                    "velocityY": -0.2494730639584577,
+                    "timestamp": 0.20042230502514852
+                },
+                {
+                    "x": 1.672944983477836,
+                    "y": 7.863888891095862,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 1.473013139515415e-17,
+                    "velocityX": -1.3071728493436645,
+                    "velocityY": -0.2078943766238021,
+                    "timestamp": 0.23382602252933993
+                },
+                {
+                    "x": 1.638013435607991,
+                    "y": 7.858333334787795,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 1.3629178582531497e-17,
+                    "velocityX": -1.0457383333295822,
+                    "velocityY": -0.1663155098641515,
+                    "timestamp": 0.26722974003353134
+                },
+                {
+                    "x": 1.611814773977994,
+                    "y": 7.8541666674410235,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 1.755358522656024e-17,
+                    "velocityX": -0.7843037717795841,
+                    "velocityY": -0.12473663586241289,
+                    "timestamp": 0.30063345753772275
+                },
+                {
+                    "x": 1.594348999239734,
+                    "y": 7.851388889159225,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 2.97539682573534e-17,
+                    "velocityX": -0.5228691907141343,
+                    "velocityY": -0.08315775875691286,
+                    "timestamp": 0.33403717504191416
+                },
+                {
+                    "x": 1.585616111755371,
+                    "y": 7.85,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 2.999614274334278e-17,
+                    "velocityX": -0.26143459880676806,
+                    "velocityY": -0.041578879927101096,
+                    "timestamp": 0.36744089254610557
+                },
+                {
+                    "x": 1.585616111755371,
+                    "y": 7.85,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 2.3644586079938488e-17,
+                    "velocityX": -1.131046232004453e-18,
+                    "velocityY": 4.408713668052511e-19,
+                    "timestamp": 0.400844610050297
+                },
+                {
+                    "x": 1.5113467586802347,
+                    "y": 7.85,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 2.4330405637306125e-17,
+                    "velocityX": -0.7671867305193174,
+                    "velocityY": 9.487506048880763e-17,
+                    "timestamp": 0.4976520105443887
+                },
+                {
+                    "x": 1.3628080558776854,
+                    "y": 7.85,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 2.5839682004954986e-17,
+                    "velocityX": -1.5343734264573585,
+                    "velocityY": 1.8882523073017907e-16,
+                    "timestamp": 0.5944594110384804
+                },
+                {
+                    "x": 1.2142693530751363,
+                    "y": 7.85,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -2.1850950516985623e-18,
+                    "velocityX": -1.5343734264573585,
+                    "velocityY": 1.8882523073017905e-16,
+                    "timestamp": 0.6912668115325722
+                },
+                {
+                    "x": 1.14,
+                    "y": 7.85,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -6.822240830187315e-19,
+                    "velocityX": -0.7671867305193174,
+                    "velocityY": 9.487506048880743e-17,
+                    "timestamp": 0.788074212026664
+                },
+                {
+                    "x": 1.14,
+                    "y": 7.85,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": -3.6382013862569226e-31,
+                    "velocityX": -1.4849441497549062e-26,
+                    "velocityY": 3.0829533752825037e-19,
+                    "timestamp": 0.8848816125207557
+                }
+            ],
+            "constraints": [
+                {
+                    "scope": [
+                        "first"
+                    ],
+                    "type": "StopPoint"
+                },
+                {
+                    "scope": [
+                        "last"
+                    ],
+                    "type": "StopPoint"
+                },
+                {
+                    "scope": [
+                        0,
+                        2
+                    ],
+                    "type": "StraightLine"
+                }
+            ],
+            "usesControlIntervalGuessing": true,
+            "defaultControlIntervalCount": 40,
+            "usesDefaultFieldObstacles": true,
+            "circleObstacles": []
+        },
+        "B_comeOut": {
+            "waypoints": [
+                {
+                    "x": 1.14,
+                    "y": 7.85,
+                    "heading": -1.5707963267948966,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": true,
+                    "controlIntervalCount": 17
+                },
+                {
+                    "x": 2.79,
+                    "y": 7.9,
+                    "heading": 0,
+                    "isInitialGuess": false,
+                    "translationConstrained": true,
+                    "headingConstrained": false,
+                    "controlIntervalCount": 40
+                }
+            ],
+            "trajectory": [
+                {
+                    "x": 1.1400000000137804,
+                    "y": 7.84999999988119,
+                    "heading": -1.5707963267948966,
+                    "angularVelocity": 1.877506873886746e-20,
+                    "velocityX": 4.423282127872142e-12,
+                    "velocityY": 1.3403873778154653e-13,
+                    "timestamp": 0
+                },
+                {
+                    "x": 1.1634040915938892,
+                    "y": 7.850709214797022,
+                    "heading": -1.570796324589889,
+                    "angularVelocity": 4.056155269480274e-8,
+                    "velocityX": 0.43052267986018894,
+                    "velocityY": 0.013046144365239149,
+                    "timestamp": 0.05436204098164825
+                },
+                {
+                    "x": 1.210211566443363,
+                    "y": 7.85212762314526,
+                    "heading": -1.5707963197974784,
+                    "angularVelocity": 8.815734155212676e-8,
+                    "velocityX": 0.8610323304649837,
+                    "velocityY": 0.026091891353263414,
+                    "timestamp": 0.1087240819632965
+                },
+                {
+                    "x": 1.2804215154699727,
+                    "y": 7.854255197377655,
+                    "heading": -1.57079631190034,
+                    "angularVelocity": 1.452694185167643e-7,
+                    "velocityX": 1.291525258147585,
+                    "velocityY": 0.0391371315860697,
+                    "timestamp": 0.16308612294494473
+                },
+                {
+                    "x": 1.3740327256452736,
+                    "y": 7.857091900735766,
+                    "heading": -1.5707963001652767,
+                    "angularVelocity": 2.1586879724531751e-7,
+                    "velocityX": 1.721995871943953,
+                    "velocityY": 0.05218169564050528,
+                    "timestamp": 0.217448163926593
+                },
+                {
+                    "x": 1.491043486287028,
+                    "y": 7.860637681380739,
+                    "heading": -1.5707962834733329,
+                    "angularVelocity": 3.070515762827932e-7,
+                    "velocityX": 2.152435017418692,
+                    "velocityY": 0.06522530610943693,
+                    "timestamp": 0.27181020490824126
+                },
+                {
+                    "x": 1.6305849567506068,
+                    "y": 7.864866210808192,
+                    "heading": -1.5707980300365618,
+                    "angularVelocity": -0.00003212835996351225,
+                    "velocityX": 2.566891675317373,
+                    "velocityY": 0.07778459877303352,
+                    "timestamp": 0.3261722458898895
+                },
+                {
+                    "x": 1.7899433392813993,
+                    "y": 7.869695252722531,
+                    "heading": -1.5708018208034533,
+                    "angularVelocity": -0.00006973187197330133,
+                    "velocityX": 2.931427511525022,
+                    "velocityY": 0.08883113926417455,
+                    "timestamp": 0.3805342868715378
+                },
+                {
+                    "x": 1.964999697604116,
+                    "y": 7.874999990872989,
+                    "heading": -1.5708063112842752,
+                    "angularVelocity": -0.00008260324172060509,
+                    "velocityX": 3.220194737855097,
+                    "velocityY": 0.09758166127417693,
+                    "timestamp": 0.43489632785318605
+                },
+                {
+                    "x": 2.1400561732145764,
+                    "y": 7.8803047325776205,
+                    "heading": -1.5708065556853856,
+                    "angularVelocity": -0.0000044958044129510635,
+                    "velocityX": 3.220196895385275,
+                    "velocityY": 0.0975817266538793,
+                    "timestamp": 0.4892583688348343
+                },
+                {
+                    "x": 2.2994148016253186,
+                    "y": 7.885133781942867,
+                    "heading": -1.5708066676135943,
+                    "angularVelocity": -0.0000020589404132105735,
+                    "velocityX": 2.931432034533083,
+                    "velocityY": 0.08883127632502488,
+                    "timestamp": 0.5436204098164825
+                },
+                {
+                    "x": 2.4389565137021516,
+                    "y": 7.8893623186919335,
+                    "heading": -1.5708066418207798,
+                    "angularVelocity": 4.744637803057722e-7,
+                    "velocityX": 2.5668961198387663,
+                    "velocityY": 0.07778473345549997,
+                    "timestamp": 0.5979824507981307
+                },
+                {
+                    "x": 2.5559672743415183,
+                    "y": 7.892908099336835,
+                    "heading": -1.5708066489462662,
+                    "angularVelocity": -1.3107459643859238e-7,
+                    "velocityX": 2.1524350173747684,
+                    "velocityY": 0.06522530610810594,
+                    "timestamp": 0.6523444917797789
+                },
+                {
+                    "x": 2.649578484517384,
+                    "y": 7.8957448026949635,
+                    "heading": -1.5708066541765255,
+                    "angularVelocity": -9.621155236908466e-8,
+                    "velocityX": 1.7219958719543367,
+                    "velocityY": 0.05218169564081993,
+                    "timestamp": 0.7067065327614271
+                },
+                {
+                    "x": 2.7197884335440063,
+                    "y": 7.897872376927357,
+                    "heading": -1.5708066578297575,
+                    "angularVelocity": -6.720184944489633e-8,
+                    "velocityX": 1.291525258147818,
+                    "velocityY": 0.039137131586076755,
+                    "timestamp": 0.7610685737430753
+                },
+                {
+                    "x": 2.766595908393454,
+                    "y": 7.8992907852755945,
+                    "heading": -1.5708066601205946,
+                    "angularVelocity": -4.2140355415317456e-8,
+                    "velocityX": 0.8610323304645008,
+                    "velocityY": 0.02609189135324878,
+                    "timestamp": 0.8154306147247236
+                },
+                {
+                    "x": 2.7899999999735683,
+                    "y": 7.900000000191429,
+                    "heading": -1.5708066612059417,
+                    "angularVelocity": -1.9965150700032492e-8,
+                    "velocityX": 0.43052267986029163,
+                    "velocityY": 0.013046144365242261,
+                    "timestamp": 0.8697926557063718
+                },
+                {
+                    "x": 2.7899999999862195,
+                    "y": 7.90000000011881,
+                    "heading": -1.5708066612059417,
+                    "angularVelocity": -1.8728536288910173e-20,
+                    "velocityX": -2.0776387577628093e-11,
+                    "velocityY": 8.497095692929421e-10,
+                    "timestamp": 0.92415469668802
+                }
+            ],
+            "constraints": [
+                {
+                    "scope": [
+                        "first"
+                    ],
+                    "type": "StopPoint"
+                },
+                {
+                    "scope": [
+                        "last"
+                    ],
+                    "type": "StopPoint"
+                },
+                {
+                    "scope": [
+                        0,
+                        1
+                    ],
+                    "type": "StraightLine"
+                }
+            ],
+            "usesControlIntervalGuessing": true,
+            "defaultControlIntervalCount": 40,
+            "usesDefaultFieldObstacles": true,
+            "circleObstacles": []
         }
     },
     "splitTrajectoriesAtStopPoints": false,
