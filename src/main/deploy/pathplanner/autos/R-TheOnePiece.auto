@@ -47,6 +47,24 @@
           "data": {
             "name": "resetArmAndIntake"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_hideFrom1731.1"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 9.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "R_comeOut"
+          }
         }
       ]
     }
