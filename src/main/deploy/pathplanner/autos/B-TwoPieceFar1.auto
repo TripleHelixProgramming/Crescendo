@@ -60,36 +60,6 @@
               }
             ]
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "B_ReturnFromFarPiece1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "raiseArmAndWait"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "outtakeAndWait"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "resetArmAndIntake"
-          }
         }
       ]
     }
