@@ -204,7 +204,7 @@ public class RobotContainer {
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? null
-                : null;
+                : new Autonomous("B-DriveThroughCenter");
             break;
 
       default:
