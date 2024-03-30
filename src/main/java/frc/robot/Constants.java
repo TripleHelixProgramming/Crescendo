@@ -206,7 +206,7 @@ public final class Constants {
 
     public static final double kPositionP = 8.0;
     public static final double kPositionI = 0.0;
-    public static final double kPositionD = 0.0; //spits it out ig
+    public static final double kPositionD = 0.0; // spits it out ig
 
     public static final double kFirstRepositionDistance = 0.15;
     public static final double kSecondRepositionDistance = 0.29; // originally 0.23
