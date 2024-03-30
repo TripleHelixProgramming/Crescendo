@@ -287,7 +287,7 @@ public class RobotContainer {
     
     // Reverse intake to outake or reject intaking Note
     D_Button.and(armDeployed.negate())
-            .whileTrue(m_intake.createOuttakeToFloorCommand());
+            .whileTrue(m_intake.createOuttakeToFloorCommand().alongWith(m_arm.createStowCommand()));
         // Shoot Note into Amp
     D_Button.and(armDeployed)
             .whileTrue(m_intake.createOuttakeToAmpCommand());
