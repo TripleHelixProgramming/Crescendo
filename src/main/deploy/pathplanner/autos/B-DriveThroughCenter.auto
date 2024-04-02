@@ -43,13 +43,26 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "B_PickUpFarPiece1"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "B_PickUpFarPiece1"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "B_DriveAcrossCenter"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -59,18 +72,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "B_DriveAcrossCenter"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "B_ReturnFromDriveThroughCenter"
           }
         }
       ]
