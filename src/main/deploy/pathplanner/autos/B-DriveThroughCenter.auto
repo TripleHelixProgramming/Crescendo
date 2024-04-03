@@ -43,7 +43,7 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
@@ -55,20 +55,27 @@
                       "data": {
                         "pathName": "B_PickUpFarPiece1"
                       }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "B_DriveAcrossCenter"
-                      }
                     }
                   ]
                 }
               },
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "intakePiece"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "intakePiece"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "flipPiece"
+                      }
+                    }
+                  ]
                 }
               }
             ]

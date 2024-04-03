@@ -2,8 +2,11 @@
 
 package frc.robot;
 
+import java.util.function.IntSupplier;
+
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -40,7 +43,6 @@ import frc.robot.climber.commands.DriveToPositionCommand;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
-import java.util.function.IntSupplier;
 
 public class RobotContainer {
 
@@ -204,7 +206,7 @@ public class RobotContainer {
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? null
-                : new Autonomous("B-DriveThroughCenter");
+                : new Autonomous("TestFlip");
             break;
 
       default:
@@ -260,6 +262,9 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("stopIntake", 
       m_intake.createStopIntakeCommand());
+
+    NamedCommands.registerCommand("flipPiece", 
+    m_intake.createOuttakeToAmpCommand());
   }
   // spotless:on
 
@@ -287,7 +292,7 @@ public class RobotContainer {
     
     // Reverse intake to outake or reject intaking Note
     D_Button.and(armDeployed.negate())
-            .whileTrue(m_intake.createOuttakeToFloorCommand());
+            .whileTrue(m_arm.createStowCommand().andThen(new WaitCommand(0.2).andThen(m_intake.createOuttakeToFloorCommand())));
         // Shoot Note into Amp
     D_Button.and(armDeployed)
             .whileTrue(m_intake.createOuttakeToAmpCommand());
