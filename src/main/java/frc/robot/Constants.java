@@ -209,7 +209,8 @@ public final class Constants {
     public static final double kPositionD = 0.0; // spits it out ig
 
     public static final double kFirstRepositionDistance = 0.15;
-    public static final double kSecondRepositionDistance = 0.26; // originally 0.29 // also with 0.23
+    public static final double kSecondRepositionDistance =
+        0.26; // originally 0.29 // also with 0.23
     public static final double kPositionTolerance = 0.01;
 
     public static final double kRollerDiameter = 0.0508; // 2 inches

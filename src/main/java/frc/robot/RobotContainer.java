@@ -2,11 +2,8 @@
 
 package frc.robot;
 
-import java.util.function.IntSupplier;
-
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -43,6 +40,7 @@ import frc.robot.climber.commands.DriveToPositionCommand;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
 import frc.robot.intake.Intake;
+import java.util.function.IntSupplier;
 
 public class RobotContainer {
 
