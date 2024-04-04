@@ -245,6 +245,10 @@ public class RobotContainer {
     NamedCommands.registerCommand("raiseArmAndWait", 
       m_arm.createDeployCommand()
         .andThen(new WaitCommand(1.8)));
+
+    NamedCommands.registerCommand("raiseArmAndWaitWhileAdvancingPiece", 
+      m_arm.createDeployCommand().alongWith(m_intake.createSetVelocityCommand(0.5))
+        .andThen(new WaitCommand(1.8)).andThen(m_intake.createStopIntakeCommand()));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
       m_arm.createStowCommand()

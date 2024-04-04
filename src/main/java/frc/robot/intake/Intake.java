@@ -160,7 +160,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Command createSetVelocityCommand(double targetVelocity) {
-    return this.startEnd(() -> this.setVelocity(targetVelocity), () -> {});
+    return this.runOnce(() -> this.setVelocity(targetVelocity));
   }
 
   public Command createJoystickControlCommand(XboxController m_controller, double factor) {
