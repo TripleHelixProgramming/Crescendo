@@ -292,7 +292,7 @@ public class RobotContainer {
     D_Button.and(armDeployed.negate())
             .whileTrue(m_arm.createStowCommand().andThen(new WaitCommand(0.2).andThen(m_intake.createOuttakeToFloorCommand())));
         // Shoot Note into Amp
-    D_Button.and(armDeployed)
+    D_Button.and(armDeployed) 
             .whileTrue(m_intake.createOuttakeToAmpCommand());
   }
   // spotless:on
