@@ -43,7 +43,7 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "deadline",
           "data": {
             "commands": [
               {
@@ -114,7 +114,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "B_ReturnFromFarPiece1AfterNear"
+            "pathName": "B_ReturnFromFarPiece1"
           }
         }
       ]

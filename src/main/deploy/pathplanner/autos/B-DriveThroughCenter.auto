@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 15.091,
+      "x": 1.449083685874939,
       "y": 7.3158488273620605
     },
     "rotation": -90.0
@@ -18,7 +18,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "R_OnePiece "
+                  "pathName": "B_OnePiece"
                 }
               },
               {
@@ -43,13 +43,20 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "sequential",
                 "data": {
-                  "pathName": "R_PickUpNearPiece"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "B_PickUpFarPiece1"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -65,56 +72,13 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "raiseArmAndWait"
+                        "name": "flipPiece"
                       }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.3
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "outtakeAndWait"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "resetArmAndIntake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "R_PickUpFarPiece1AfterNear"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intakePiece"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "R_ReturnFromFarPiece1AfterNear"
           }
         }
       ]

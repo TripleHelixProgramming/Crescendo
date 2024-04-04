@@ -204,7 +204,7 @@ public class RobotContainer {
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
                 ? null
-                : null;
+                : new Autonomous("TestFlip");
             break;
 
       default:
@@ -260,6 +260,9 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("stopIntake", 
       m_intake.createStopIntakeCommand());
+
+    NamedCommands.registerCommand("flipPiece", 
+    m_intake.createOuttakeToAmpCommand());
   }
   // spotless:on
 
@@ -287,7 +290,7 @@ public class RobotContainer {
     
     // Reverse intake to outake or reject intaking Note
     D_Button.and(armDeployed.negate())
-            .whileTrue(m_arm.createStowCommand().andThen(new WaitCommand(0.05).andThen(m_intake.createOuttakeToFloorCommand())));
+            .whileTrue(m_arm.createStowCommand().andThen(new WaitCommand(0.2).andThen(m_intake.createOuttakeToFloorCommand())));
         // Shoot Note into Amp
     D_Button.and(armDeployed) 
             .whileTrue(m_intake.createOuttakeToAmpCommand());
