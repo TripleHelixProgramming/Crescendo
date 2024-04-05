@@ -243,7 +243,7 @@ public class RobotContainer {
   // spotless:off
   private void createNamedCommands() {
     NamedCommands.registerCommand("raiseArmAndWait", 
-      m_arm.createDeployCommand()
+      m_arm.createDeployCommand().alongWith(m_intake.createStopIntakeCommand())
         .andThen(new WaitCommand(1.8)));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
