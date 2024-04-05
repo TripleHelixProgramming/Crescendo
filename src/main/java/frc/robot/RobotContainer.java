@@ -245,10 +245,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("raiseArmAndWait", 
       m_arm.createDeployCommand()
         .andThen(new WaitCommand(1.8)));
-
-    NamedCommands.registerCommand("raiseArmAndWaitWhileAdvancingPiece", 
-      m_arm.createDeployCommand().alongWith(m_intake.createSetVelocityCommand(0.5))
-        .andThen(new WaitCommand(1.8)).andThen(m_intake.createStopIntakeCommand()));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
       m_arm.createStowCommand()
@@ -259,8 +255,11 @@ public class RobotContainer {
         .withTimeout(0.7));
     
     NamedCommands.registerCommand("intakePiece", 
-      createAutoIntakeCommandSequence()
-      );
+      m_arm.createStowCommand()
+        .andThen(m_intake.createIntakeCommand()).until(m_intake.hasNote)
+        .andThen(m_arm.createCarryCommand()
+        .alongWith(m_intake.createAdvanceAfterIntakingCommand()))
+    );
     
     NamedCommands.registerCommand("stopIntake", 
       m_intake.createStopIntakeCommand());
@@ -288,16 +287,18 @@ public class RobotContainer {
     new JoystickButton(m_driver,OIConstants.kZorroAIn)
     .whileTrue((new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematicsDriveFromArm, m_driver)));
 
-
     Trigger armDeployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
     JoystickButton D_Button = new JoystickButton(m_driver, OIConstants.kZorroDIn);
     
     // Reverse intake to outake or reject intaking Note
     D_Button.and(armDeployed.negate())
-            .whileTrue(m_arm.createStowCommand().andThen(new WaitCommand(0.2).andThen(m_intake.createOuttakeToFloorCommand())));
-        // Shoot Note into Amp
+      .whileTrue(m_arm.createStowCommand()
+      .andThen(new WaitCommand(0.2)
+      .andThen(m_intake.createOuttakeToFloorCommand())));
+    
+    // Shoot Note into Amp
     D_Button.and(armDeployed) 
-            .whileTrue(m_intake.createOuttakeToAmpCommand());
+      .whileTrue(m_intake.createOuttakeToAmpCommand());
   }
   // spotless:on
 
@@ -307,7 +308,6 @@ public class RobotContainer {
     JoystickButton leftBumper = new JoystickButton(m_operator, Button.kLeftBumper.value);
     JoystickButton leftJoystickDown = new JoystickButton(m_operator, Button.kLeftStick.value);
 
-    Trigger hasNote = new Trigger(m_intake.eitherSensorSupplier());
     Trigger armDeployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
 
     // CLIMBER
@@ -333,16 +333,19 @@ public class RobotContainer {
     // Control position of Note in intake
     Trigger leftStick = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
     //While arm is down
-    leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmDown));
+    leftStick.and(armDeployed.negate())
+      .whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmDown));
+    
     //While arm is up
-    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmUp));
+    leftStick.and(armDeployed)
+      .whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmUp));
 
     // Intake Note from floor
-    rightBumper.and(hasNote.negate())
+    rightBumper.and(m_intake.hasNote.negate())
       .whileTrue(m_arm.createStowCommand()
       .andThen(m_intake.createIntakeCommand()));
     
-    hasNote.and(m_intake.stateChecker(IntakeState.INTAKING)).and(() -> RobotState.isTeleop())
+    m_intake.hasNote.and(m_intake.stateChecker(IntakeState.INTAKING)).and(() -> RobotState.isTeleop())
       .onTrue(m_arm.createCarryCommand()
       .andThen(m_intake.createAdvanceAfterIntakingCommand().withInterruptBehavior(InterruptionBehavior.kCancelIncoming)));
     
