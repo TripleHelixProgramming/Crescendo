@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -258,7 +257,8 @@ public class RobotContainer {
       m_arm.createStowCommand()
         .andThen(m_intake.createIntakeCommand()).until(m_intake.hasNote)
         .andThen(m_arm.createCarryCommand()
-        .alongWith(m_intake.createAdvanceAfterIntakingCommand()))
+        .alongWith(m_intake.createAdvanceAfterIntakingCommand(IntakeConstants.kAutoFirstRepositionDistance, IntakeConstants.kAutoSecondRepositionDistance)))
+        .andThen(m_intake.createStopIntakeCommand())
     );
     
     NamedCommands.registerCommand("stopIntake", 
@@ -347,7 +347,7 @@ public class RobotContainer {
     
     m_intake.hasNote.and(m_intake.stateChecker(IntakeState.INTAKING)).and(() -> RobotState.isTeleop())
       .onTrue(m_arm.createCarryCommand()
-      .andThen(m_intake.createAdvanceAfterIntakingCommand().withInterruptBehavior(InterruptionBehavior.kCancelIncoming)));
+      .andThen(m_intake.createAdvanceAfterIntakingCommand(IntakeConstants.kFirstRepositionDistance, IntakeConstants.kSecondRepositionDistance).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)));
     
     // Reverse intake to outake or reject intaking Note
     leftBumper.and(armDeployed.negate())
@@ -395,11 +395,4 @@ public class RobotContainer {
   }
   // spotless:on
 
-  public Command createAutoIntakeCommandSequence() {
-    return new SequentialCommandGroup(
-        m_arm.createStowCommand(),
-        m_intake.createIntakeCommand().until(m_intake.eitherSensorSupplier()),
-        m_arm.createCarryCommand(),
-        m_intake.createAdvanceAfterIntakingCommand());
-  }
 }

@@ -1,11 +1,14 @@
 package frc.robot.intake;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
@@ -18,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.IntakeConstants.IntakeState;
-import java.util.function.BooleanSupplier;
 
 public class Intake extends SubsystemBase {
 
@@ -138,12 +140,12 @@ public class Intake extends SubsystemBase {
         });
   }
 
-  public Command createAdvanceAfterIntakingCommand() {
+  public Command createAdvanceAfterIntakingCommand(double firstDistance, double secondDistance) {
     return new FunctionalCommand(
         // initialize
-        () -> this.configurePositionController(IntakeConstants.kFirstRepositionDistance),
+        () -> this.configurePositionController(firstDistance),
         // execute
-        () -> this.advanceAfterIntaking(IntakeConstants.kSecondRepositionDistance),
+        () -> this.advanceAfterIntaking(secondDistance),
         // end
         interrupted -> {},
         // isFinished
@@ -151,6 +153,8 @@ public class Intake extends SubsystemBase {
         // requirements
         this);
   }
+
+
 
   public BooleanSupplier eitherSensorSupplier() {
     return () -> (!m_noteSensorRetroReflective.get() || !m_noteSensorBeamBreak.get());
