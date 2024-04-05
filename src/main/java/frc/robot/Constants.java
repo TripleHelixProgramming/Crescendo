@@ -213,6 +213,9 @@ public final class Constants {
         0.26; // originally 0.29 // also with 0.23
     public static final double kPositionTolerance = 0.01;
 
+    public static final double kAutoFirstRepositionDistance = 0.15;
+    public static final double kAutoSecondRepositionDistance = 0.285;
+
     public static final double kRollerDiameter = 0.0508; // 2 inches
     public static final double kGearRatio = 10.0;
 

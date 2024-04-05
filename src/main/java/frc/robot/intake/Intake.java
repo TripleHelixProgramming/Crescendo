@@ -138,12 +138,12 @@ public class Intake extends SubsystemBase {
         });
   }
 
-  public Command createAdvanceAfterIntakingCommand() {
+  public Command createAdvanceAfterIntakingCommand(double firstDistance, double secondDistance) {
     return new FunctionalCommand(
         // initialize
-        () -> this.configurePositionController(IntakeConstants.kFirstRepositionDistance),
+        () -> this.configurePositionController(firstDistance),
         // execute
-        () -> this.advanceAfterIntaking(IntakeConstants.kSecondRepositionDistance),
+        () -> this.advanceAfterIntaking(secondDistance),
         // end
         interrupted -> {},
         // isFinished
