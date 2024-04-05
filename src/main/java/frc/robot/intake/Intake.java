@@ -64,6 +64,7 @@ public class Intake extends SubsystemBase {
     m_velocityController.setD(IntakeConstants.kVelocityD);
 
     m_positionController.setTolerance(IntakeConstants.kPositionTolerance);
+    m_positionController.setGoal(17);
 
     m_relativeEncoder = m_motor.getEncoder();
     m_relativeEncoder.setPosition(0.0);
@@ -91,17 +92,22 @@ public class Intake extends SubsystemBase {
   }
 
   private void configurePositionController(double targetPosition) {
+    SmartDashboard.putNumber("ResetBeam", 1);
     m_positionController.reset(m_relativeEncoder.getPosition(), m_relativeEncoder.getVelocity());
     m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
+    m_positionController.calculate(m_relativeEncoder.getPosition());
   }
 
   // spotless:off
   private void advanceAfterIntaking(double targetPosition) {
     m_secondSensorTriggered.rising().ifHigh(
             () -> {
+              SmartDashboard.putNumber("RealativeEncoderReset", 0);
               m_positionController.reset(
                   m_relativeEncoder.getPosition(), m_relativeEncoder.getVelocity());
+                  SmartDashboard.putNumber("RealativeEncoderReset", 1);
               m_positionController.setGoal(m_relativeEncoder.getPosition() + targetPosition);
+                SmartDashboard.putNumber("RealativeEncoderReset", 2);
             });
     setState(IntakeState.PROCESSING);
     m_motor.set(m_positionController.calculate(m_relativeEncoder.getPosition()));
@@ -187,6 +193,8 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber(
         "IntakeSensorRetroReflective", !m_noteSensorRetroReflective.get() ? 1d : 0d);
     SmartDashboard.putNumber("IntakeSensorBeamBreak", !m_noteSensorBeamBreak.get() ? 1d : 0d);
+    SmartDashboard.putNumber("RealativeEncoderReset", -1);
+    SmartDashboard.putNumber("ResetBeam", -1);
 
     if (m_state != null) SmartDashboard.putString("Intake State", m_state.name());
   }

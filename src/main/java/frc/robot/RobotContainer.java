@@ -6,12 +6,13 @@ import java.util.function.IntSupplier;
 
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
+import frc.robot.Constants.IntakeConstants.IntakeState;
+import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -19,7 +20,6 @@ import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -33,7 +33,6 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.IntakeConstants.IntakeState;
 import frc.robot.Constants.OIConstants;
 import frc.robot.LEDs.LEDs;
 import frc.robot.arm.Arm;
@@ -259,9 +258,10 @@ public class RobotContainer {
     
     NamedCommands.registerCommand("intakePiece", 
       m_arm.createStowCommand()
-      .andThen(m_intake.createIntakeCommand()).until(m_intake.hasNote.and(m_intake.stateChecker(IntakeState.INTAKING)))
-      .andThen(m_arm.createCarryCommand()).andThen(m_intake.createAdvanceAfterIntakingCommand())
-      );
+        .andThen(m_intake.createIntakeCommand()).until(m_intake.hasNote)
+        .andThen(m_arm.createCarryCommand()
+        .alongWith(m_intake.createAdvanceAfterIntakingCommand()))
+    );
     
     NamedCommands.registerCommand("stopIntake", 
       m_intake.createStopIntakeCommand());
@@ -289,16 +289,18 @@ public class RobotContainer {
     new JoystickButton(m_driver,OIConstants.kZorroAIn)
     .whileTrue((new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematicsDriveFromArm, m_driver)));
 
-
     Trigger armDeployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
     JoystickButton D_Button = new JoystickButton(m_driver, OIConstants.kZorroDIn);
     
     // Reverse intake to outake or reject intaking Note
     D_Button.and(armDeployed.negate())
-            .whileTrue(m_arm.createStowCommand().andThen(new WaitCommand(0.2).andThen(m_intake.createOuttakeToFloorCommand())));
-        // Shoot Note into Amp
+      .whileTrue(m_arm.createStowCommand()
+      .andThen(new WaitCommand(0.2)
+      .andThen(m_intake.createOuttakeToFloorCommand())));
+    
+    // Shoot Note into Amp
     D_Button.and(armDeployed) 
-            .whileTrue(m_intake.createOuttakeToAmpCommand());
+      .whileTrue(m_intake.createOuttakeToAmpCommand());
   }
   // spotless:on
 
@@ -333,9 +335,12 @@ public class RobotContainer {
     // Control position of Note in intake
     Trigger leftStick = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
     //While arm is down
-    leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmDown));
+    leftStick.and(armDeployed.negate())
+      .whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmDown));
+    
     //While arm is up
-    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmUp));
+    leftStick.and(armDeployed)
+      .whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmUp));
 
     // Intake Note from floor
     rightBumper.and(m_intake.hasNote.negate())
