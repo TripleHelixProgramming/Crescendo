@@ -202,8 +202,8 @@ public class RobotContainer {
       case 5:
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? null
-                : new Autonomous("Match87");
+                ? new Autonomous("Red5")
+                : new Autonomous("Blue5");
             break;
 
       default:
@@ -293,7 +293,7 @@ public class RobotContainer {
     // Reverse intake to outake or reject intaking Note
     D_Button.and(armDeployed.negate())
       .whileTrue(m_arm.createStowCommand()
-      .andThen(new WaitCommand(0.2)
+      .andThen(new WaitCommand(0.3)
       .andThen(m_intake.createOuttakeToFloorCommand())));
     
     // Shoot Note into Amp
