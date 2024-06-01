@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command.InterruptionBehavior;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -203,8 +202,8 @@ public class RobotContainer {
       case 5:
         m_autonomous = 
             m_swerve.redAllianceSupplier().getAsBoolean()
-                ? null
-                : new Autonomous("TestFlip");
+                ? new Autonomous("Red5")
+                : new Autonomous("Blue5");
             break;
 
       default:
@@ -243,7 +242,7 @@ public class RobotContainer {
   // spotless:off
   private void createNamedCommands() {
     NamedCommands.registerCommand("raiseArmAndWait", 
-      m_arm.createDeployCommand()
+      m_arm.createDeployCommand().alongWith(m_intake.createStopIntakeCommand())
         .andThen(new WaitCommand(1.8)));
     
     NamedCommands.registerCommand("resetArmAndIntake", 
@@ -255,8 +254,12 @@ public class RobotContainer {
         .withTimeout(0.7));
     
     NamedCommands.registerCommand("intakePiece", 
-      createAutoIntakeCommandSequence()
-      );
+      m_arm.createStowCommand()
+        .andThen(m_intake.createIntakeCommand()).until(m_intake.hasNote)
+        .andThen(m_arm.createCarryCommand()
+        .alongWith(m_intake.createAdvanceAfterIntakingCommand(IntakeConstants.kAutoFirstRepositionDistance, IntakeConstants.kAutoSecondRepositionDistance)))
+        .andThen(m_intake.createStopIntakeCommand())
+    );
     
     NamedCommands.registerCommand("stopIntake", 
       m_intake.createStopIntakeCommand());
@@ -284,16 +287,18 @@ public class RobotContainer {
     new JoystickButton(m_driver,OIConstants.kZorroAIn)
     .whileTrue((new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematicsDriveFromArm, m_driver)));
 
-
     Trigger armDeployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
     JoystickButton D_Button = new JoystickButton(m_driver, OIConstants.kZorroDIn);
     
     // Reverse intake to outake or reject intaking Note
     D_Button.and(armDeployed.negate())
-            .whileTrue(m_arm.createStowCommand().andThen(new WaitCommand(0.2).andThen(m_intake.createOuttakeToFloorCommand())));
-        // Shoot Note into Amp
+      .whileTrue(m_arm.createStowCommand()
+      .andThen(new WaitCommand(0.3)
+      .andThen(m_intake.createOuttakeToFloorCommand())));
+    
+    // Shoot Note into Amp
     D_Button.and(armDeployed) 
-            .whileTrue(m_intake.createOuttakeToAmpCommand());
+      .whileTrue(m_intake.createOuttakeToAmpCommand());
   }
   // spotless:on
 
@@ -303,7 +308,6 @@ public class RobotContainer {
     JoystickButton leftBumper = new JoystickButton(m_operator, Button.kLeftBumper.value);
     JoystickButton leftJoystickDown = new JoystickButton(m_operator, Button.kLeftStick.value);
 
-    Trigger hasNote = new Trigger(m_intake.eitherSensorSupplier());
     Trigger armDeployed = new Trigger(m_arm.stateChecker(ArmState.DEPLOYED));
 
     // CLIMBER
@@ -329,18 +333,21 @@ public class RobotContainer {
     // Control position of Note in intake
     Trigger leftStick = new Trigger(() -> Math.abs(m_operator.getLeftY()) > 0.2);
     //While arm is down
-    leftStick.and(armDeployed.negate()).whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmDown));
+    leftStick.and(armDeployed.negate())
+      .whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmDown));
+    
     //While arm is up
-    leftStick.and(armDeployed).whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmUp));
+    leftStick.and(armDeployed)
+      .whileTrue(m_intake.createJoystickControlCommand(m_operator, IntakeConstants.kRepositionSpeedArmUp));
 
     // Intake Note from floor
-    rightBumper.and(hasNote.negate())
+    rightBumper.and(m_intake.hasNote.negate())
       .whileTrue(m_arm.createStowCommand()
       .andThen(m_intake.createIntakeCommand()));
     
-    hasNote.and(m_intake.stateChecker(IntakeState.INTAKING)).and(() -> RobotState.isTeleop())
+    m_intake.hasNote.and(m_intake.stateChecker(IntakeState.INTAKING)).and(() -> RobotState.isTeleop())
       .onTrue(m_arm.createCarryCommand()
-      .andThen(m_intake.createAdvanceAfterIntakingCommand().withInterruptBehavior(InterruptionBehavior.kCancelIncoming)));
+      .andThen(m_intake.createAdvanceAfterIntakingCommand(IntakeConstants.kFirstRepositionDistance, IntakeConstants.kSecondRepositionDistance).withInterruptBehavior(InterruptionBehavior.kCancelIncoming)));
     
     // Reverse intake to outake or reject intaking Note
     leftBumper.and(armDeployed.negate())
@@ -388,11 +395,4 @@ public class RobotContainer {
   }
   // spotless:on
 
-  public Command createAutoIntakeCommandSequence() {
-    return new SequentialCommandGroup(
-        m_arm.createStowCommand(),
-        m_intake.createIntakeCommand().until(m_intake.eitherSensorSupplier()),
-        m_arm.createCarryCommand(),
-        m_intake.createAdvanceAfterIntakingCommand());
-  }
 }
