@@ -16,6 +16,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.drivetrain.Drivetrain;
 import frc.robot.drivetrain.commands.ZorroDriveCommand;
+import frc.robot.drivetrain.kicker.Kicker;
 
 public class RobotContainer {
 
@@ -31,6 +32,7 @@ public class RobotContainer {
   private final PowerDistribution m_PowerDistribution = new PowerDistribution(1, ModuleType.kRev);
 
   private final Drivetrain m_swerve = new Drivetrain();
+  private final Kicker m_kicker = new Kicker();
 
   private Joystick m_driver = new Joystick(OIConstants.kDriverControllerPort);
 
@@ -164,6 +166,9 @@ public class RobotContainer {
 
     new JoystickButton(m_driver,OIConstants.kZorroAIn)
     .whileTrue((new ZorroDriveCommand(m_swerve, DriveConstants.kDriveKinematicsDriveFromArm, m_driver)));
+
+    new JoystickButton(m_driver, OIConstants.kZorroDIn).whileTrue(m_kicker.createDeployCommand());
+    new JoystickButton(m_driver, OIConstants.kZorroDIn).whileFalse(m_kicker.createRetractCOmmand());
   }
   // spotless:on
 }

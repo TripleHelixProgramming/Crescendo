@@ -43,6 +43,11 @@ public final class Constants {
       public static final double kDefaultAbsEncoderMagnetOffset = 0.0;
     }
 
+    public static final class KickerConstants {
+      public static final int kKickerDeployPort = 5;
+      public static final int kKickerRetractPort = 7;
+    }
+
     /**
      * public static final boolean kFrontLeftDriveEncoderReversed = false; public static final
      * boolean kFrontRightDriveEncoderReversed = false; public static final boolean
